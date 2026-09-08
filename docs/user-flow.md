@@ -6,7 +6,7 @@ This document explains exactly what the user does in ChatGPT and what ChatGPT au
 
 - **USER**: action the user must perform manually
 - **GPT**: action ChatGPT performs during setup or scheduled runs
-- **USER + GPT**: ChatGPT presents a choice or request, and the user approves or answers it
+- **USER + GPT**: ChatGPT presents one choice or question, and the user approves or answers it
 
 ## One-time setup
 
@@ -39,38 +39,80 @@ How:
 
 No local program needs to be installed or executed.
 
-### Step 3 - USER + GPT - Complete onboarding in the chat
+### Step 3 - USER + GPT - Complete conversational onboarding
 
 ChatGPT asks the onboarding questions directly in the same conversation.
 
-The user answers there. There is no separate questionnaire file to find or fill manually.
+The user does not open a separate questionnaire.
+
+The onboarding is intentionally sequential:
+
+- ChatGPT asks exactly one question per turn.
+- Each question is marked `Required` or `Optional`.
+- Optional questions can be skipped.
+- Unfamiliar concepts are explained in plain language.
+- Technical internal terms are not used without explanation.
+- Recommended defaults are used for technical settings whenever possible.
+
+Examples of user-facing wording:
+
+Instead of:
+
+`What is your target seniority?`
+
+ChatGPT asks:
+
+`What level of role are you looking for? For example: Junior, Mid-level, Senior, Staff, Lead, Manager, or Director.`
+
+Instead of:
+
+`What adjacent titles should be included?`
+
+ChatGPT asks:
+
+`Are there similar job titles you would also consider? These are not your first choice, but close enough that you would still want to see them.`
+
+People management is explained separately from leadership.
+
+People management means direct reports and responsibilities such as 1:1 meetings, performance reviews, hiring, or managing team members.
+
+Project leadership, mentoring, design direction, or cross-functional leadership without direct reports is collected separately and does not count as people management.
 
 The questions cover:
 
-- daily run time and timezone
-- target job titles and seniority
-- career evidence and strongest skills
+- main target role
+- similar roles the user would also consider
+- desired job level
+- roles or levels to always exclude
+- direct people-management preference
+- current or recent career evidence
+- relevant experience
+- strongest skills and responsibilities
+- measurable outcomes when available
+- leadership experience without direct reports
 - preferred and excluded domains
 - target locations and work model
 - employment type
 - work authorization and sponsorship handling
 - compensation preferences when relevant
-- hard exclusions and warning-only preferences
-- optional tracker behavior
+- optional company and keyword preferences
+- optional existing application history
+- automation preference
 - Gmail job-alert sources
+- daily run time and timezone
 
-ChatGPT may search recent Gmail for likely job-alert senders and ask the user to confirm which senders should be monitored.
+The email scan window uses the previous local calendar day by default, so the user does not need to configure a technical time window unless they want something different.
 
-### Step 4 - GPT - Create private files in Google Drive
+### Step 4 - GPT - Create private profile and a new Tracker
 
 ChatGPT creates and stores the resources itself.
 
-The user does not manually move generated files.
+The user does not manually create or move generated files.
 
 Created resources:
 
 1. private career profile
-2. Google Sheet tracker
+2. new Google Sheet tracker
 
 Preferred profile:
 
@@ -91,11 +133,23 @@ Tabs:
 - Tracker
 - Control
 
+A new Tracker is created by default for a new setup.
+
+The workflow does not require the user to already have a tracker.
+
+If the user says they already have past application history and wants it imported, ChatGPT may locate that source only after explicit authorization and import compatible history into the new Job Mail Collector Tracker.
+
+ChatGPT must not search Drive for arbitrary existing trackers before the user opts into import.
+
+ChatGPT must not silently reuse a similarly named existing spreadsheet.
+
 ### Step 5 - USER + GPT - Create the Scheduled Task
 
-The user answers the schedule question during onboarding.
+The schedule questions are asked near the end of onboarding.
 
-ChatGPT then creates the recurring Scheduled Task using that selected time and timezone.
+The user selects a daily run time and confirms a timezone in plain language. A city name is acceptable when ChatGPT can normalize it to the correct timezone.
+
+ChatGPT then creates the recurring Scheduled Task.
 
 The user does not launch a program at that time. The task runs inside ChatGPT.
 
@@ -209,11 +263,14 @@ Paste bootstrap prompt into a new ChatGPT chat
         |
         v
 USER + GPT
-GPT asks onboarding questions, user answers
+GPT asks ONE plain-language question at a time
+Required/Optional is shown for every question
         |
         v
 GPT
-Create private profile + Tracker in Google Drive
+Create private profile + NEW Tracker in Google Drive
+        |
+        +---- optional: import existing history only if user requests it
         |
         v
 GPT
