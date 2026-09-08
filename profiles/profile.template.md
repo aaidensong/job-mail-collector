@@ -31,14 +31,32 @@ resume_versions: []
 
 Write a short factual summary of the user's career background, current level, and the kind of work they are strongest at.
 
+## Search interpretation
+
+Summarize how the user's natural-language answers should be interpreted when matching jobs.
+
+Include, when supported by the conversation:
+
+- the user's main role direction;
+- nearby role families or title variations that are worth considering;
+- whether broader career levels should be considered when the actual responsibilities fit;
+- explicit roles, levels, domains, or work arrangements the user does not want;
+- important nuance that should affect recommendations.
+
+Do not require the user to enumerate every acceptable job title or level in advance.
+
+Treat `primary_titles` and `target_seniority` as matching anchors, not automatic whitelists, unless the user explicitly created a hard restriction.
+
 ## Experience highlights
 
 - Add the most relevant roles, products, domains, responsibilities, and scope.
 - Prefer evidence that helps distinguish a good job match from a superficially similar title.
+- Record actual ownership and responsibility, not only job-title labels.
 
 ## Measurable outcomes
 
 - Add selected outcomes, metrics, launches, process improvements, or business impact when useful for matching.
+- Record only evidence actually provided by the user.
 
 ## Core skills and strengths
 
@@ -49,12 +67,31 @@ Write a short factual summary of the user's career background, current level, an
 
 - Add specialty areas such as growth, design systems, research, enterprise UX, AI, accessibility, marketplace, fintech, healthcare, etc.
 
+## Leadership experience
+
+Record leadership evidence separately from people-management evidence.
+
+Leadership can include:
+
+- leading projects or major initiatives;
+- setting design or product direction;
+- mentoring;
+- facilitating cross-functional alignment;
+- leading reviews or team processes;
+- influencing decisions without direct reports.
+
+Do not treat these as proof of direct people management.
+
+When the user has direct reports, hiring responsibility, performance reviews, 1:1 ownership, or similar management responsibility, record that explicitly.
+
 ## Role preferences and interpretation notes
 
-Explain any nuance that cannot be represented cleanly in the YAML fields above. Examples:
+Explain nuance that cannot be represented cleanly in the YAML fields above. Examples:
 
-- A title that is acceptable only when it remains an individual-contributor role.
-- A domain that is acceptable only for digital products.
+- `Senior is the main target, but Staff or Lead roles should still be considered when the actual scope is supported by the user's experience.`
+- `UX/UI roles are acceptable when the work is primarily digital product design.`
+- `Lead roles are acceptable when they remain individual-contributor roles.`
+- `Manager roles should be excluded because the user does not want direct people management.`
 - A location that is acceptable only for hybrid work.
 - A skill gap that should create a warning rather than exclude the job.
 
