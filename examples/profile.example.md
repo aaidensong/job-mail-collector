@@ -4,15 +4,15 @@ primary_titles:
   - Senior Product Designer
 adjacent_titles:
   - Product Designer
-  - Design Systems Designer
+  - UX/UI Designer
+  - Growth Product Designer
 target_seniority:
   - Senior
-  - Lead IC
 excluded_titles:
   - Graphic Designer
   - Industrial Designer
   - Intern
-management_roles: review-needed
+management_roles: unacceptable
 preferred_domains:
   - B2C marketplace
   - SaaS
@@ -42,8 +42,7 @@ preferred_company_types:
 excluded_company_types: []
 hard_exclude_keywords:
   - internship
-warning_keywords:
-  - people management
+warning_keywords: []
 languages:
   - English
 resume_versions:
@@ -56,6 +55,14 @@ resume_versions:
 ## Professional summary
 
 Senior product designer with substantial experience in consumer digital products, marketplace funnels, and cross-functional product teams.
+
+## Search interpretation
+
+Senior Product Designer is the main target. Product Designer, UX/UI Designer, and Growth Product Designer roles should also be considered when the work is primarily digital product design and the responsibilities fit the user's experience.
+
+Staff or Lead-level product design roles should not be rejected only because the title is above the main Senior target. They should still be evaluated when the required ownership, product scope, and leadership expectations are supported by the user's experience.
+
+Direct people-management roles should be excluded. Project leadership, mentoring, and cross-functional leadership are acceptable and should count positively when the posting values those skills.
 
 ## Experience highlights
 
@@ -79,9 +86,14 @@ Senior product designer with substantial experience in consumer digital products
 
 B2C growth, marketplace UX, recruiting technology, and design systems.
 
+## Leadership experience
+
+- Led product-design initiatives and cross-functional decision making.
+- Supported team processes and mentoring without direct people-management responsibility.
+
 ## Role preferences and interpretation notes
 
-People-management titles may be considered when the role still contains substantial hands-on product design. Pure visual, graphic, spatial, industrial, and non-digital design roles should be excluded.
+Title labels should be treated as signals rather than strict gates. A Staff or Lead role can be a valid match when the actual work is supported by the profile. Pure visual, graphic, spatial, industrial, and non-digital design roles should be excluded.
 
 ## Additional context
 
