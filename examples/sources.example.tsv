@@ -1,0 +1,5 @@
+Source	SenderPattern	Enabled	DigestMode	LinkRule	Notes
+LinkedIn Alerts	jobalerts-noreply@linkedin.com	true	true	Normalize explicit LinkedIn job IDs	Example only
+LinkedIn Jobs	jobs-noreply@linkedin.com	true	true	Normalize explicit LinkedIn job IDs	Separate recommendations from application confirmations
+Indeed Alerts	donotreply@jobalert.indeed.com	true	true	Preserve usable job/application URL	Example only
+Glassdoor	noreply@glassdoor.com	false	true	Preserve usable job/application URL	Enable only if this sender actually reaches the user's inbox
