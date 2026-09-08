@@ -1,0 +1,6 @@
+.DS_Store
+*.local.*
+.env
+profiles/profile.md
+profiles/*.private.md
+profiles/*-private.md
