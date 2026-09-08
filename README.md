@@ -1,3 +1,5 @@
+[English](README.md) | [한국어](README.ko.md)
+
 # Job Mail Collector
 
 Job Mail Collector is a reusable ChatGPT Scheduled Task workflow that reads job-alert emails from Gmail, matches postings against a private career profile, writes suitable jobs into a Google Sheet tracker when permitted, and returns application links in ChatGPT.
@@ -141,8 +143,10 @@ The career profile is the source of truth for matching. The Sheet does not dupli
 job-mail-collector/
 ├── LICENSE
 ├── README.md
-├── assets/
-│   └── job-mail-collector-flow.png
+├── README.ko.md
+├── .gitignore
+├── job-mail-collector-flow.png
+├── job-mail-collector-flow-ko.png
 ├── prompts/
 │   ├── 01-bootstrap.md
 │   ├── 02-daily-job-mail-collector.md
