@@ -2,261 +2,275 @@
 
 This document defines the onboarding UX used by `prompts/01-bootstrap.md`.
 
-The user does not fill out this file directly. ChatGPT asks the questions inside the setup conversation and stores the answers in the user's private career profile.
+The user does not fill out this file directly. ChatGPT collects the information inside the setup conversation and stores the result in the user's private career profile.
+
+## Core principle
+
+The onboarding is a conversation, not a form.
+
+Users may answer in free-form natural language. They do not need to provide one exact value for each question.
+
+For example, this is a valid answer:
+
+> I am mainly looking for Senior Product Designer roles, but I would also like to see UX/UI or Lead roles when the work actually fits my experience. I have about nine years of B2C product design experience and a lot of design-system and growth work.
+
+ChatGPT should extract every useful fact from that answer and use it to resolve multiple profile fields when appropriate.
+
+The user should never feel that they must know the internal schema or provide a precise label such as `Senior`, `Staff`, or `Lead` before the system can judge fit.
 
 ## Conversation rules
-
-The onboarding must be usable by someone who does not know recruiting or HR terminology.
 
 ChatGPT must:
 
 1. ask exactly one question per turn;
-2. wait for the answer before continuing;
-3. mark every question as `Required` or `Optional`;
-4. explicitly allow `none` or `skip` for Optional questions;
-5. explain unfamiliar concepts in plain language;
-6. use examples when useful;
-7. avoid unexplained internal terms such as `seniority`, `adjacent titles`, or `management roles`;
-8. use recommended defaults for technical settings;
-9. skip questions already answered;
-10. ask follow-up clarification before moving on when an answer is ambiguous.
+2. allow free-form answers, including answers that contain several pieces of information;
+3. extract and normalize all useful information from every answer;
+4. skip later questions when the answer has already resolved them;
+5. mark each user-facing question as `Required` or `Optional` when a direct question is needed;
+6. explain that `Required` means the topic must eventually be understood, not that the user must provide a rigid or exact-format value;
+7. explicitly allow `none`, `skip`, `not sure`, or the equivalent for Optional questions;
+8. explain unfamiliar concepts in plain language;
+9. use examples when useful without implying that the user must copy the example format;
+10. avoid unexplained internal terms such as `target_seniority`, `adjacent_titles`, or `management_roles`;
+11. collect factual career evidence before asking for narrow title, level, or exclusion boundaries;
+12. prefer recommended defaults for technical settings;
+13. ask follow-up questions only when unresolved information could materially change job-fit decisions;
+14. summarize the inferred search direction before finalizing it and let the user correct the interpretation in natural language.
 
-Internal field names can remain technical. User-facing questions should not be.
+Internal field names can remain technical. User-facing conversation should not be.
 
-## User-facing role questions
+## Phase 1: understand the person and the search
 
-### Main target role
+The first phase should collect broad factual context before asking the user to define narrow constraints.
+
+### Opening guidance
+
+Before the first career question, tell the user something equivalent to:
+
+> Answer naturally. You do not need to use a specific format or give only one value. You can mention several roles, preferences, or pieces of experience in one answer. I will organize the useful information and skip questions you have already answered.
+
+### Search direction
+
 **Required**
 
-Ask:
+Ask an open-ended question such as:
 
-> What is the main job title you want Job Mail Collector to look for?
+> What kind of work are you looking for? Describe it in your own words.
 
-Example: `Senior Product Designer`
+Add a non-restrictive example:
 
-Maps to `primary_titles`.
+> For example: `I am mainly looking for Senior Product Designer roles, but UX/UI or Lead roles are also interesting when the actual work fits my experience.`
 
-### Similar roles
-**Optional**
+From this answer, ChatGPT may populate or partially populate:
 
-Ask:
+- `primary_titles`
+- `adjacent_titles`
+- `target_seniority`
+- `excluded_titles`
+- role interpretation notes
+- preferred domains
+- strong skills
 
-> Are there similar job titles you would also consider?
-
-Explain:
-
-> These are not your first-choice titles, but they are close enough that you would still want to see the job.
-
-Example: if the main target is `Senior Product Designer`, the user might also consider `Product Designer`, `Growth Product Designer`, or `Product Design Lead`.
-
-Maps to `adjacent_titles`.
-
-Do not use the phrase `adjacent titles` without explaining it.
-
-### Job level
-**Required**
-
-Ask:
-
-> What level of role are you looking for?
-
-Explain if needed:
-
-> This means the career level of the job, such as Junior, Mid-level, Senior, Staff, Lead, Manager, or Director.
-
-If the user is unsure, collect their experience first and later propose a level for confirmation.
-
-Maps to `target_seniority`.
-
-Do not ask `What is your target seniority?` as the user-facing question.
-
-### Always-excluded roles
-**Optional**
-
-Ask:
-
-> Are there any job titles or job levels you never want to see in the recommendations?
-
-Example: `Intern`, `Graphic Designer`, `Director`
-
-Maps job titles to `excluded_titles`. Job-level nuance can be stored in interpretation notes.
-
-### Direct people management
-**Required**
-
-Ask:
-
-> Are you open to jobs where you directly manage employees?
-
-Explain:
-
-> People management means having direct reports and responsibilities such as 1:1 meetings, performance reviews, hiring, or managing team members. Leading projects, mentoring, or influencing a team without direct reports does not count as people management here.
-
-Offer:
-
-- Yes, include those roles
-- No, individual-contributor roles only
-- Review each job individually
-
-Maps internally to `management_roles`.
-
-## People management versus leadership
-
-These must not be treated as the same thing.
-
-### People management
-
-Examples:
-
-- direct reports
-- 1:1 meetings
-- performance reviews
-- hiring responsibility
-- managing team members' growth or workload
-
-### Leadership without people management
-
-Examples:
-
-- leading a project
-- setting design direction
-- mentoring
-- running cross-functional reviews
-- leading team processes
-- facilitating alignment
-- owning a major initiative
-
-Ask separately:
-
-> Have you led projects, design direction, mentoring, cross-functional work, or team processes even if nobody directly reported to you?
-
-This is Optional but useful matching evidence.
-
-Leadership without direct reports must not be recorded as proof of people-management experience.
-
-## Career evidence
-
-Collect one item per turn.
+Do not immediately ask the user to enumerate every acceptable title or career level.
 
 ### Current or recent role
-**Required**
 
-Ask for the current or most recent job title.
+**Required if not already known from the conversation**
 
-### Relevant experience length
-**Required**
+Ask for the current or most recent role in plain language.
 
-Ask approximately how many years of experience are relevant to the target jobs.
+Use it as evidence, not automatically as the user's target.
 
-### Product, industry, or business experience
-**Required**
+### Relevant experience
 
-Ask what kinds of products, industries, or business areas the user has worked in most.
+**Required if unresolved**
 
-### Strongest skills or responsibilities
-**Required**
+Ask approximately how much relevant experience the user has.
 
-Ask which skills and responsibilities should materially strengthen a match.
+A rough answer is sufficient.
+
+### Products, industries, and responsibilities
+
+**Required if unresolved**
+
+Ask what kinds of products, industries, business areas, and actual responsibilities the user has worked with most.
+
+The user may answer all of these together.
+
+Do not split them into separate questions unless necessary.
+
+### Strongest skills and evidence
+
+**Required if unresolved**
+
+Ask what the user is strongest at or what they want the matcher to value most.
+
+Allow skills, responsibilities, projects, and outcomes in one natural-language answer.
 
 ### Measurable outcomes
+
 **Optional but recommended**
 
-Ask for concrete outcomes or metrics.
+Ask only if concrete evidence is still missing and would improve matching.
 
-Never invent metrics.
+Never invent metrics or outcomes.
 
-### Leadership evidence
+### Leadership and people management
+
+Leadership and people management are different concepts.
+
+Leadership can include:
+
+- leading projects;
+- setting direction;
+- mentoring;
+- running cross-functional reviews;
+- facilitating alignment;
+- leading team processes;
+- owning major initiatives.
+
+People management means direct reports and responsibilities such as:
+
+- 1:1 meetings;
+- performance reviews;
+- hiring;
+- managing team members' growth or workload.
+
+If the user's answers already make this distinction clear, do not ask again.
+
+If unresolved and likely to affect recommendations, ask one plain-language question at a time.
+
+## Phase 2: infer the search interpretation
+
+After enough factual evidence has been collected, ChatGPT should infer the user's likely search scope.
+
+Do not ask the user to manually classify every role into exact buckets.
+
+Internally, think in three concepts:
+
+### Core target
+
+The user's main role family or direction.
+
+Usually maps to `primary_titles`.
+
+### Consider if fit
+
+Nearby titles, broader role labels, or different career levels that may still be worth applying to when the actual responsibilities and required scope fit the user's evidence.
+
+Usually represented through `adjacent_titles`, `target_seniority`, and natural-language interpretation notes.
+
+Do not require the user to list every possible title.
+
+### Hard exclude
+
+Roles, levels, domains, or conditions the user explicitly does not want.
+
+Usually represented by `excluded_titles`, management rules, excluded domains, hard blockers, or interpretation notes.
+
+## Seniority and title handling
+
+Do not ask questions such as:
+
+> Besides Senior, do you also want Staff or Lead?
+
+unless the distinction is genuinely necessary to resolve a material ambiguity.
+
+The default behavior should be fit-based:
+
+- use the stated title or level as an anchor;
+- evaluate nearby or broader titles when the actual scope fits the user's evidence;
+- do not exclude a role merely because its title label was not explicitly named during onboarding;
+- use explicit exclusions to close categories the user does not want.
+
+Examples:
+
+- A Senior Product Designer target can still include Staff Product Designer when the responsibilities appear supported.
+- A Lead Product Designer can be considered when it is an individual-contributor or project-lead role supported by the user's evidence.
+- A Design Manager can be excluded if the user explicitly does not want people management.
+
+`target_seniority` should be treated as an anchor, not a whitelist, unless the user's profile explicitly says otherwise.
+
+## Search interpretation checkpoint
+
+Once enough evidence exists, show a concise interpretation and ask one confirmation question.
+
+Example:
+
+> Here is how I currently understand your search:
+> - Main direction: Senior Product Designer
+> - Also consider when the work fits: Product Designer, UX/UI, Growth, Staff or Lead-level product design
+> - Strong evidence: B2C product design, funnel optimization, research, design systems
+> - Leadership: project and process leadership
+> - Hard exclusions: none confirmed yet
+>
+> Does anything here need to be corrected or narrowed?
+
+The user can answer freely, for example:
+
+> Lead is fine, but I do not want Manager roles yet. UX/UI is fine only for digital products.
+
+ChatGPT should update all affected fields from that one answer.
+
+## Phase 3: ask only meaningful constraints
+
+After the search interpretation is understood, collect only constraints that materially affect recommendations.
+
+### Hard role or level exclusions
+
 **Optional**
 
-Ask about project, mentoring, process, or cross-functional leadership separately from people management.
+Prefer asking what the user definitely does not want rather than asking them to enumerate everything they would accept.
 
-A complete chronological resume is not required when a shorter factual profile is enough.
+Example:
 
-## Domain and skill preferences
+> Is there any type of role or level you definitely do not want recommended? If not, you can say `none`.
 
-### Preferred industries or product types
-**Optional**
+### Domain preferences and exclusions
 
-Maps to `preferred_domains`.
+Ask only when unresolved or materially useful.
 
-### Excluded industries or product types
-**Optional**
+Preferred domains are usually soft preferences.
 
-Maps to `excluded_domains`.
+Explicitly excluded domains can be hard rules.
 
 ### Hard skill blockers
+
 **Optional**
 
-Ask only for requirements that should make a posting ineligible when essential and missing.
+Ask only when there is a missing skill or requirement that should make a posting ineligible rather than merely lower its fit.
 
-Maps to `hard_skill_blockers`.
+### Geography and work model
 
-## Geography and work model
+Target location is Required.
 
-### Target location
-**Required**
+Work-model constraints are Required when they materially affect eligibility.
 
-Ask where the user wants to find jobs.
+Allow answers such as:
 
-### Work arrangement
-**Required**
+> Toronto mainly, but Canada-remote roles are also fine. Hybrid is okay, but I would rather not be in the office five days a week.
 
-Offer Remote, Hybrid, On-site, or any combination.
+Extract all relevant constraints from one answer.
 
-### Commute or relocation constraints
-**Optional**
+### Employment conditions
 
-Store material nuance in profile interpretation notes.
+Employment type and work authorization are Required when relevant to eligibility.
 
-## Employment conditions
+Sponsorship handling should only be asked when it could materially change results.
 
-### Employment type
-**Required**
+Minimum compensation is Optional.
 
-Examples: Full-time, contract, part-time, internship.
+### Company, keyword, language, and resume preferences
 
-### Work authorization
-**Required**
+These are Optional.
 
-Ask in plain language.
-
-Example answer:
-
-`Authorized to work in Canada without sponsorship.`
-
-### Sponsorship handling
-**Conditional**
-
-Ask only when sponsorship could materially affect matching.
-
-Offer:
-
-- exclude sponsorship-required jobs
-- keep them with a warning
-- ignore sponsorship when matching
-
-### Minimum compensation
-**Optional**
-
-Only use as a filter when the user wants it.
-
-## Other matching preferences
-
-The following are Optional and should only be asked when useful:
-
-- preferred or avoided company types
-- hard-exclude keywords
-- warning-only keywords
-- languages relevant to work
-- resume version labels
-
-Do not turn these into a large batch questionnaire.
+Ask only when useful and do not turn them into a fixed checklist.
 
 ## Existing application history
 
 Existing history is Optional.
 
-User-facing question:
+Ask:
 
 > Do you already have a spreadsheet or tracker with past job applications that you want imported into the new Job Mail Collector tracker?
 
@@ -272,7 +286,7 @@ Rules:
 
 ## Automation settings
 
-Do not ask seven technical module questions by default.
+Do not ask several technical module questions by default.
 
 Ask one plain-language question:
 
@@ -280,15 +294,15 @@ Ask one plain-language question:
 
 Recommended settings:
 
-- automatically add suitable jobs to Tracker
-- detect application confirmation emails
-- update clear application status changes
-- detect employer or recruiter responses
-- estimate rejection stage when evidence supports it
-- estimate ATS when recognizable
-- flag no-response applications after 14 days
+- automatically add suitable jobs to Tracker;
+- detect application confirmation emails;
+- update clear application status changes;
+- detect employer or recruiter responses;
+- estimate rejection stage when evidence supports it;
+- estimate ATS when recognizable;
+- flag no-response applications after 14 days.
 
-If the user wants customization, ask about changes one at a time.
+If the user wants customization, ask only about the settings they want to change, one at a time.
 
 ## Gmail sources
 
@@ -302,14 +316,16 @@ Never enable an unconfirmed sender.
 
 ## Schedule
 
-Ask schedule questions near the end of onboarding, not at the beginning.
+Ask schedule questions near the end of onboarding.
 
 ### Daily run time
+
 **Required**
 
 Ask what time the workflow should run.
 
 ### Time zone
+
 **Required unless already clear**
 
 Allow a city name instead of requiring an IANA time-zone string.
@@ -326,12 +342,12 @@ Only ask for a custom window when the user wants to change the default.
 
 ## Rule severity
 
-Career-related fields should distinguish between:
+Career-related fields should distinguish internally between:
 
-- `hard`: can exclude a job
-- `soft`: changes match quality but does not exclude
-- `info`: context only
+- `hard`: can exclude a job;
+- `soft`: changes match quality but does not exclude;
+- `info`: context only.
 
 The user does not need to learn these labels during onboarding.
 
-The Markdown profile represents severity through fields such as `excluded_titles`, `hard_skill_blockers`, `hard_exclude_keywords`, and narrative interpretation notes.
+The Markdown profile represents severity through fields such as `excluded_titles`, `hard_skill_blockers`, `hard_exclude_keywords`, management rules, and natural-language interpretation notes.
