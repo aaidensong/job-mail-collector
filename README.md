@@ -21,7 +21,25 @@ The setup is designed so a new user only needs to do four things:
 
 Everything else is handled by ChatGPT when the required permissions are available.
 
-See `docs/user-flow.md` for the complete user and GPT responsibility map.
+### Onboarding is conversational
+
+The bootstrap is designed for non-technical users.
+
+ChatGPT should:
+
+- ask exactly one question per turn;
+- mark each question as `Required` or `Optional`;
+- explain unfamiliar concepts in plain language;
+- give examples when useful;
+- allow Optional questions to be skipped;
+- use recommended defaults for technical settings;
+- avoid unexplained recruiting or schema terms.
+
+For example, it asks `What level of role are you looking for?` instead of asking for a `target seniority`.
+
+It also treats direct people management separately from leadership such as project leadership, mentoring, design direction, or cross-functional leadership.
+
+See `docs/profile-questionnaire.md` for the complete question design and `docs/user-flow.md` for the user/GPT responsibility map.
 
 ## Where to connect Gmail and Google Drive
 
@@ -34,13 +52,24 @@ After the apps are connected, the bootstrap prompt is run in a normal ChatGPT co
 1. Connect Gmail and Google Drive in ChatGPT.
 2. Open `prompts/01-bootstrap.md` on GitHub.
 3. Copy the entire prompt into a new ChatGPT conversation.
-4. ChatGPT asks the profile and configuration questions directly in that chat.
-5. Answer those questions in the same chat.
-6. ChatGPT creates the private career profile and Google Sheet in your connected Google Drive.
-7. ChatGPT creates a recurring Scheduled Task at the time you selected.
-8. ChatGPT runs a validation test before setup is considered complete.
+4. ChatGPT asks one plain-language setup question at a time.
+5. Answer each question in the same chat.
+6. ChatGPT creates the private career profile and a new Google Sheet Tracker in your connected Google Drive.
+7. If you already have application history, you can optionally choose to import it into the new Tracker.
+8. ChatGPT creates a recurring Scheduled Task at the time you selected.
+9. ChatGPT runs a validation test before setup is considered complete.
 
-You do not manually move the generated profile or tracker files after setup. ChatGPT stores and references them in your connected Drive.
+You do not need an existing job tracker before using this project.
+
+You do not manually create or move the generated profile or Tracker files after setup. ChatGPT creates and references them in your connected Drive.
+
+### Existing application history is optional
+
+Job Mail Collector does not search your Drive for an old tracker during initial access checks.
+
+If you say that you have past application history you want imported, ChatGPT can locate it after your explicit authorization and copy compatible history into the new `Job_Mail_Collector` Tracker.
+
+If you have no previous tracker, setup continues normally with a new empty Tracker.
 
 ## Daily automation
 
@@ -57,6 +86,8 @@ At the scheduled time, ChatGPT should automatically:
 9. scan clear application confirmations and employer or recruiter responses;
 10. update Tracker status fields automatically when the evidence is unambiguous;
 11. report anything that requires human review.
+
+The default email scan window is the previous local calendar day. The user only needs to configure a different window if they want one.
 
 ### What is not automated
 
@@ -93,13 +124,14 @@ Preferred name:
 Contains:
 
 - career background
-- target titles and seniority
+- target titles and job levels
 - relevant skills and experience
 - preferred and excluded domains
 - location and work-model rules
 - work authorization and sponsorship handling
 - company and keyword preferences
 - measurable evidence used for job matching
+- leadership evidence kept separate from direct people-management experience
 
 If direct raw Markdown creation or reading is not supported, ChatGPT creates a private Google Doc containing the same Markdown text and stores that document reference in the Sheet configuration.
 
@@ -116,14 +148,18 @@ Tabs:
 - `Tracker`: job candidates and application history
 - `Control`: read-completeness verification
 
+A new Tracker is created automatically during setup.
+
 The career profile is the source of truth for matching. The Sheet does not duplicate the user's full career history.
 
 ## Core capabilities
 
-- interactive one-time onboarding in ChatGPT
+- one-question-at-a-time conversational onboarding
+- Required/Optional labels and plain-language explanations
 - private career profile creation
+- automatic creation of a new Google Sheet Tracker
+- optional import of existing application history
 - Gmail job-alert source discovery and confirmation
-- Google Sheet tracker creation
 - recurring Scheduled Task creation
 - digest-email expansion
 - hard filtering and soft matching
@@ -171,7 +207,11 @@ job-mail-collector/
 ## Design principles
 
 - **ChatGPT-first onboarding.** A new user should not need to understand the internal schema before setup.
-- **User and GPT responsibilities are explicit.** The user connects apps, answers questions, and applies to jobs. GPT handles ingestion, matching, tracking, and monitoring.
+- **One question at a time.** Do not overwhelm users with batch questionnaires.
+- **Plain language before internal terminology.** Technical field names stay internal.
+- **Required versus Optional is explicit.** Users should know what they can skip.
+- **People management and leadership are separate concepts.** Direct reports are not inferred from project or mentoring leadership.
+- **A new Tracker is created automatically.** Existing history is optional and imported only after explicit user choice.
 - **Private profile outside the public prompt.** Career data lives in a user-owned Drive resource.
 - **No fabricated links.** Missing or unreadable application URLs stay blank.
 - **Hard filters before matching.** Clear exclusions should not be rescued by a strong score elsewhere.
@@ -188,7 +228,7 @@ The current repository structure uses:
 - `config_version = 3`
 - `profile_version = 1`
 
-`Config.config_version` tracks Sheet and automation compatibility. The private profile separately uses `profile_version` in YAML front matter.
+This onboarding update changes the conversation UX, not the Sheet or profile schema, so the configuration version remains unchanged.
 
 ## OpenAI references
 
