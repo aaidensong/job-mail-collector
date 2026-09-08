@@ -69,10 +69,12 @@ resume_versions
 Require profile_version = 1.
 Also read the Markdown sections, especially:
 - Professional summary
+- Search interpretation
 - Experience highlights
 - Measurable outcomes
 - Core skills and strengths
 - Portfolio or specialty areas
+- Leadership experience
 - Role preferences and interpretation notes
 - Additional context
 
@@ -146,27 +148,59 @@ Apply explicit hard rules from the profile, including when relevant:
 - hard_exclude_keywords
 - hard_skill_blockers
 
-Use Markdown interpretation notes when they clarify whether a rule is hard or warning-only.
+Use Search interpretation and Role preferences and interpretation notes when they clarify whether a rule is hard or warning-only.
 
 A hard exclusion must include a short reason based on evidence from the posting/profile.
 Do not turn a missing detail into a hard exclusion unless the profile explicitly says missing information is disqualifying.
 
+IMPORTANT TITLE AND LEVEL RULE:
+- `primary_titles` identifies the main target direction, not an exact-title whitelist.
+- `adjacent_titles` contains useful nearby labels but is not an exhaustive list of every acceptable title.
+- `target_seniority` is a career-level anchor, not a whitelist.
+- Do not hard-exclude a job merely because its exact title or level is absent from these lists.
+- Only use title or level as a hard exclusion when the user explicitly excluded it in `excluded_titles` or the Markdown interpretation notes clearly make that boundary hard.
+
 Management handling:
-- if management_roles = unacceptable, exclude people-management roles;
+- if management_roles = unacceptable, exclude roles that clearly require direct people management;
 - if review-needed, keep them and add a warning;
 - if acceptable, evaluate normally.
 
-[8. SCORE REMAINING JOBS]
+Do not confuse project leadership, mentoring, design direction, or cross-functional leadership with direct people management.
+
+[8. EVALUATE REMAINING JOBS BY ACTUAL FIT]
 Run only when profile_read_status = VERIFIED.
 
 For jobs not hard-excluded, assess fit using both structured YAML and the Markdown career evidence.
+
+Judge the actual job, not the title label alone.
+
 Use these dimensions:
-- title/seniority fit
+- actual responsibilities and role scope
+- required experience and ownership level
+- decision-making and leadership expectations
+- direct people-management requirements, if any
 - product/domain fit
 - skills/experience fit
 - evidence of relevant scope or outcomes
 - location/work-model fit
 - employment/compensation fit when known
+
+TITLE AND CAREER-LEVEL INTERPRETATION:
+- Treat the user's main title and `target_seniority` as anchors.
+- Evaluate nearby or broader title labels when the actual work is supported by the user's career evidence.
+- A user mainly targeting Senior may still receive Staff or Lead roles when the responsibilities and scope are plausible for their experience.
+- A role can be a Strong match even when the exact title differs from `primary_titles`.
+- A superficially similar title can be Weak or Excluded when the actual required scope is materially unsupported.
+- Do not assume Senior, Staff, Lead, Principal, Manager, or Director mean the same scope at every company.
+- Compare the posting's actual requirements with the user's evidence before deciding.
+
+STRETCH ROLES:
+If a role appears somewhat above or outside the user's usual title but much of the required scope is supported:
+- keep it as Strong or Possible depending on the evidence;
+- briefly mention the stretch or title difference when useful;
+- let the user decide whether to apply.
+
+If the posting requires materially unsupported scope, such as large-team people management, executive ownership, or specialized expertise the profile clearly does not support, lower the match or exclude it using that concrete reason.
 
 Classify each as:
 Strong match
@@ -174,9 +208,12 @@ Possible match
 Weak match
 
 Do not create false precision with a numeric score unless the private profile explicitly requests one.
-A Strong match should have clear positive evidence and no major unresolved conflict.
-A Possible match may have missing or ambiguous information that needs user review.
+A Strong match should have clear positive evidence and no major unresolved conflict. Exact title equality is not required.
+A Possible match may have missing or ambiguous information or represent a reasonable stretch the user may still want to consider.
 A Weak match should not appear in the main shortlist unless there are no stronger jobs; it may be summarized in Excluded/Low-priority output.
+
+Every Strong or Possible match should have a short evidence-based reason.
+When title or career level differs from the user's main target, explain whether the actual scope appears supported instead of treating the label itself as the reason.
 
 [9. COMPARE AGAINST TRACKER]
 Only do confirmed historical duplicate checks when tracker_read_status = VERIFIED.
@@ -228,10 +265,13 @@ Order by:
 
 Use clickable links in Apply when available.
 
+The Why column should explain actual fit. When useful, note that a different title label is still supported by the user's experience.
+
 ## Excluded or low priority
 Company | Title | Reason | Source
 Keep this concise. Include only jobs actually reviewed during this run.
 When the profile is unavailable, include only non-profile exclusions such as obvious non-job messages or unavailable postings, not personal-fit exclusions.
+Do not use `title not listed` or `seniority not listed` as an exclusion reason unless the profile explicitly made that title or level a hard exclusion.
 
 ## Missing applications
 Only when module is enabled. When auto_application_update is true, apply clear missing-application reconciliation directly to Tracker when write access allows it; otherwise include it in the manual fallback.
@@ -279,7 +319,7 @@ For automatic status reconciliation:
 A user may apply without receiving a confirmation email. In that case, do not guess that the application happened. Leave the row as Candidate until the user changes it or reliable evidence appears.
 
 ## Human review
-List only items that need a user decision or manual action, such as ambiguous company/title matching, an application with no confirmation email, conflicting status evidence, or a blocked Tracker write.
+List only items that need a user decision or manual action, such as ambiguous company/title matching, a reasonable stretch role with a material unresolved requirement, an application with no confirmation email, conflicting status evidence, or a blocked Tracker write.
 
 ## Diagnostics
 Report:
