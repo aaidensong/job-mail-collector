@@ -37,7 +37,7 @@ The onboarding follows these rules:
 
 - one question per turn;
 - free-form answers are accepted;
-- examples are shown when a question may be hard to answer;
+- every career, experience, strength, preference, or constraint question includes a concise fictional answer example;
 - examples are illustrative, not a required format;
 - normal questions are not labeled `Required`;
 - only optional questions are marked;
@@ -47,24 +47,23 @@ The onboarding follows these rules:
 
 For experienced users, a title alone is not enough. The onboarding asks role-specific depth questions when needed to understand actual ownership, problem-solving strengths, impact, decision-making, cross-functional influence, leadership, process improvements, and differentiating expertise.
 
-## Setup progress is visible
+## Compact questions with a simple remaining count
 
-The user should not have to wonder when onboarding will end.
+The onboarding does not show a stage roadmap, `1/4` labels, or a `Setup progress` heading.
 
-The setup is divided into four visible stages:
+The question itself is emphasized, followed by one concise fictional answer example when useful. The only progress indicator appears at the bottom of the message:
 
-1. **Career direction & evidence**
-2. **Search constraints**
-3. **Automation & job-alert sources**
-4. **Schedule, create, and test**
+`Questions remaining: about 7`
 
-Most setups take about **8-12 user answers** when recommended settings are used. A detailed answer can cover several topics and reduce the remaining count.
+The number is approximate and recalculated as information is collected. A detailed answer can resolve several topics at once. Permission dialogs, approval clicks, resource creation, and tests are not counted as questions.
 
-Before each direct onboarding question, ChatGPT shows a compact progress line such as:
+A typical turn looks like this:
 
-`Setup progress: 1/4 - Career direction & evidence - about 7-10 answers remaining`
-
-The range is recalculated as information is collected. Permission dialogs and approval clicks are not counted as onboarding answers.
+> **Tell me about your current or most recent role and what you actually owned. You can include your title, domain, and scope.**
+>
+> Example: I was a Senior Data Analyst on a logistics team and owned delivery-performance analytics from metric definition through dashboard rollout.
+>
+> Questions remaining: about 7
 
 ## Fit is based on actual scope, not title labels alone
 
@@ -85,7 +84,7 @@ For experienced users, a Strong match should normally have a meaningful reason b
 1. Connect Gmail and Google Drive in ChatGPT.
 2. Open `prompts/01-bootstrap.md`.
 3. Paste the full prompt into a new ChatGPT conversation.
-4. ChatGPT collects career evidence and matching preferences conversationally, with visible setup progress.
+4. ChatGPT collects career evidence and matching preferences through compact natural-language questions.
 5. ChatGPT creates a private career profile.
 6. ChatGPT creates a **brand-new** Google Sheet Tracker using Job Mail Collector's schema.
 7. ChatGPT discovers or collects Gmail job-alert sources and asks the user to confirm them.
@@ -327,7 +326,7 @@ job-mail-collector/
 ## Design principles
 
 - **Conversation, not configuration forms.** Users answer naturally.
-- **Visible progress.** Users can see the current setup stage and an approximate remaining-answer range.
+- **Compact onboarding.** The question is emphasized, examples are restored, and only a simple approximate remaining-question count is shown.
 - **Understand the person before narrowing the search.** Experienced candidates need evidence beyond title and years.
 - **Actual scope over title labels.** Plausible nearby roles stay open unless explicitly excluded.
 - **Fresh Tracker every setup.** Bootstrap never adapts an arbitrary existing spreadsheet.
