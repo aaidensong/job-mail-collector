@@ -9,61 +9,15 @@ The user's career history, strengths, target roles, constraints, and matching pr
 The profile uses Markdown with YAML front matter:
 
 - YAML stores stable fields the scheduled workflow should interpret consistently.
-- Markdown sections store richer career evidence and interpretation that do not fit cleanly into a flat table.
-- The file can be reviewed and edited without touching the scheduled prompt.
+- Markdown stores richer career evidence, including actual ownership, differentiators, and interpretation notes.
+- The file can be reviewed and edited without touching the daily task prompt.
 - A filled-in profile should remain private and should not be committed to the public repository.
 
 Template: `profiles/profile.template.md`
 
-## Structured fields are anchors, not always hard limits
+Current schema: `profile_version = 2`.
 
-Fields such as `primary_titles`, `adjacent_titles`, and `target_seniority` help the matcher understand the user's main direction.
-
-They should not automatically become exact-title or exact-level whitelists.
-
-For example, a profile can say that `Senior Product Designer` is the main target while the Markdown `Search interpretation` section explains that Staff or Lead roles should still be considered when the actual responsibilities and scope are supported by the user's experience.
-
-Hard exclusions should be explicit, using fields such as:
-
-- `excluded_titles`
-- `excluded_domains`
-- `hard_skill_blockers`
-- `hard_exclude_keywords`
-- `management_roles`
-- clear natural-language hard constraints in `Role preferences and interpretation notes`
-
-## Search interpretation
-
-The Markdown profile should preserve nuance inferred from the user's natural-language onboarding answers.
-
-Useful examples:
-
-- main role direction;
-- nearby role families to consider when actual fit is strong;
-- broader career levels that should remain open when scope is supported;
-- explicit unwanted roles or levels;
-- whether Lead roles are acceptable only when they remain individual-contributor roles;
-- whether UX/UI roles are acceptable only for digital product work;
-- any other context needed to avoid overly literal title matching.
-
-The user does not need to manually fill these categories. ChatGPT should infer and summarize them from the onboarding conversation, then let the user correct the interpretation.
-
-## Career evidence matters more than labels
-
-The Markdown body should contain enough evidence to compare the user's actual experience with a posting's real requirements.
-
-Useful evidence includes:
-
-- responsibilities and ownership;
-- product and domain experience;
-- measurable outcomes;
-- scope of decisions;
-- cross-functional collaboration;
-- project or process leadership;
-- direct people-management evidence when it exists;
-- specialty areas and relevant skills.
-
-Do not infer direct people management from project leadership, mentoring, or cross-functional influence alone.
+Version 2 intentionally removes resume-version tracking. The core profile keeps only information that materially improves job matching.
 
 ## Storage
 
@@ -85,12 +39,27 @@ The scheduled workflow treats both representations identically after reading the
 
 The private profile document is the source of truth for career and matching information.
 
-The Google Sheet must not duplicate career history or matching rules. It stores only operational configuration, sources, tracker history, and validation metrics.
+The Google Sheet must not duplicate career history or matching rules. It stores only operational configuration, sources, Tracker history, and validation metrics.
+
+## What should be rich, not minimal
+
+Tracker fields are intentionally minimal, but the career profile should contain enough evidence to make useful distinctions between superficially similar jobs.
+
+For experienced users, the profile should capture when available:
+
+- actual end-to-end ownership
+- recurring problem types
+- measurable or observable impact
+- decision-making under ambiguity
+- cross-functional influence
+- leadership or mentoring
+- systems or process improvement
+- specialty or differentiating expertise
+
+A title and years of experience alone are usually not enough for high-quality matching.
 
 ## Updating the profile
 
 Use `prompts/04-update-profile.md` or edit the private profile document directly while preserving the YAML field names.
 
-Users can describe changes in natural language. They do not need to manually decide which YAML field should change.
-
-If the YAML becomes malformed or the profile becomes too incomplete to interpret reliably, the daily workflow must stop fit classification and report `PROFILE_INVALID` rather than guessing.
+If the YAML becomes malformed or required sections disappear, the daily workflow must stop fit classification and report `PROFILE_INVALID` rather than guessing.

@@ -1,5 +1,5 @@
 ---
-profile_version: 1
+profile_version: 2
 primary_titles:
   - Senior Product Designer
 adjacent_titles:
@@ -45,9 +45,6 @@ hard_exclude_keywords:
 warning_keywords: []
 languages:
   - English
-resume_versions:
-  - Product Design
-  - Design Systems
 ---
 
 # Job Mail Collector Career Profile

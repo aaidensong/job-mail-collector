@@ -5,14 +5,14 @@
 Runs once in a normal ChatGPT conversation after the user connects Gmail and Google Drive.
 
 User responsibilities:
-- connect Gmail and Google Drive in ChatGPT
+- connect Gmail and Google Drive
 - paste the bootstrap prompt into a new ChatGPT chat
-- answer onboarding questions in that chat
+- answer onboarding questions naturally
 - approve product permission or task-creation prompts when required
 
 GPT responsibilities:
 - verify app access
-- collect career and matching information interactively
+- collect career evidence and matching constraints conversationally
 - create the private profile
 - discover and confirm Gmail alert sources
 - create the Tracker Sheet
@@ -27,109 +27,148 @@ The user should not manually create, move, or wire together the profile and Trac
 A private Markdown-formatted document owned by the user.
 
 Preferred name:
-
 `Job_Mail_Collector_Profile.md`
 
-Responsibilities:
-- target titles and seniority
+The profile stores:
+- main target direction and nearby roles to consider when actual fit is strong
 - career background and relevant experience
+- differentiators, scope, impact, and recurring problem types
 - strengths and skills
 - domain preferences and exclusions
 - geography and work model
 - employment constraints
 - work authorization and sponsorship handling
 - hard exclusions and warnings
-- richer interpretation notes
+- leadership evidence kept separate from direct people management
 
-The document uses YAML front matter for stable machine-readable fields and Markdown sections for richer career evidence.
-
-When raw Markdown storage is unavailable, a Google Doc containing the exact Markdown text is the compatibility fallback.
+The profile uses `profile_version = 2`.
+It does not track resume versions.
 
 ## 3. Operational configuration layer
 
 Google Sheet owned by the user.
 
 ### Config
-Stores schedule, profile reference, scan window, module settings, and Tracker write behavior.
+Stores schedule, profile reference, automation settings, and write behavior.
+
+Current schema uses `config_version = 4`.
 
 ### Sources
-Stores confirmed Gmail sender patterns plus source-specific parsing notes.
+Stores confirmed Gmail sender patterns plus source-specific parsing and message-classification notes.
+
+A sender may produce more than one message type. Classification uses sender + subject + body.
 
 ### Tracker
-Stores job candidates and application history.
+Stores job candidates and application history in 13 columns:
+
+`Status, Company, Title, Location, Salary, WorkMode, Notes, Link, ReceivedAt, AppliedAt, RespondedAt, Result, Source`
+
+The Tracker intentionally does not store ATS, ResumeVersion, Channel, or RejectionStage.
+
+`Source` is the single provenance field. Agency or recruiter details go in Notes only when useful.
 
 ### Control
-Stores verification metrics used to detect incomplete Tracker reads.
+Stores verification metrics and `last_successful_scan_date`.
+
+`last_successful_scan_date` lets the workflow catch up automatically after a skipped or failed scheduled run.
 
 ## 4. Scheduled ingestion layer
 
 Runs automatically inside ChatGPT at the configured time.
 
 Responsibilities:
-- read Config
+- load Config and Control
+- calculate every unprocessed local calendar day through yesterday
 - read and validate the private profile
-- determine the local scan window
-- read configured Gmail sources
-- expand digest emails
+- read configured Gmail job-alert sources
+- expand digest messages
+- classify messages by actual content
 - extract structured jobs
 - normalize links
 - deduplicate within the run
 
-The user does not manually start a local program for each run.
+The scan marker advances only after the target period is fully processed successfully enough to produce normal output or a complete TSV write fallback.
 
 ## 5. Matching layer
 
 Two-stage decision model:
 
 1. Hard filters remove explicit non-starters.
-2. Soft matching classifies the remainder as Strong, Possible, or Weak.
+2. Fit matching classifies the remainder as Strong, Possible, or Weak.
 
-This prevents an explicitly disallowed role from surviving only because other attributes match well.
+Matching prioritizes actual responsibilities and demonstrated career evidence over exact title equality.
 
-## 6. Tracker automation layer
+For experienced users, Strong matches should normally include a meaningful reason beyond title similarity, such as matching problem type, ownership scope, measurable impact, specialty, domain depth, or leadership evidence.
 
-When Tracker completeness is verified and Google Drive write actions are available, the task can automatically:
-- append suitable new jobs as `Candidate`
-- reconcile clear application-confirmation emails to `Applied`
+## 6. History and completeness layer
+
+Before making absence or historical duplicate judgments, the workflow compares rows actually read from Tracker with `Control.tracker_data_rows`.
+
+When completeness is not verified:
+- absence claims are disabled
+- historical duplicate confirmation is disabled
+- application/response reconciliation is skipped
+- candidate writes are not applied
+- `last_successful_scan_date` does not advance
+
+## 7. Single-pass inbox reconciliation layer
+
+Candidate alert collection uses confirmed Sources.
+
+Application and response reconciliation can use one broad Gmail read for the target period.
+
+The workflow classifies messages into categories such as:
+- job alert
+- application confirmation
+- recruiter submission evidence
+- employer or recruiter response
+- marketing/newsletter
+- unknown
+
+It then compares relevant messages against Tracker rows.
+
+A separate Gmail query for every Applied company is avoided by default. A targeted follow-up search is used only when needed to resolve ambiguity.
+
+Clear recruiter statements that a profile, resume, or application was submitted for a specific role can count as application evidence. Ambiguous future-intent language requires human review.
+
+## 8. Tracker automation layer
+
+When Tracker completeness is verified and Google Drive write actions are available, the task can:
+- append suitable jobs as `Candidate`
+- reconcile clear application evidence to `Applied`
 - fill `AppliedAt`
 - fill `RespondedAt` after clear employer or recruiter responses
-- close explicitly rejected applications
-- record rejection stage when enabled and supported by evidence
-- record recognizable ATS platforms when enabled
+- close explicitly rejected applications with `Result = Rejected`
+- record other explicit final outcomes in Result
+
+ATS and rejection-stage inference are intentionally excluded from the core workflow because they add complexity without enough user value.
 
 Ambiguous evidence is not written automatically.
 
-If a scheduled external write cannot proceed because approval is required or a write action is unavailable, the workflow returns the intended changes as TSV. This is a fallback path, not the preferred primary workflow.
+If a scheduled external write cannot proceed because approval is required or a write action is unavailable, the workflow returns exact 13-column TSV as a fallback.
 
-## 7. User application layer
+## 9. User application layer
 
-The user reviews the recommended links and submits applications on the relevant external sites.
+The user reviews recommended links and submits applications on external sites.
 
-Application submission is intentionally outside the core workflow because different employers and ATS systems have different forms, authentication, consent, and submission requirements.
+Application submission is intentionally outside the core workflow because employers and application systems use different forms, authentication, consent, and submission requirements.
 
-After the user applies, later Gmail evidence can be used to reconcile Tracker state automatically.
+If an application generates no confirmation and no clear recruiter-submission evidence, the user may need to mark the row Applied manually.
 
-If an application generates no confirmation email, the user may need to mark the row `Applied` manually because the workflow otherwise has no reliable evidence that submission occurred.
-
-## 8. History and monitoring layer
-
-When the Tracker read is verified as complete, the task can:
-- suppress historical duplicates
-- surface prior-company context
-- detect untracked applications
-- detect employer or recruiter responses
-- find no-response cases
-
-When completeness is not verified, absence-based judgments are disabled.
-
-## 9. Delivery layer
+## 10. Monitoring and delivery layer
 
 The Scheduled Task result provides:
+- scan period
 - readable shortlist with reasons and application links
-- automatic Tracker write results
+- detected applications and responses
+- no-response candidates
+- Tracker write results
 - human-review items
+- source-health checks
 - diagnostics
 - TSV only when automatic Tracker writing could not be applied
+
+Enabled alert sources with zero messages are always surfaced. If all major configured sources unexpectedly return zero messages, the workflow warns that alert delivery, sender patterns, or account configuration may need review.
 
 ## Data flow
 
@@ -143,7 +182,7 @@ Paste bootstrap prompt into ChatGPT
         |
         v
 USER + GPT
-Interactive onboarding
+Conversational onboarding
         |
         v
 GPT
@@ -153,53 +192,30 @@ Create profile + Tracker + Scheduled Task
 ================ SCHEDULED RUN ================
         |
         v
-Private profile -------------------------------+
-                                              |
-Config ---------------------------------------+
-                                              |
-Gmail job alerts                              |
-        |                                     |
-        v                                     v
-Email extraction -> normalization -> hard filters -> fit matching
-                                                |
-Sources ----------------------------------------+
-Tracker -> dedupe + status reconciliation ------+
-Control -> read completeness -------------------+
-                                                |
-                                                v
-GPT -> write candidates/status to Tracker when permitted
-                                                |
-                                                v
-GPT -> return shortlist + application links + diagnostics
-                                                |
-                                                v
-USER -> apply on external site
-                                                |
-                                                v
-Gmail confirmations/replies -> next scheduled reconciliation
+Control.last_successful_scan_date -> calculate catch-up period
+        |
+        v
+Private profile + Config + Sources + Tracker
+        |
+        v
+Job-alert Gmail -> extraction -> hard filters -> fit matching
+        |
+        +------------------------------+
+        |                              |
+        v                              v
+Candidate shortlist            Broad inbox reconciliation
+                                       |
+                                       v
+                           applications + responses
+        |                              |
+        +---------------+--------------+
+                        |
+                        v
+              Tracker updates when permitted
+                        |
+                        v
+              Result + source health + diagnostics
+                        |
+                        v
+                 USER applies externally
 ```
-
-## Core vs optional behavior
-
-### Core
-- ChatGPT onboarding
-- scheduled Gmail scan
-- private profile read and validation
-- digest expansion
-- link extraction
-- hard filtering
-- fit classification
-- within-run dedupe
-- Tracker comparison when verified
-- automatic Candidate write when enabled and permitted
-- shortlist delivery
-- diagnostics
-
-### Optional
-- missing-application reconciliation
-- automatic application status updates
-- recruiter or employer response detection
-- no-response aging
-- rejection-stage inference
-- ATS inference
-

@@ -12,39 +12,77 @@ My career data is stored in the private profile referenced by Config.profile_ref
 
 [1. LOAD OPERATIONAL CONFIGURATION]
 
-Read the Config, Sources, Tracker, and Control tabs.
+Read Config, Sources, Tracker, and Control.
 
-Require Config.config_version = 3.
+Require Config.config_version = 4.
 Use Config.schedule_timezone for all date and time judgments and output.
-Use Config.scan_window to determine the Gmail time window.
 Use only Sources rows where Enabled is true.
 
-Before making any Tracker-dependent judgment, verify Tracker read completeness:
-1. Count non-empty Tracker data rows using Company as the required field.
+Required Config keys:
+profile_reference
+profile_storage_format
+schedule_timezone
+scan_window
+auto_candidate_write
+auto_application_update
+module_missing_application
+module_response_detection
+module_no_response
+no_response_days
+write_fallback
+
+Do not expect ATS, resume-version, channel, or rejection-stage configuration. These are not part of the core workflow.
+
+[2. DETERMINE TARGET PERIOD AND CATCH UP MISSED RUNS]
+
+Use local calendar dates in Config.schedule_timezone.
+
+Set:
+- target_end = previous local calendar day
+- if Control.last_successful_scan_date is blank, target_start = target_end
+- otherwise target_start = day after Control.last_successful_scan_date
+
+Process every local calendar day from target_start through target_end.
+
+If target_start is after target_end, report `No unprocessed calendar day` and skip candidate ingestion for this run. You may still perform non-date-dependent diagnostics when useful.
+
+At the very top of the output, show:
+`Scan period: YYYY-MM-DD to YYYY-MM-DD (timezone)`
+
+Do not infer the scan period from the newest Tracker row. A day can be processed successfully even when no candidate was added.
+
+Do not update Control.last_successful_scan_date yet. That happens only after successful core processing.
+
+[3. VERIFY TRACKER READ COMPLETENESS]
+
+Before any Tracker-dependent absence, duplicate, response, or missing-application judgment:
+1. Count non-empty Tracker rows using Company as the required field.
 2. Compare that count with Control.tracker_data_rows.
-3. If they match, tracker_read_status = VERIFIED.
-4. If they do not match, retry the Tracker read once using the broadest available Sheet read method.
-5. If the second count still does not match, tracker_read_status = INCOMPLETE.
+3. If equal, tracker_read_status = VERIFIED.
+4. If unequal, retry once using the broadest available Sheet read method.
+5. If still unequal, tracker_read_status = INCOMPLETE.
 
 When tracker_read_status = INCOMPLETE:
-- continue extracting jobs from Gmail;
-- do not claim that a job is absent from the Tracker;
-- do not mark historical duplicates as confirmed;
-- skip all optional modules that depend on complete Tracker history;
-- label deduplication against history as `unverified`;
-- report the mismatch in Diagnostics.
+- continue source-health and basic Gmail parsing when useful;
+- do not claim a job or application is absent from Tracker;
+- do not confirm historical duplicates;
+- skip response, missing-application, and no-response reconciliation;
+- do not write new Candidate rows because historical duplicate checks are unverified;
+- report the row-count mismatch in Diagnostics;
+- do not advance Control.last_successful_scan_date.
 
-[2. LOAD AND VALIDATE PRIVATE CAREER PROFILE]
+Partial data must never be used to prove absence.
 
-Read the entire document referenced by Config.profile_reference from my connected Google Drive.
+[4. LOAD AND VALIDATE PRIVATE CAREER PROFILE]
+
+Read the complete document referenced by Config.profile_reference.
 
 Config.profile_storage_format may be:
 - markdown_file
 - google_doc_markdown
 
-Treat the retrieved text as Markdown with YAML front matter.
-
-Do not substitute ChatGPT Memory or any other personal context if the profile cannot be read.
+Treat the text as Markdown with YAML front matter.
+Require profile_version = 2.
 
 Required YAML keys:
 profile_version
@@ -68,11 +106,8 @@ excluded_company_types
 hard_exclude_keywords
 warning_keywords
 languages
-resume_versions
 
-Require profile_version = 1.
-
-Also read the Markdown sections, especially:
+Also read these Markdown sections when present:
 - Professional summary
 - Search interpretation
 - Differentiators and scope
@@ -85,27 +120,26 @@ Also read the Markdown sections, especially:
 - Additional context
 
 Set profile_read_status:
-- VERIFIED: document is readable and required YAML can be interpreted reliably
-- INVALID: document is readable but materially malformed or missing required schema
-- UNAVAILABLE: document cannot be accessed/read
+- VERIFIED
+- INVALID
+- UNAVAILABLE
 
-When profile_read_status is not VERIFIED:
+If not VERIFIED:
 - do not classify jobs as Strong, Possible, or Weak;
-- do not apply personal hard filters whose source would be the profile;
-- do not infer the user's target from task history, Memory, or prior results;
-- continue source-health checks and basic job extraction only if useful;
-- report PROFILE_INVALID or PROFILE_UNAVAILABLE in Diagnostics;
-- do not produce candidate rows because personal fit has not been validated.
+- do not apply personal hard filters from the unavailable profile;
+- do not infer the user's target from Memory or prior task output;
+- do not write candidate rows;
+- report PROFILE_INVALID or PROFILE_UNAVAILABLE;
+- do not advance Control.last_successful_scan_date.
 
-[3. READ JOB-ALERT EMAILS]
+[5. COLLECT JOB-ALERT MESSAGES]
 
-Search Gmail for the configured scan window and every enabled Sources.SenderPattern.
+For every enabled Sources.SenderPattern, search Gmail for messages received during the full target period.
 
 Read messages, not only thread summaries.
+Read each message individually even when Gmail grouped several messages into one thread.
 
-If DigestMode is true, open the message body and extract every distinct job posting in the digest.
-
-Do not assume the email subject represents the only job in the message.
+If DigestMode is true, open the body and extract every distinct job in the message. Do not assume the subject contains the only job.
 
 For each extracted job, capture when available:
 - company
@@ -115,24 +149,33 @@ For each extracted job, capture when available:
 - work mode
 - source
 - received timestamp converted to Config.schedule_timezone
-- raw application/job URL
-- short evidence needed for fit judgment
+- raw job/application URL
+- evidence needed for fit judgment
 
 Do not invent missing company names, titles, salaries, locations, or links.
 
-If a company is represented by an unfamiliar subsidiary or brand name, preserve the email's wording unless the relationship is explicitly stated in the email or linked job page.
+[6. CLASSIFY MESSAGES BEFORE USING THEM]
 
-[4. EXCLUDE NON-JOB MESSAGES]
+Do not assume a sender always represents one message type.
 
-Source-specific rules in Sources.LinkRule or Sources.Notes override generic behavior.
+Classify each relevant message using sender + subject + body into one of these useful categories when possible:
+- job alert
+- application confirmation
+- recruiter submission evidence
+- employer or recruiter response
+- marketing/newsletter
+- unknown
 
-Exclude application confirmations, newsletters, marketing messages, career advice, and recruiter content that does not contain an identifiable open role from the candidate-job collection.
+A sender can produce multiple categories across different messages.
 
-Keep application confirmations available for the optional missing-application module if enabled.
+Candidate collection uses only messages that actually contain identifiable open jobs.
+Application confirmations and recruiter-submission evidence are retained for reconciliation when the relevant module is enabled.
 
-[5. NORMALIZE LINKS]
+If classification is uncertain, keep the message as unknown or Human review rather than forcing a category.
 
-Prefer a stable, directly usable job or application URL.
+[7. NORMALIZE LINKS]
+
+Prefer a stable directly usable job or application URL.
 
 For LinkedIn, when a job ID is explicit, normalize to:
 https://www.linkedin.com/jobs/view/{JOB_ID}/
@@ -141,288 +184,285 @@ Remove tracking parameters from normalized LinkedIn URLs.
 
 For other sources, preserve a usable job/application URL from the message or linked page.
 
-If the URL is absent, broken, inaccessible, or cannot be associated with the correct job confidently:
+If the URL is missing, broken, inaccessible, or cannot be associated with the correct job confidently:
 - leave Link blank;
 - add `link not extracted` to Notes;
 - never reconstruct or guess a URL.
 
-If a link resolves to an obviously expired or removed posting, keep the URL only if useful for identification and mark the job Excluded with reason `posting unavailable`.
+If a posting is clearly expired or removed, keep the URL only if useful for identification and exclude the job with reason `posting unavailable`.
 
-[6. DEDUPLICATE WITHIN THIS RUN]
+[8. DEDUPLICATE WITHIN THE CURRENT RUN]
 
 Primary duplicate key: normalized Company + normalized Title.
-
 Use location as a tie-breaker when the same title clearly represents different openings.
 
-If the same posting appears from multiple sources, keep one candidate and join source names with ` + `.
+If the same posting appears from multiple sources, keep one candidate and combine the source names in Source, for example `Glassdoor + LinkedIn`.
+Prefer the cleanest usable link.
 
-Prefer the cleanest usable application link.
+Do not infer a parent company from an unfamiliar subsidiary or brand name.
+Preserve the source wording.
+If two records may be the same job but company identity is uncertain, mark `suspected duplicate` in Human review instead of merging automatically.
 
-[7. APPLY HARD FILTERS]
+[9. APPLY EXPLICIT HARD FILTERS]
 
 Run only when profile_read_status = VERIFIED.
 
-Apply explicit hard rules from the profile, including when relevant:
+Use explicit profile rules, including when relevant:
 - excluded_titles
 - excluded_domains
 - disallowed employment types
-- disallowed locations/work models when the profile makes them hard constraints
+- hard location/work-model constraints
 - sponsorship/work-authorization blockers according to sponsorship_rule
 - hard_exclude_keywords
 - hard_skill_blockers
+- explicit management constraints
 
-Use Search interpretation and Role preferences and interpretation notes when they clarify whether a rule is hard or warning-only.
+A hard exclusion must have a short evidence-based reason.
+Missing information is not automatically a hard exclusion unless the profile explicitly says so.
 
-A hard exclusion must include a short reason based on evidence from the posting/profile.
-
-Do not turn a missing detail into a hard exclusion unless the profile explicitly says missing information is disqualifying.
-
-IMPORTANT TITLE AND LEVEL RULE:
-- `primary_titles` identifies the main target direction, not an exact-title whitelist.
-- `adjacent_titles` contains useful nearby labels but is not an exhaustive list of every acceptable title.
-- `target_seniority` is a career-level anchor, not a whitelist.
-- Do not hard-exclude a job merely because its exact title or level is absent from these lists.
-- Only use title or level as a hard exclusion when the user explicitly excluded it in `excluded_titles` or the Markdown interpretation notes clearly make that boundary hard.
+Title and level rules:
+- primary_titles identifies the main direction, not an exact-title whitelist;
+- adjacent_titles is not exhaustive;
+- target_seniority is an anchor, not a whitelist;
+- do not reject a role merely because its exact title or level was not listed;
+- only explicit exclusions should close that category.
 
 Management handling:
-- if management_roles = unacceptable, exclude roles that clearly require direct people management;
-- if review-needed, keep them and add a warning;
-- if acceptable, evaluate normally.
+- `unacceptable`: exclude roles that clearly require direct people management;
+- `review-needed`: keep them with a warning;
+- `acceptable`: evaluate normally.
 
-Do not confuse project leadership, mentoring, design direction, or cross-functional leadership with direct people management.
+Do not confuse project leadership, mentoring, design direction, or cross-functional influence with direct people management.
 
-[8. EVALUATE REMAINING JOBS BY ACTUAL FIT]
+[10. EVALUATE ACTUAL FIT]
 
 Run only when profile_read_status = VERIFIED.
 
-For jobs not hard-excluded, assess fit using both structured YAML and the Markdown career evidence.
+Judge the actual job, not title similarity alone.
 
-Judge the actual job, not the title label alone.
-
-Use these dimensions:
+Use evidence from both YAML and Markdown, especially Differentiators and scope.
+Consider:
 - actual responsibilities and role scope
 - required experience and ownership level
 - decision-making and ambiguity
 - leadership expectations
-- direct people-management requirements, if any
-- user's distinctive problem-solving strengths
-- user's demonstrated differentiators and specialty areas
+- people-management requirements
+- distinctive problem-solving strengths
+- demonstrated differentiators and specialty areas
 - product/domain fit
-- skills/experience fit
-- evidence of relevant scope or outcomes
+- skills and experience fit
+- relevant measurable outcomes
 - location/work-model fit
 - employment/compensation fit when known
 
-TITLE AND CAREER-LEVEL INTERPRETATION:
-- Treat the user's main title and `target_seniority` as anchors.
-- Evaluate nearby or broader title labels when the actual work is supported by the user's career evidence.
-- A user mainly targeting Senior may still receive Staff or Lead roles when the responsibilities and scope are plausible for their experience.
-- A role can be a Strong match even when the exact title differs from `primary_titles`.
-- A superficially similar title can be Weak or Excluded when the actual required scope is materially unsupported.
-- Do not assume Senior, Staff, Lead, Principal, Manager, or Director mean the same scope at every company.
-- Compare the posting's actual requirements with the user's evidence before deciding.
+A user mainly targeting Senior can still receive Staff or Lead roles when scope is plausible for their experience.
+A role can be Strong even when the exact title differs from primary_titles.
+A superficially similar title can be Weak or Excluded when the required scope is unsupported.
 
-DIFFERENTIATOR RULE:
-For experienced users, do not call a job a Strong match based on exact title similarity alone.
+Stretch roles:
+- if much of the required scope is supported, keep as Strong or Possible depending on evidence and mention the stretch when useful;
+- if materially unsupported scope is required, lower the fit or exclude using the concrete reason.
 
-When the profile contains `Differentiators and scope`, use that evidence to distinguish among superficially similar jobs.
+Classify:
+- Strong match
+- Possible match
+- Weak match
 
-Examples:
-- If the user is especially strong at diagnosing B2C funnel breakpoints using behavioral data and research, roles emphasizing growth, experimentation, conversion, or funnel ownership should receive stronger evidence-based fit.
-- If the user has design-system leadership but little enterprise workflow experience, a design-system-heavy role may be stronger than an enterprise admin-product role even if both share the same title.
-- If a posting needs ownership or leadership scope that the user has demonstrated, that can support a higher match even when the title is broader.
+Do not create false precision with numeric scores unless the private profile explicitly requests one.
 
-For a Strong or Possible match, the explanation should identify the most relevant evidence from the user's profile.
+For an experienced user, a Strong match should normally include at least one meaningful reason beyond exact title similarity, such as matching problem type, ownership scope, measurable outcome, specialty, domain depth, or leadership evidence.
 
-STRETCH ROLES:
-If a role appears somewhat above or outside the user's usual title but much of the required scope is supported:
-- keep it as Strong or Possible depending on the evidence;
-- briefly mention the stretch or title difference when useful;
-- let the user decide whether to apply.
+Weak matches normally stay out of the main shortlist.
 
-If the posting requires materially unsupported scope, such as large-team people management, executive ownership, or specialized expertise the profile clearly does not support, lower the match or exclude it using that concrete reason.
+[11. COMPARE AGAINST TRACKER]
 
-Classify each as:
-Strong match
-Possible match
-Weak match
-
-Do not create false precision with a numeric score unless the private profile explicitly requests one.
-
-A Strong match should have clear positive evidence and no major unresolved conflict.
-
-For an experienced user, a Strong match should normally include at least one high-signal reason beyond title similarity, such as:
-- matching problem type
-- supported ownership scope
-- relevant measurable outcome
-- distinctive domain depth
-- matching specialty
-- leadership or influence evidence
-
-A Possible match may have missing or ambiguous information that needs user review.
-
-A Weak match should not appear in the main shortlist unless there are no stronger jobs; it may be summarized in Excluded/Low-priority output.
-
-[9. COMPARE AGAINST TRACKER]
-
-Only do confirmed historical duplicate checks when tracker_read_status = VERIFIED.
+Run confirmed historical comparison only when tracker_read_status = VERIFIED.
 
 Rules:
-- same Company + same Title: treat as historical duplicate; do not add as a new Candidate unless the posting is clearly a materially different requisition and that difference is evidenced.
-- same Company + different Title: keep it, but add concise prior-history context when relevant.
-- staffing/recruiting agencies are channels, not automatically the employer. Do not deduplicate solely on agency name.
+- same Company + same Title: historical duplicate, do not add unless evidence shows a materially different requisition;
+- same Company + different Title: keep, but add concise prior-company context when useful;
+- staffing or recruiting agencies are not automatically the employer. Do not use an agency name by itself to prove a duplicate.
 
-If a current posting is already in Tracker with Status=Excluded because the old posting was unavailable or expired, allow a clearly new requisition to be reconsidered when evidence shows it is a new opening.
+There is no separate Channel field. Use Source for provenance and Notes for agency/recruiter context when it materially helps the user.
 
-[10. OPTIONAL: MISSING APPLICATION DETECTION]
+If a previously excluded posting was unavailable or expired, a clearly new requisition can be reconsidered when evidence shows it is a new opening.
+
+[12. SINGLE-PASS INBOX RECONCILIATION]
+
+Run when module_missing_application or module_response_detection is enabled AND tracker_read_status = VERIFIED.
+
+Do NOT run a separate Gmail search for every Applied row by default.
+
+Instead:
+1. read Gmail messages received in the full target period in one broad pass;
+2. build a list of relevant Tracker rows, especially Status=Applied and recent Candidate rows;
+3. classify the target-period inbox messages using sender + subject + body;
+4. compare potential confirmations, recruiter submissions, and employer/recruiter responses against Company + Title + thread/context evidence;
+5. use a targeted follow-up search only when needed to resolve a specific ambiguity.
+
+This inbox pass is separate from the enabled-source candidate-alert searches because employer and recruiter responses may come from completely different senders.
+
+[13. MISSING APPLICATION DETECTION]
 
 Run only if Config.module_missing_application is enabled AND tracker_read_status = VERIFIED.
 
-Inspect application-confirmation messages in the scan window.
+Use clear application evidence from the single-pass inbox scan.
 
-If Company + Title cannot be found in Tracker, create an Applied row and write it directly when Config.auto_application_update is true and write access allows it. Otherwise include it in the manual TSV fallback.
+Strong evidence includes:
+- an explicit application-confirmation email naming the company and role;
+- an explicit recruiter message stating that the user's application, profile, or resume was submitted or forwarded for a specific company/role.
 
-If the confirmation is for a general career-page submission without a title, preserve the email wording and use a non-colliding title such as `Unknown (Career Page)` only when the email truly has no role title.
+If Company + Title is not present in Tracker and the evidence is clear, create an Applied row when automatic application updates are enabled and writes are available. Otherwise return the 13-column TSV fallback.
 
-Do not infer a title from unrelated context.
+For a general career-page submission with no role title, preserve the source wording and use a non-colliding title such as `Unknown (Career Page)` only when the message truly provides no role title.
 
-[11. OPTIONAL: RESPONSE DETECTION]
+Ambiguous language such as a recruiter saying they may submit the user later is not enough. Put it in Human review.
+
+AppliedAt = the evidence message timestamp converted to Config.schedule_timezone when no better confirmed application time is available.
+Source = the actual evidence source, for example `LinkedIn`, `Company email`, or `Recruiter email`.
+
+[14. RESPONSE DETECTION]
 
 Run only if Config.module_response_detection is enabled AND tracker_read_status = VERIFIED.
 
-For Tracker rows with Status=Applied, search Gmail for responses received after AppliedAt.
+Use the single-pass inbox messages and Tracker rows with Status=Applied.
 
-Use company name, recruiter/employer sender clues, job title, and thread context together.
+A response must be received after AppliedAt and have enough company/title/thread context to associate it with the application.
+Do not treat generic alerts or unrelated company marketing mail as a response.
 
-Do not classify generic job alerts or unrelated company mail as a response.
+When evidence is clear:
+- fill RespondedAt if blank;
+- if the message explicitly rejects the application, set Status=Closed and Result=Rejected;
+- if it explicitly communicates another final result, store that result in Result when unambiguous;
+- do not infer rejection stage;
+- do not infer or store ATS platform.
 
-If Config.module_rejection_stage is enabled, estimate RejectionStage only from available evidence:
-- ATS automatic
-- recruiter screening
-- portfolio/hiring-manager review
-- after interview
-- unknown
+Ambiguous or conflicting evidence goes to Human review and does not automatically change the row.
 
-If Config.module_ats is enabled, estimate ATS from sender domain only when there is a recognizable platform signature. Otherwise use `unknown`, not a fabricated vendor.
-
-[12. OPTIONAL: NO-RESPONSE CHECK]
+[15. NO-RESPONSE CHECK]
 
 Run only if Config.module_no_response is enabled AND tracker_read_status = VERIFIED.
 
-Find Tracker rows with Status=Applied, RespondedAt blank, and elapsed local calendar days >= Config.no_response_days.
+Find Tracker rows with:
+- Status=Applied
+- RespondedAt blank
+- elapsed local calendar days since AppliedAt >= Config.no_response_days
 
 Return them as no-response candidates.
+Do not automatically close them or set Result=No response unless the user explicitly configured that behavior outside the core workflow.
 
-Do not automatically close them unless the user's configuration explicitly requests auto-closing.
+[16. TRACKER WRITES]
 
-[13. OUTPUT]
+Tracker schema is exactly 13 columns:
+Status	Company	Title	Location	Salary	WorkMode	Notes	Link	ReceivedAt	AppliedAt	RespondedAt	Result	Source
 
-Always produce these sections, even when empty:
+Do not output or write ATS, ResumeVersion, Channel, or RejectionStage fields.
+
+For new candidates:
+- Status = Candidate
+- ReceivedAt = original job-alert timestamp in Config.schedule_timezone
+- leave AppliedAt, RespondedAt, and Result blank unless supported by reconciliation evidence
+- Source = alert source or combined alert sources
+
+For automatic status reconciliation:
+- clear application evidence -> Status=Applied and AppliedAt if blank;
+- clear employer or recruiter response -> fill RespondedAt if blank;
+- explicit rejection -> Status=Closed, Result=Rejected;
+- other explicit final outcome -> Status=Closed and store the supported Result;
+- ambiguous evidence -> no automatic change.
+
+Preferred mode:
+- if automatic writing is enabled and permitted, apply changes directly;
+- never overwrite user-entered data with a lower-confidence inference;
+- reread affected rows when possible and report whether the change was applied.
+
+Fallback mode:
+- if a write cannot proceed because approval is required or the action is unavailable, return every intended insert or update as a fenced 13-column TSV block;
+- clearly state that the automatic write was not applied.
+
+[17. ADVANCE THE SUCCESSFUL-SCAN MARKER]
+
+Advance Control.last_successful_scan_date to target_end only when ALL of the following are true:
+- profile_read_status = VERIFIED;
+- tracker_read_status = VERIFIED;
+- Gmail access worked;
+- every enabled source search for the target period completed without access/query failure;
+- the full target period was processed;
+- normal output was produced;
+- intended Tracker changes were either applied successfully or returned completely through the explicit TSV fallback.
+
+Zero messages from a source is not itself a failure.
+A source query/access failure is a failure.
+
+If any core condition above fails, do not advance last_successful_scan_date. This allows the next scheduled run to catch up automatically.
+
+[18. OUTPUT]
+
+Always produce these sections, even when empty.
+
+At the top:
+`Scan period: ...`
 
 ## Best matches
-
 Company | Title | Location | Work mode | Salary | Match | Why | Source | Apply
 
 Only populate when profile_read_status = VERIFIED.
+Order Strong before Possible, then older ReceivedAt first unless the profile explicitly requests another order.
 
-Order by:
-1. Strong match before Possible match
-2. within the same match class, older ReceivedAt first unless the private profile explicitly specifies another order
-
-Use clickable links in Apply when available.
-
-The `Why` field should prefer evidence-based reasons connected to actual scope, differentiators, specialty, domain, or outcomes.
-
-Do not use `same title` as the main reason for an experienced candidate when stronger evidence is available.
+Use clickable Apply links when available.
+The Why field should use actual scope, differentiators, specialty, domain, or outcomes. Do not use `same title` as the main reason for an experienced candidate when stronger evidence exists.
 
 ## Excluded or low priority
-
 Company | Title | Reason | Source
 
-Keep this concise.
+Keep concise and include only jobs actually reviewed during this run.
 
-Include only jobs actually reviewed during this run.
-
-When the profile is unavailable, include only non-profile exclusions such as obvious non-job messages or unavailable postings, not personal-fit exclusions.
-
-## Missing applications
-
-Only when module is enabled.
-
-When auto_application_update is true, apply clear missing-application reconciliation directly to Tracker when write access allows it; otherwise include it in the manual fallback.
+## Applications detected
+Show clear previously untracked application or recruiter-submission evidence handled during this run.
 
 ## Responses detected
-
-Only when module is enabled.
-
-Apply clear RespondedAt or rejection updates directly when auto_application_update is true and write access allows it.
+Company | Title | RespondedAt | Result | Evidence
 
 ## No-response candidates
-
-Only when module is enabled.
+Company | Title | AppliedAt | Days
 
 ## Tracker updates
+Summarize applied writes or state that no update was needed.
 
-First, determine and apply the intended Tracker changes according to the automation rules below.
-
-Preferred mode:
-- if Config.auto_candidate_write is true and the Google Drive write action can run with the current task permissions, append new suitable Candidate rows directly to Tracker;
-- if Config.auto_application_update is true and evidence is unambiguous, update matching existing rows directly;
-- never overwrite user-entered data with a lower-confidence inference;
-- after writes, reread the affected rows when possible and report whether the change was applied.
-
-Fallback mode:
-- if a required external write cannot proceed because approval is required or the write action is unavailable, do not silently fail;
-- return every intended insert or update as a fenced TSV block;
-- label the section `Manual Tracker fallback` and state that the automatic write was not applied.
-
-Use exactly 17 columns in this order:
-Status	Company	Title	Location	Salary	WorkMode	Notes	Link	ReceivedAt	AppliedAt	RespondedAt	Result	RejectionStage	Channel	ATS	ResumeVersion	Source
-
-For new job candidates:
-- Status = Candidate
-- leave AppliedAt, RespondedAt, Result, RejectionStage, ATS, ResumeVersion blank unless known from an enabled optional module
-- Channel should describe an agency/recruiter only when applicable
-- Source should contain the alert platform/source
-
-Sort new Candidate rows by ReceivedAt ascending.
-
-Do not add confirmed historical duplicates or hard-excluded jobs.
-
-Do not create new Candidate rows if profile_read_status is not VERIFIED.
-
-For automatic status reconciliation:
-- clear application confirmation for Company + Title -> set Status=Applied and AppliedAt to confirmation received time when AppliedAt is blank;
-- clear recruiter/employer response -> fill RespondedAt when blank;
-- explicit rejection -> set Status=Closed and Result=Rejected; fill RejectionStage only when enabled and supported by evidence;
-- recognizable ATS sender domain -> fill ATS only when module_ats is enabled and the vendor is supported by evidence;
-- ambiguous or conflicting evidence -> do not change the row automatically; report it under Human review.
-
-A user may apply without receiving a confirmation email. In that case, do not guess that the application happened. Leave the row as Candidate until the user changes it or reliable evidence appears.
+## Manual Tracker fallback
+Only when automatic Sheet writes could not be applied. Return exact 13-column TSV rows.
 
 ## Human review
+List only items needing a decision or manual action, such as:
+- ambiguous company/title association
+- suspected duplicate with uncertain company identity
+- ambiguous recruiter submission language
+- conflicting response evidence
+- blocked Tracker write
 
-List only items that need a user decision or manual action, such as ambiguous company/title matching, an application with no confirmation email, conflicting status evidence, or a blocked Tracker write.
+## Source health
+List every enabled source with its message count for the target period.
+Explicitly list enabled sources with zero messages.
+If all major enabled job-alert sources unexpectedly return zero messages, warn that job-alert delivery, sender patterns, or account configuration may need review.
 
 ## Diagnostics
-
 Report:
-- profile_read_status, profile_version, and storage format
-- automatic Tracker write result: applied, not needed, approval required, or unavailable
+- profile_read_status and profile_version
 - Config version
-- scan window and timezone
-- number of Gmail messages read per enabled source
-- sources with zero messages
-- number of extracted postings before filtering
+- target period and timezone
+- previous and resulting last_successful_scan_date
 - tracker_read_status and row-count comparison
+- number of messages read per enabled source
+- number of all-inbox messages read for reconciliation when enabled
+- number of extracted postings before filtering
 - link extraction failures
-- parsing ambiguities
+- parsing or classification ambiguities
+- automatic Tracker write result
 - any skipped module and why
 
 DIAGNOSTIC RULES
-- State the evidence for anomalies.
-- Separate `confirmed` from `suspected`.
-- Never claim data is absent when the relevant source was not fully read.
-- Never substitute personal information from Memory when the private profile is unavailable.
-- If all major configured job-alert sources unexpectedly return zero messages, flag `job-alert delivery or account configuration may need review`.
+- State evidence for anomalies.
+- Separate confirmed from suspected.
+- Never claim absence when the relevant source was not fully read.
+- Never substitute Memory when the private profile is unavailable.
 ```

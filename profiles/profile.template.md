@@ -1,5 +1,5 @@
 ---
-profile_version: 1
+profile_version: 2
 primary_titles: []
 adjacent_titles: []
 target_seniority: []
@@ -20,7 +20,6 @@ excluded_company_types: []
 hard_exclude_keywords: []
 warning_keywords: []
 languages: []
-resume_versions: []
 ---
 
 # Job Mail Collector Career Profile
@@ -49,27 +48,20 @@ Treat `primary_titles` and `target_seniority` as matching anchors, not automatic
 
 ## Differentiators and scope
 
-Record the evidence that distinguishes this user from another candidate with a similar title.
+Capture the evidence that helps distinguish the user from another person with a similar title or years of experience.
 
-Prefer concrete evidence over generic claims.
-
-Include, when supported:
+Useful evidence can include:
 
 - recurring problem types the user is especially good at solving;
-- the products, systems, customers, or business problems they know deeply;
-- end-to-end ownership and decision-making scope;
-- ambiguity or complexity they handled;
+- actual end-to-end ownership;
+- decision-making under ambiguity;
+- measurable or observable impact;
 - cross-functional influence;
-- systems, process, or organizational improvements;
-- distinctive specialty areas;
-- the kind of work they want to be hired for next.
+- systems or process improvements;
+- specialty or domain depth;
+- leadership or mentoring scope.
 
-Examples of useful evidence:
-
-- `Often owned ambiguous funnel problems from diagnosis through launch, using behavioral data and user research to find breakpoints.`
-- `Worked beyond individual screens by influencing PM and engineering decisions and improving the team's design process.`
-
-Do not record generic statements such as `strong communicator` or `great leader` unless the user's examples provide supporting context.
+Prefer concrete career evidence over generic self-description.
 
 ## Experience highlights
 
@@ -81,13 +73,11 @@ Do not record generic statements such as `strong communicator` or `great leader`
 
 - Add selected outcomes, metrics, launches, process improvements, or business impact when useful for matching.
 - Record only evidence actually provided by the user.
-- Non-numeric outcomes are valid when they are concrete and meaningful.
 
 ## Core skills and strengths
 
 - Add strengths that should increase job fit.
 - Include tools only when they materially affect matching.
-- Prefer strengths supported by the user's work examples.
 
 ## Portfolio or specialty areas
 

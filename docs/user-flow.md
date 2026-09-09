@@ -1,389 +1,256 @@
 # User flow
 
-This document explains exactly what the user does in ChatGPT and what ChatGPT automates.
+This document explains what the user does in ChatGPT and what ChatGPT automates.
 
 ## Responsibility legend
 
-- **USER**: action the user must perform manually
+- **USER**: action the user performs manually
 - **GPT**: action ChatGPT performs during setup or scheduled runs
-- **USER + GPT**: ChatGPT presents one choice or question, and the user approves, answers, or corrects it
+- **USER + GPT**: ChatGPT asks, proposes, or requests approval and the user responds
 
 ## One-time setup
 
 ### Step 1 - USER - Connect Gmail and Google Drive
 
-Where:
+In ChatGPT, open `Settings > Apps` or `Settings > Plugins`, depending on the account interface.
 
-`ChatGPT > Settings > Apps`
-
-or, depending on the account interface:
-
-`ChatGPT > Settings > Plugins`
-
-Connect the Google account that receives the user's job-alert emails and owns the Google Drive resources for this workflow.
-
-This step is required because the workflow needs Gmail read access and Google Drive read access. Tracker automation also needs supported Google Drive write actions.
+Connect the Google account that receives job-alert emails and owns the Drive resources for this workflow.
 
 ### Step 2 - USER - Start the bootstrap prompt
 
-Where:
-
-A normal ChatGPT conversation.
-
-How:
-
-1. Open `prompts/01-bootstrap.md` in this GitHub repository.
+1. Open `prompts/01-bootstrap.md`.
 2. Copy the complete prompt.
-3. Start a new ChatGPT conversation.
-4. Paste the prompt and send it.
+3. Start a new normal ChatGPT conversation.
+4. Paste and send the prompt.
 
-No local program needs to be installed or executed.
+No local application, script, terminal command, or server is required.
 
 ### Step 3 - USER + GPT - Complete conversational onboarding
 
 The onboarding is a conversation, not a form.
 
-At the beginning, ChatGPT tells the user that they can answer naturally and do not need to provide one exact value per question.
+The user can answer naturally and may mention several pieces of information in one message.
 
-It also tells the user that example answers will be shown when useful, but the examples are only guidance and do not define a required format.
+Example:
 
-For example, the user can write:
+> I am mainly looking for Senior Product Designer roles, but UX/UI, Growth, or Lead roles are also interesting when the work fits. I have about nine years of B2C product design experience and a lot of design-system and funnel work.
 
-> I am mainly looking for Senior Product Designer roles, but UX/UI or Lead roles are also interesting when the work fits. I have about nine years of B2C product design experience and a lot of design-system work.
-
-ChatGPT should extract every useful piece of information from that answer, organize it internally, and skip later questions that have already been answered.
-
-The user does not need to know terms such as `target_seniority`, `adjacent_titles`, YAML, or internal matching fields.
+ChatGPT extracts all useful facts from that answer and skips questions already resolved.
 
 Normal questions are not labeled `Required` or `필수`.
-
-Only optional questions receive an optional marker. In Korean, the user should see:
+Only optional questions are marked. In Korean, optional questions use:
 
 `선택 질문입니다. 필요하지 않다면 답변하지 않으셔도 됩니다.`
 
-In English:
+Examples are shown when useful, but users do not need to copy the format.
 
-`Optional question. You can skip this if it is not useful for your search.`
+#### Understand the person before narrowing the search
 
-#### Phase 1: understand the user first
+ChatGPT first gathers enough evidence about:
 
-ChatGPT first collects broad factual evidence about:
+- the kind of work the user wants
+- current or recent role
+- relevant experience
+- actual ownership and scope
+- products, industries, and problem areas
+- strongest skills and responsibilities
+- recurring problem types
+- measurable or observable impact
+- decision-making under ambiguity
+- cross-functional influence
+- leadership or mentoring
+- specialty or differentiating expertise
 
-- what kind of work the user is looking for;
-- current or recent work;
-- relevant experience;
-- products, industries, and business context;
-- actual ownership and responsibility;
-- recurring problems the user is especially good at solving;
-- measurable or observable impact;
-- leadership, influence, and people-management evidence when relevant;
-- distinctive strengths or specialty areas.
+For experienced users, a title such as `Senior Product Designer` is not considered sufficient evidence by itself. ChatGPT asks role-specific depth questions when needed to understand what actually distinguishes the person.
 
-ChatGPT asks exactly one question per turn, but a single user answer may resolve several topics at once.
-
-A short answer such as `Senior Product Designer` is not treated as sufficient evidence by itself.
-
-If the user appears experienced or senior, ChatGPT asks a small number of role-specific depth questions unless the user's earlier answers already contain equivalent evidence.
-
-For a Senior Product Designer, examples of useful depth questions include:
-
-- What kinds of product problems are you especially good at solving?
-- What did you own end to end?
-- What changed because of your work?
-- How did you influence PM, engineering, other designers, or team processes?
-- What strength or experience would you most want a hiring team to notice?
-
-Each question includes a natural-language answer example when that would make it easier to answer.
-
-The examples are adapted to the user's role family and are not templates that the user must copy.
-
-#### Phase 2: infer the search scope
-
-After enough evidence is collected, ChatGPT summarizes how it currently understands the user's search.
-
-The matching model is fit-based rather than title-gated.
-
-For example, a user mainly targeting `Senior Product Designer` does not need to decide in advance whether every `Staff` or `Lead` role is allowed.
-
-If the actual responsibilities and required scope fit the user's experience, those jobs can still be considered.
+#### Infer search scope instead of forcing a whitelist
 
 ChatGPT treats:
 
-- the main title or direction as a **core target**;
-- nearby titles or broader levels as **consider if fit** when supported by evidence;
-- only explicit unwanted roles or constraints as **hard exclusions**.
+- main role direction as **Core target**
+- nearby titles or broader levels as **Consider if fit**
+- explicitly unwanted roles or constraints as **Hard exclude**
 
-The interpretation summary should include more than title and years of experience.
+A user mainly targeting `Senior Product Designer` does not need to decide in advance whether every Staff or Lead role is allowed. If the actual responsibilities and scope fit the user's evidence, those jobs can still be considered.
 
-A useful summary can include:
+ChatGPT then shows a concise interpretation summary. The user can correct or narrow it in normal language.
 
-- main search direction;
-- nearby roles to consider when the work fits;
-- distinctive strengths;
-- evidence of ownership and scope;
-- leadership or influence;
-- explicit hard exclusions.
+#### Ask only material constraints
 
-The user is shown a short interpretation summary and can correct it in normal language.
+After the person's career evidence is understood, ChatGPT asks only unresolved conditions that could materially change recommendations, such as location, work model, employment type, work authorization, explicit exclusions, or compensation limits.
 
-Example correction:
+Resume-version tracking is not part of the core workflow.
 
-> Lead is fine, but I do not want Manager roles yet. UX/UI is fine only for digital products.
+### Step 4 - GPT - Create private profile and new Tracker
 
-ChatGPT should update all affected matching rules from that one answer.
+ChatGPT creates:
 
-#### Phase 3: ask only meaningful constraints
-
-After career evidence and search direction are understood, ChatGPT asks only for unresolved conditions that could materially change recommendations, such as:
-
-- target location;
-- remote, hybrid, or on-site constraints;
-- employment type;
-- work authorization and sponsorship handling;
-- explicit unwanted roles or domains;
-- optional compensation limits;
-- optional company or keyword preferences.
-
-It should prefer asking what the user definitely does not want over making the user enumerate every title or career level they would accept.
-
-Optional preference questions must include the optional marker and the sentence saying the user may leave them unanswered.
-
-People management is kept separate from leadership.
-
-People management means direct reports and responsibilities such as 1:1 meetings, performance reviews, hiring, or managing team members.
-
-Project leadership, mentoring, design direction, process leadership, or cross-functional influence without direct reports does not count as people management.
-
-The email scan window uses the previous local calendar day by default, so the user does not need to configure a technical time window unless they want something different.
-
-### Step 4 - GPT - Create private profile and a new Tracker
-
-ChatGPT creates and stores the resources itself.
-
-The user does not manually create or move generated files.
-
-Created resources:
-
-1. private career profile
-2. new Google Sheet tracker
+1. a private career profile
+2. a new Google Sheet Tracker
 
 Preferred profile:
-
 `Job_Mail_Collector_Profile.md`
 
-Compatibility fallback:
-
-A Google Doc containing the exact Markdown content.
-
-The private profile stores both structured fields and natural-language evidence.
-
-The profile should preserve:
-
-- search interpretation;
-- differentiators and actual scope;
-- experience highlights;
-- measurable outcomes;
-- core skills;
-- specialty areas;
-- leadership and people-management evidence;
-- explicit preferences and exclusions.
-
-The role interpretation should preserve nuance such as:
-
-- `Senior is the main target, but Staff or Lead roles should still be considered when the actual scope fits.`
-- `Manager roles are excluded because the user does not want direct people management.`
-- `The user is especially strong at diagnosing funnel breakpoints using behavioral data and user research.`
+Fallback:
+a private Google Doc containing the same Markdown text.
 
 Default Sheet:
-
 `Job_Mail_Collector`
 
 Tabs:
-
 - Config
 - Sources
 - Tracker
 - Control
 
-A new Tracker is created by default for a new setup.
+The Tracker has exactly 13 columns:
 
-The workflow does not require the user to already have a tracker.
+`Status, Company, Title, Location, Salary, WorkMode, Notes, Link, ReceivedAt, AppliedAt, RespondedAt, Result, Source`
 
-If the user says they already have past application history and wants it imported, ChatGPT may locate that source only after explicit authorization and import compatible history into the new Job Mail Collector Tracker.
+There are no ATS, ResumeVersion, Channel, or RejectionStage columns.
 
-ChatGPT must not search Drive for arbitrary existing trackers before the user opts into import.
+`Source` is the single provenance field. If recruiter or agency context is important for a row, it goes in Notes.
 
-ChatGPT must not silently reuse a similarly named existing spreadsheet.
+A new Tracker is created by default. Existing application history is imported only when the user explicitly requests it.
 
 ### Step 5 - USER + GPT - Configure automation and schedule
 
-ChatGPT asks whether the user wants the recommended automation settings.
+Recommended automation includes:
 
-The recommended configuration includes Tracker writes, application-confirmation detection, response detection, rejection handling when evidence exists, ATS estimation when recognizable, and no-response checks after 14 days.
+- add suitable jobs to Tracker
+- detect clear application confirmations
+- detect explicit recruiter submission evidence
+- reconcile clear application status changes
+- detect employer or recruiter responses
+- flag no-response applications after 14 days
 
-If the user wants customization, only the settings they want to change should be discussed, one question at a time.
+ATS and rejection-stage inference are not part of the core workflow.
 
-Schedule questions are asked near the end of onboarding.
+The user chooses a daily run time and timezone in plain language. A city name is acceptable when ChatGPT can normalize it.
 
-The user selects a daily run time and confirms a timezone in plain language. A city name is acceptable when ChatGPT can normalize it to the correct timezone.
+ChatGPT creates the recurring Scheduled Task.
 
-ChatGPT then creates the recurring Scheduled Task.
+### Step 6 - GPT - Validate setup
 
-The user does not launch a program at that time. The task runs inside ChatGPT.
-
-If task creation requires an additional confirmation in the user's interface, the user completes that confirmation.
-
-### Step 6 - GPT - Validate the setup
-
-Before setup is considered complete, ChatGPT performs a test run and checks:
-
-- profile access;
-- Gmail access;
-- enabled job-alert sources;
-- digest parsing;
-- Sheet access;
-- Tracker read completeness;
-- application-link extraction;
-- Tracker write capability when automatic writing is enabled;
-- whether plausible jobs can be explained using actual career evidence rather than exact-title matching alone.
+The setup test checks profile access, Gmail access, source parsing, digest expansion, Tracker completeness, 13-column output, application-link extraction, write capability, fit-based matching, and missed-run recovery logic.
 
 ## Daily scheduled workflow
 
-### Step 7 - GPT - Read Gmail and identify jobs
+### Step 7 - GPT - Calculate the unprocessed date range
 
-At the configured time, the Scheduled Task runs inside ChatGPT.
+The task uses `Control.last_successful_scan_date`.
 
-ChatGPT:
+- First run: process the previous local calendar day.
+- Later runs: process every calendar day after the last successful date through yesterday.
+- If a scheduled run was skipped or failed, the next successful run catches up automatically.
 
-1. loads the user's current private profile;
-2. reads job-alert emails in the configured time window;
-3. expands digest emails into individual jobs;
-4. extracts job data and application links;
-5. removes duplicates and explicit hard mismatches;
-6. evaluates remaining jobs against the user's actual career evidence, differentiators, and constraints.
+The task shows the scan period at the top of the result.
 
-The user does not manually trigger this daily scan.
+The success marker is updated only after the full target period was processed successfully enough to produce normal output or a complete TSV write fallback.
 
-### Step 8 - GPT - Judge fit by actual scope, not title alone
+### Step 8 - GPT - Read and classify Gmail messages
 
-The daily workflow does not use title or career-level labels as automatic gates unless the user explicitly configured them as hard exclusions.
+Candidate collection searches the confirmed Sources for the target period.
 
-For each role, ChatGPT compares:
+For reconciliation, ChatGPT can also read target-period inbox messages in one broad pass.
 
-- actual responsibilities;
-- required experience;
-- ownership and decision-making scope;
-- leadership or people-management expectations;
-- distinctive strengths and specialty evidence;
-- measurable or observable outcomes;
-- relevant skills;
-- domain context;
-- location, work model, employment, and authorization constraints.
+Messages are classified using sender + subject + body, not sender address alone.
 
-A `Staff` or `Lead` role can still be recommended to a user mainly targeting `Senior` when the actual scope is supported by the profile.
+Useful categories include:
 
-A superficially similar title can still be downgraded when the actual responsibilities are materially unsupported.
+- job alert
+- application confirmation
+- recruiter submission evidence
+- employer or recruiter response
+- marketing/newsletter
+- unknown
 
-### Step 9 - GPT - Update the Tracker automatically
+One sender may produce several message types.
 
-When authorized Google Drive write actions are available, ChatGPT appends suitable new jobs to the Tracker as `Candidate`.
+### Step 9 - GPT - Extract, normalize, and deduplicate jobs
 
-If an automatic scheduled write cannot proceed because approval is required or the write action is unavailable, ChatGPT returns the exact rows as TSV instead and reports the write limitation.
+ChatGPT expands digest messages, extracts individual jobs, preserves valid links, normalizes stable LinkedIn links when a job ID is explicit, and never invents missing URLs.
 
-This TSV path is a fallback, not the preferred primary workflow.
+Within-run duplicates use Company + Title, with location as a tie-breaker when needed.
 
-### Step 10 - GPT - Deliver recommended jobs
+If the same job appears from multiple sources, Source can contain a combined value such as `Glassdoor + LinkedIn`.
 
-The Scheduled Task result contains a readable shortlist with application links.
+If company identity is ambiguous, ChatGPT does not guess the parent company. Suspected duplicates go to Human review rather than being merged automatically.
 
-For each recommended job, ChatGPT should show enough information for the user to decide whether to apply.
+### Step 10 - GPT - Evaluate actual fit
 
-Typical fields:
+Hard exclusions are applied first.
 
-- company;
-- role;
-- location;
-- work model;
-- salary when available;
-- match level;
-- short evidence-based reason;
-- source;
-- application link.
+Remaining jobs are judged using actual responsibilities, required scope, ownership, ambiguity, leadership, problem type, differentiators, domain, skills, outcomes, and practical constraints.
 
-A role that is a reasonable stretch can still appear when the evidence supports it. The explanation should make the scope difference clear rather than rejecting it only because of the title.
+A Strong match for an experienced user should normally have a meaningful reason beyond title similarity.
 
-### Step 11 - USER - Apply to jobs
+### Step 11 - GPT - Compare with Tracker
 
-The user opens a recommended application link and completes the application on the external site.
+Before absence or historical duplicate judgments, ChatGPT verifies that the number of Tracker rows read matches `Control.tracker_data_rows`.
 
-This is the main manual action in the daily workflow.
+If the read is incomplete, it does not claim that a row is absent and skips history-dependent reconciliation.
+
+### Step 12 - GPT - Reconcile applications and responses in one inbox pass
+
+When enabled, ChatGPT reads target-period inbox messages once and compares likely application confirmations, recruiter submissions, and employer/recruiter responses against relevant Tracker rows.
+
+It does not run a separate Gmail search for every Applied company by default.
+
+A targeted follow-up search is used only when a specific ambiguity needs resolution.
+
+Clear application evidence can include an explicit recruiter statement that a profile, resume, or application was submitted for a specific company and role.
+Ambiguous future-intent language goes to Human review.
+
+### Step 13 - GPT - Update Tracker
+
+When writes are permitted:
+
+- suitable jobs are added as Candidate
+- clear application evidence can set Status=Applied and AppliedAt
+- clear replies can fill RespondedAt
+- explicit rejection can set Status=Closed and Result=Rejected
+- other explicit final outcomes can be stored in Result
+
+No ATS or rejection-stage field is stored.
+
+If an automatic write is blocked, ChatGPT returns exact 13-column TSV as a fallback.
+
+### Step 14 - USER - Apply to jobs
+
+The user opens recommended links and completes applications on external sites.
 
 Job Mail Collector does not claim to submit applications on the user's behalf.
 
-### Step 12 - GPT - Reconcile application and response status
+### Step 15 - GPT - Monitor no-response cases and source health
 
-On later scheduled runs, ChatGPT scans relevant Gmail evidence and updates the Tracker when the evidence is clear.
+When enabled, ChatGPT identifies Applied rows with no response after the configured number of days.
 
-Automatic examples:
+It also reports enabled job-alert sources with zero messages and warns when all major sources unexpectedly return zero messages.
 
-- clear application confirmation -> `Status = Applied`, fill `AppliedAt`;
-- clear employer or recruiter reply -> fill `RespondedAt`;
-- explicit rejection -> `Status = Closed`, fill `Result`, optionally fill `RejectionStage`;
-- recognizable ATS sender domain -> fill `ATS` when enabled.
-
-Do not update state from weak evidence.
-
-If the user applied but no confirmation email exists, ChatGPT may not know that the application happened. The user can manually change that Tracker row to `Applied`.
-
-### Step 13 - GPT - Monitor no-response cases and anomalies
-
-When enabled, ChatGPT identifies applications that have had no response for the configured number of days.
-
-It also reports:
-
-- broken or missing links;
-- source channels with zero messages;
-- profile read failures;
-- incomplete Tracker reads;
-- ambiguous responses;
-- failed Tracker writes.
-
-No-response rows should not be automatically closed unless the user has explicitly chosen that behavior.
+No-response rows are not automatically closed by default.
 
 ## Simplified flow
 
 ```text
 USER
-Connect Gmail + Google Drive in ChatGPT
+Connect Gmail + Google Drive
         |
         v
 USER
-Paste bootstrap prompt into a new ChatGPT chat
+Paste bootstrap prompt into ChatGPT
         |
         v
 USER + GPT
-User answers naturally
-GPT asks one question at a time and shows examples when useful
+Natural-language onboarding
         |
         v
 GPT
-Ask a few role-specific depth questions
-Extract scope, impact, and differentiators
+Build fit-based profile with real differentiators
         |
         v
 GPT
-Build a fit-based search interpretation from career evidence
-        |
-        v
-USER + GPT
-User corrects or narrows only what matters
-Optional questions can be skipped
-        |
-        v
-GPT
-Create private profile + NEW Tracker in Google Drive
-        |
-        +---- optional: import existing history only if user requests it
+Create private profile + 13-column Tracker
         |
         v
 GPT
@@ -394,25 +261,29 @@ Create and test Scheduled Task
         |
         v
 GPT
-Read job-alert emails
+Calculate catch-up scan period
         |
         v
 GPT
-Filter hard exclusions + evaluate actual job scope + deduplicate
+Read alerts + classify messages
         |
         v
 GPT
-Write suitable jobs to Tracker when permitted
+Extract + deduplicate + evaluate actual fit
         |
         v
 GPT
-Send shortlist with application links
+Single-pass application/response reconciliation
+        |
+        v
+GPT
+Write Tracker updates when permitted
+        |
+        v
+GPT
+Return shortlist + source health + diagnostics
         |
         v
 USER
 Open links and apply
-        |
-        v
-GPT
-Detect confirmations/replies and update Tracker later
 ```

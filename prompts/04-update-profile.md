@@ -57,7 +57,9 @@ excluded_company_types
 hard_exclude_keywords
 warning_keywords
 languages
-resume_versions
+
+Require `profile_version: 2`.
+Do not add a resume-version field. Job Mail Collector no longer tracks resume versions as part of the core workflow.
 
 Preserve and update these Markdown sections when relevant:
 - Professional summary
