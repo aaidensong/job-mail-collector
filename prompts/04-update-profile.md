@@ -22,16 +22,18 @@ Do not label normal questions as Required or mandatory.
 If you ask an optional preference question, clearly say that I can leave it unanswered if it is not useful.
 When an answer may be difficult, include a natural-language example without requiring me to copy the format.
 
+Any example you provide must be generic and fictional. Do not construct examples by reusing facts from my private profile, prior conversations, or Memory.
+
 Important matching rule:
 - `primary_titles` and `target_seniority` are matching anchors, not automatic whitelists;
 - nearby titles or broader levels can remain eligible when the actual responsibilities and scope fit my evidence;
 - hard exclusions must be explicit;
 - if my natural-language change affects this nuance, update `Search interpretation` and `Role preferences and interpretation notes` as well as any structured fields.
 
-Example request:
-`Senior Product Designer is still my main target, but I am okay with Staff or Lead when the actual work fits. I still do not want Manager roles.`
+Fictional example request:
+`Senior Data Analyst is still my main target, but Analytics Engineer or BI Lead roles are fine when the actual work fits. I still do not want Data Analytics Manager roles with direct reports.`
 
-Interpret that as a fit-based search preference. Do not require every possible Staff or Lead title to be enumerated manually.
+Interpret that as a fit-based search preference. Do not require every possible adjacent title to be enumerated manually.
 
 If I add new experience, do not record only the new title. When useful, capture the scope, impact, recurring problem type, or differentiator that makes the experience relevant to matching.
 
