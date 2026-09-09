@@ -10,6 +10,10 @@ The onboarding is a conversation, not a form.
 
 Users may answer in free-form natural language and may include several useful facts in one response. ChatGPT should extract all useful information, resolve multiple profile fields when appropriate, and skip later questions that are already answered.
 
+The initial setup is not the user's only chance to provide career information. The profile can be improved later, so onboarding should collect enough evidence for useful matching without creating pressure to document an entire career perfectly in one sitting.
+
+If a user is unsure, cannot remember a detail, or wants to add it later, continue once enough information exists for useful matching unless the missing fact is genuinely required for eligibility or core operation.
+
 Public examples must be generic and fictional. Do not reuse personal facts from the current user, prior conversations, Memory, or the private career profile as examples.
 
 ## User-facing turn format
@@ -42,6 +46,12 @@ English pattern:
 > Questions remaining: about 7
 
 The question is the primary visual emphasis. Do not bold the remaining-question line.
+
+Before the first career question, use at most one short reassurance sentence. It should make clear that the user can answer naturally, does not need to provide everything now, and can update the profile later.
+
+Example meaning in Korean:
+
+> 편하게 답해주세요. 여러 내용을 한 번에 적어도 되고, 지금 다 정리할 필요는 없습니다. 설정 후에도 경력이나 구직 조건은 언제든 업데이트할 수 있습니다.
 
 ## Remaining-question count
 
@@ -84,7 +94,9 @@ ChatGPT must:
 10. collect factual career evidence and differentiators before narrow exclusions;
 11. prefer recommended defaults for technical settings;
 12. ask follow-up questions only when unresolved information could materially change job-fit decisions;
-13. summarize the inferred search direction before finalizing it and let the user correct the interpretation naturally.
+13. summarize the inferred search direction before finalizing it and let the user correct the interpretation naturally;
+14. do not block setup merely because a useful but nonessential career detail is missing;
+15. remind the user only when useful that profile information can be improved after setup.
 
 ## Understand the person first
 
@@ -132,6 +144,8 @@ Collect evidence across useful dimensions such as:
 - specialty or differentiating expertise
 
 For Senior, Staff, Lead, Manager, Director, Principal, or similarly experienced users, normally ask at least two depth questions unless earlier answers already provide equivalent evidence.
+
+If the user cannot answer one of these now or prefers to add it later, do not treat that as failed setup. Continue once the profile is strong enough for useful matching.
 
 Possible questions and fictional examples:
 
@@ -213,6 +227,38 @@ For Gmail sources, ask whether ChatGPT should find likely job-alert senders auto
 For schedule and timezone, ask only what is unresolved. Because schedule and timezone are preferences, include concise fictional examples.
 
 Do not ask the user to configure a technical email scan window. The workflow uses `Control.last_successful_scan_date` to recover missed runs automatically.
+
+## Ongoing profile updates after setup
+
+The private career profile is designed to evolve.
+
+After setup, the user should be able to continue talking naturally in the same conversation. They should not need to know whether a statement belongs in the profile or say `update my profile`.
+
+When the user mentions stable information that is likely to change future matching, ChatGPT should proactively offer to update the profile.
+
+Examples of profile-worthy changes:
+
+- a new role, project, responsibility, or measurable outcome
+- a newly clarified strength or specialty
+- a change in target roles or career level
+- a new hard exclusion
+- a change in location, work model, employment type, work authorization, sponsorship, compensation, or people-management preference
+
+Use a short confirmation question such as:
+
+> Would you like me to update your Job Mail Collector profile with this?
+
+In Korean:
+
+> 이 내용을 Job Mail Collector 프로필에 업데이트할까요?
+
+Do not write the profile until the user confirms. If the user explicitly asks for a profile change, that explicit request already counts as confirmation.
+
+Do not propose updates for every casual comment. Only propose them for stable information that is likely to improve or materially change future matching.
+
+After confirmation, update the existing private profile directly. Normal career-profile changes should not require recreating the recurring Scheduled Task because the daily task reloads `Config.profile_reference` on every run.
+
+If the user instead changes operational behavior such as run time, automation modules, no-response threshold, or Gmail sources, explain what would change and ask for confirmation. After confirmation, update the existing Config, Sources, or Scheduled Task directly when supported instead of asking the user to copy and paste a newly generated scheduled prompt.
 
 ## Rule severity
 
