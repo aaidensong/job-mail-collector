@@ -15,6 +15,31 @@ Examples:
 - A `Design Manager` role can be excluded when the user explicitly does not want people-management roles.
 - A role whose title sounds close but whose required experience is materially unsupported should be downgraded or excluded for that evidence-based reason, not for the title label by itself.
 
+## Use differentiators, not title-only similarity
+
+For experienced candidates, matching should use the user's distinctive evidence whenever available.
+
+Examples of high-signal evidence:
+
+- recurring problem types the user is especially good at solving;
+- end-to-end ownership;
+- decision-making scope;
+- measurable or observable outcomes;
+- cross-functional influence;
+- leadership or mentoring;
+- systems or process improvements;
+- domain or product depth;
+- specialty areas the user wants to be hired for next.
+
+A job should not be called a Strong match merely because its title resembles the user's title.
+
+For example, two `Senior Product Designer` roles can differ materially:
+
+- one may emphasize growth funnels, behavioral data, and B2C experimentation;
+- another may emphasize enterprise workflow design and complex admin systems.
+
+Use the user's `Differentiators and scope`, experience highlights, outcomes, skills, and specialty evidence to decide which one is actually stronger.
+
 ## Decision order
 
 1. Read and validate the private career profile.
@@ -22,7 +47,7 @@ Examples:
 3. Apply explicit hard exclusions.
 4. Deduplicate within the current run.
 5. Compare with history when Tracker completeness is verified.
-6. Evaluate actual fit using career evidence and job scope.
+6. Evaluate actual fit using career evidence, differentiators, and job scope.
 7. Extract and validate the best usable application link.
 8. Produce shortlist and Tracker rows.
 
@@ -59,11 +84,36 @@ Compare required years, ownership, decision-making scope, leadership expectation
 
 Do not assume that title labels such as Senior, Staff, Lead, Principal, Manager, or Director mean the same thing at every company.
 
+### Differentiators
+
+Compare the posting with the user's high-signal strengths and recurring work patterns.
+
+Questions include:
+
+- Does this role need the kind of problems the user is especially good at solving?
+- Does the required ownership resemble the user's demonstrated scope?
+- Does the role reward the user's distinctive domain or product experience?
+- Is the user's strongest evidence directly relevant to the work?
+- Does the role offer the kind of work the user said they want to be hired for next?
+
+### Impact and evidence
+
+Use measurable results when available, but do not require a metric for every strength.
+
+Concrete non-numeric evidence can include:
+
+- leading a major launch;
+- reducing delivery risk;
+- establishing a reusable system;
+- improving team process;
+- influencing a key product decision;
+- mentoring or cross-functional leadership.
+
 ### Domain
 
 Is the product or industry close to the user's experience or stated target direction?
 
-### Skills and evidence
+### Skills
 
 Does the posting emphasize strengths supported by the private career profile, including concrete responsibilities, outcomes, leadership evidence, or specialty areas?
 
@@ -115,32 +165,44 @@ If the posting requires materially unsupported scope, such as large-team managem
 
 ### Strong match
 
-Clear fit across the important dimensions with no major unresolved conflict. Exact title equality is not required.
+Clear fit across the important dimensions with no major unresolved conflict.
+
+Exact title equality is not required.
+
+For experienced users, a Strong match should normally be explainable using at least one piece of high-signal evidence beyond title similarity, such as relevant scope, differentiator, outcome, specialty, or domain depth.
 
 ### Possible match
 
-Plausible fit, but one or more material details are missing, ambiguous, or represent a reasonable stretch that the user may still want to consider.
+Plausible fit, but one or more material details are missing, ambiguous, somewhat outside preference, or represent a reasonable stretch.
 
 ### Weak match
 
-Not a hard exclusion, but meaningfully outside the user's target or evidence. Normally omitted from the main shortlist.
+Not a hard exclusion, but meaningfully outside the user's target or unsupported by the user's evidence.
+
+Normally omitted from the main shortlist.
 
 ## Explanation standard
 
 Every Strong or Possible match should have a short evidence-based reason.
 
-Prefer explanations such as:
+Prefer reasons such as:
 
-- `Strong overlap with your B2C product design and funnel optimization experience; Lead title appears IC-focused.`
-- `Staff title is above your usual target, but the required scope closely matches your demonstrated ownership and cross-functional leadership.`
+- `Strong match: the role emphasizes conversion and funnel experimentation, which directly matches the user's repeated B2C funnel-optimization work.`
+- `Possible match: Lead title is broader than the user's usual title, but the role remains hands-on and the required cross-functional ownership is supported.`
 
-Avoid generic praise such as `great fit` without pointing to role scope, domain, skills, career evidence, or constraints.
+Avoid generic reasons such as:
+
+- `great fit`
+- `same title`
+- `senior-level role`
+
+without pointing to actual scope, differentiators, domain, skills, outcomes, or constraints.
 
 ## Invalid or unreadable profile
 
 If the private profile cannot be read, its YAML is materially malformed, or the content is too incomplete to determine the user's target:
 
 - do not use ChatGPT Memory or old chats as a substitute;
-- do not assign Strong, Possible, or Weak fit;
+- do not assign Strong/Possible/Weak fit;
 - report `PROFILE_UNAVAILABLE` or `PROFILE_INVALID` in Diagnostics;
 - continue only with source-health and non-profile-dependent parsing checks when useful.
