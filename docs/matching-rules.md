@@ -4,16 +4,18 @@
 
 Judge the actual job, not the title label alone.
 
-A user's stated target title or career level is an anchor for matching, not automatically a whitelist. If the posting's responsibilities, required experience, product context, and scope are supported by the user's career evidence, the role can still be a valid match even when the title uses a different label such as Staff, Lead, Principal, UX/UI, Growth, or another nearby title.
+A user's stated target title or career level is an anchor for matching, not automatically a whitelist. If the posting's responsibilities, required experience, product context, and scope are supported by the user's career evidence, the role can still be a valid match even when the title uses a different label.
 
 Only explicit hard exclusions should close that door.
 
-Examples:
+Fictional examples:
 
-- A user mainly targeting `Senior Product Designer` can still receive a `Staff Product Designer` or `Lead Product Designer` role when the actual scope is supported by their experience.
-- A role should not be excluded merely because `Staff` or `Lead` was not explicitly listed during onboarding.
-- A `Design Manager` role can be excluded when the user explicitly does not want people-management roles.
-- A role whose title sounds close but whose required experience is materially unsupported should be downgraded or excluded for that evidence-based reason, not for the title label by itself.
+- A user mainly targeting `Senior Data Analyst` can still receive an `Analytics Engineer` or `BI Lead` role when the actual scope is supported by their experience.
+- A role should not be excluded merely because `Analytics Engineer` or `BI Lead` was not explicitly listed during onboarding.
+- A `Data Analytics Manager` role can be excluded when the user explicitly does not want people-management roles.
+- A role whose title sounds close but whose required technical or ownership scope is materially unsupported should be downgraded or excluded for that evidence-based reason, not for the title label by itself.
+
+Public examples in this document are generic and fictional. Do not derive examples from a user's private profile, Memory, or prior conversations.
 
 ## Use differentiators, not title-only similarity
 
@@ -33,10 +35,10 @@ Examples of high-signal evidence:
 
 A job should not be called a Strong match merely because its title resembles the user's title.
 
-For example, two `Senior Product Designer` roles can differ materially:
+For example, two `Senior Data Analyst` roles can differ materially:
 
-- one may emphasize growth funnels, behavioral data, and B2C experimentation;
-- another may emphasize enterprise workflow design and complex admin systems.
+- one may emphasize operational metrics, SQL, data modeling, and stakeholder decision support;
+- another may emphasize marketing attribution, experimentation statistics, and ad-platform data.
 
 Use the user's `Differentiators and scope`, experience highlights, outcomes, skills, and specialty evidence to decide which one is actually stronger.
 
@@ -106,7 +108,7 @@ Concrete non-numeric evidence can include:
 - reducing delivery risk;
 - establishing a reusable system;
 - improving team process;
-- influencing a key product decision;
+- influencing a key decision;
 - mentoring or cross-functional leadership.
 
 ### Domain
@@ -185,10 +187,10 @@ Normally omitted from the main shortlist.
 
 Every Strong or Possible match should have a short evidence-based reason.
 
-Prefer reasons such as:
+Fictional examples:
 
-- `Strong match: the role emphasizes conversion and funnel experimentation, which directly matches the user's repeated B2C funnel-optimization work.`
-- `Possible match: Lead title is broader than the user's usual title, but the role remains hands-on and the required cross-functional ownership is supported.`
+- `Strong match: the role emphasizes SQL, operational metrics, and cross-functional KPI ownership, which directly matches the user's demonstrated logistics analytics work.`
+- `Possible match: the BI Lead title is broader than the user's usual title, but the role remains hands-on and the required stakeholder ownership is supported.`
 
 Avoid generic reasons such as:
 
