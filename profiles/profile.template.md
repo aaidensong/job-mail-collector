@@ -47,6 +47,30 @@ Do not require the user to enumerate every acceptable job title or level in adva
 
 Treat `primary_titles` and `target_seniority` as matching anchors, not automatic whitelists, unless the user explicitly created a hard restriction.
 
+## Differentiators and scope
+
+Record the evidence that distinguishes this user from another candidate with a similar title.
+
+Prefer concrete evidence over generic claims.
+
+Include, when supported:
+
+- recurring problem types the user is especially good at solving;
+- the products, systems, customers, or business problems they know deeply;
+- end-to-end ownership and decision-making scope;
+- ambiguity or complexity they handled;
+- cross-functional influence;
+- systems, process, or organizational improvements;
+- distinctive specialty areas;
+- the kind of work they want to be hired for next.
+
+Examples of useful evidence:
+
+- `Often owned ambiguous funnel problems from diagnosis through launch, using behavioral data and user research to find breakpoints.`
+- `Worked beyond individual screens by influencing PM and engineering decisions and improving the team's design process.`
+
+Do not record generic statements such as `strong communicator` or `great leader` unless the user's examples provide supporting context.
+
 ## Experience highlights
 
 - Add the most relevant roles, products, domains, responsibilities, and scope.
@@ -57,11 +81,13 @@ Treat `primary_titles` and `target_seniority` as matching anchors, not automatic
 
 - Add selected outcomes, metrics, launches, process improvements, or business impact when useful for matching.
 - Record only evidence actually provided by the user.
+- Non-numeric outcomes are valid when they are concrete and meaningful.
 
 ## Core skills and strengths
 
 - Add strengths that should increase job fit.
 - Include tools only when they materially affect matching.
+- Prefer strengths supported by the user's work examples.
 
 ## Portfolio or specialty areas
 
