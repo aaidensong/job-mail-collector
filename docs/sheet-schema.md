@@ -1,6 +1,12 @@
 # Google Sheet schema
 
-Default file name: `Job_Mail_Collector`
+Preferred new file name: `Job_Mail_Collector`
+
+Bootstrap always creates a **brand-new** Sheet using this schema. It does not search for, import, adapt, merge, or reuse an existing application tracker.
+
+If `Job_Mail_Collector` already exists, create a uniquely named new file such as `Job_Mail_Collector_2` rather than asking to reuse the existing one.
+
+Historical spreadsheet migration, if desired, is outside bootstrap and should be handled separately after setup.
 
 Career history and job-fit rules do not live in this Sheet. They live in the private profile document described in `profile-file.md`.
 
@@ -71,7 +77,7 @@ Status values:
 - Closed
 - Excluded
 
-`Source` is the single provenance field for the opportunity or application evidence, for example `LinkedIn`, `Indeed`, `Randstad email`, or `Recruiter email`. Do not maintain separate ATS, resume-version, or channel columns. If agency or recruiter context matters for a specific row, put that detail in `Notes`.
+`Source` is the single provenance field for the opportunity or application evidence, for example `LinkedIn`, `Indeed`, `Recruiter email`, or another confirmed source. Do not maintain separate ATS, resume-version, or channel columns. If agency or recruiter context matters for a specific row, put that detail in `Notes`.
 
 `ReceivedAt` is retained so users can tell how old a discovered opportunity is even when they review or apply several days later.
 
