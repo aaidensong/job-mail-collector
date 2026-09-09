@@ -22,7 +22,7 @@ You only need **one prompt** to get started: [`prompts/01-bootstrap.md`](prompts
 
 No local app, script, terminal command, server, or GitHub Action is required.
 
-`01-bootstrap.md` already contains the daily Scheduled Task instructions it needs. New users do **not** need to copy `02-daily-job-mail-collector.md` separately.
+`01-bootstrap.md` contains everything needed to set up the workflow.
 
 ## What ChatGPT sets up
 
