@@ -29,45 +29,41 @@ No local application, script, terminal command, or server is required.
 
 The onboarding is a conversation, not a form.
 
-The user can answer naturally and may mention several pieces of information in one message.
+The user can answer naturally and may mention several pieces of information in one message. ChatGPT extracts useful facts from each answer and skips questions that are already resolved.
 
-Fictional example:
+Public examples are fictional and should not reuse facts from the user's private profile, prior conversations, or Memory.
+
+A fictional answer can look like this:
 
 > I am mainly looking for Senior Data Analyst roles, but Analytics Engineer or BI Lead roles are also interesting when the work fits. I have about six years of experience, with the last three focused on logistics and operations analytics.
 
-ChatGPT extracts all useful facts from that answer and skips questions already resolved.
+Normal questions are not labeled `Required` or `필수`. Only optional questions are marked.
 
-Public examples are intentionally fictional and should not be generated from the user's private profile or prior conversations.
+#### Keep each question compact
 
-Normal questions are not labeled `Required` or `필수`.
-Only optional questions are marked. In Korean, optional questions use:
+ChatGPT does not show a setup roadmap, stage number, or `Setup progress` label.
 
-`선택 질문입니다. 필요하지 않다면 답변하지 않으셔도 됩니다.`
+A typical career question looks like this:
 
-Examples are shown when useful, but users do not need to copy the format.
+> **Tell me about your current or most recent role and what you actually owned. You can include your title, domain, and scope.**
+>
+> Example: I was a Senior Data Analyst on a logistics team and owned delivery-performance analytics from metric definition through dashboard rollout.
+>
+> Questions remaining: about 7
 
-#### The user can see how much setup remains
+In Korean, the bottom line is:
 
-Before career questions, ChatGPT shows this setup roadmap once:
+`남은 질문: 약 N개`
 
-1. Career direction & evidence
-2. Search constraints
-3. Automation & job-alert sources
-4. Schedule, create, and test
+The remaining-question count is recalculated from unresolved topics after each answer. It is intentionally approximate. Permission dialogs, connection clicks, approvals, resource creation, and tests do not count as questions.
 
-Most setups take about **8-12 user answers** when recommended settings are used. Detailed answers can reduce the number because one response may resolve several topics.
+The question itself is the visual emphasis. The remaining-question line is not emphasized.
 
-Before each direct onboarding question, ChatGPT shows a compact progress line such as:
-
-`Setup progress: 1/4 - Career direction & evidence - about 7-10 answers remaining`
-
-The remaining-answer range is recalculated from unresolved topics. Permission dialogs and approval clicks do not count as onboarding answers.
-
-When the final schedule question is resolved, ChatGPT explicitly tells the user that the Q&A portion is complete before it moves on to resource creation and testing.
+Every career, experience, strength, preference, or constraint question includes a concise fictional answer example directly below it. Simple operational yes/no questions may omit an example when the choice is obvious.
 
 #### Understand the person before narrowing the search
 
-ChatGPT first gathers enough evidence about:
+ChatGPT gathers enough evidence about:
 
 - the kind of work the user wants
 - current or recent role
@@ -92,13 +88,15 @@ ChatGPT treats:
 - nearby titles or broader levels as **Consider if fit**
 - explicitly unwanted roles or constraints as **Hard exclude**
 
-For example, a user mainly targeting `Senior Data Analyst` does not need to decide in advance whether every `Analytics Engineer` or `BI Lead` role is allowed. If the actual responsibilities and scope fit the user's evidence, those jobs can still be considered.
+A user does not need to enumerate every acceptable title or level in advance. If actual responsibilities and scope fit the user's evidence, nearby roles can still be considered.
 
-ChatGPT then shows a concise interpretation summary. The user can correct or narrow it in normal language.
+ChatGPT shows a concise interpretation summary and asks one confirmation question. The user can correct several points in one normal-language response.
 
 #### Ask only material constraints
 
-After the person's career evidence is understood, ChatGPT asks only unresolved conditions that could materially change recommendations, such as location, work model, employment type, work authorization, explicit exclusions, or compensation limits.
+After career evidence is understood, ChatGPT asks only unresolved conditions that could materially change recommendations, such as location, work model, employment type, work authorization, explicit exclusions, or compensation limits.
+
+Each preference question includes a concise fictional answer example.
 
 Resume-version tracking is not part of the core workflow.
 
@@ -107,7 +105,7 @@ Resume-version tracking is not part of the core workflow.
 ChatGPT creates:
 
 1. a private career profile
-2. a **new** Google Sheet Tracker using Job Mail Collector's own schema
+2. a new Google Sheet Tracker using Job Mail Collector's own schema
 
 Preferred profile:
 `Job_Mail_Collector_Profile.md`
@@ -136,14 +134,11 @@ There are no ATS, ResumeVersion, Channel, or RejectionStage columns.
 
 #### Existing trackers are deliberately outside bootstrap
 
-Bootstrap does not ask whether the user already has a spreadsheet or tracker.
-It does not search for, import, adapt, merge, or reuse an existing tracker.
-
-This avoids trying to fit automation into an arbitrary spreadsheet structure whose columns, formulas, or semantics may not match Job Mail Collector.
+Bootstrap does not ask whether the user already has a spreadsheet or tracker. It does not search for, import, adapt, merge, or reuse an existing tracker.
 
 If the user wants historical application rows migrated, that should be handled separately in another ChatGPT conversation after setup is complete.
 
-Later Gmail-based missing-application detection is different. A scheduled run can still create an Applied row when a clear confirmation email or recruiter-submission message proves that the application occurred.
+Later Gmail-based missing-application detection is different. A scheduled run can still create an Applied row when clear confirmation or recruiter-submission evidence proves that an application occurred.
 
 ### Step 5 - USER + GPT - Configure automation and schedule
 
@@ -274,7 +269,7 @@ Paste bootstrap prompt into ChatGPT
         |
         v
 USER + GPT
-Natural-language onboarding with visible progress
+Compact natural-language onboarding
         |
         v
 GPT
