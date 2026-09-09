@@ -31,11 +31,13 @@ The onboarding is a conversation, not a form.
 
 The user can answer naturally and may mention several pieces of information in one message.
 
-Example:
+Fictional example:
 
-> I am mainly looking for Senior Product Designer roles, but UX/UI, Growth, or Lead roles are also interesting when the work fits. I have about nine years of B2C product design experience and a lot of design-system and funnel work.
+> I am mainly looking for Senior Data Analyst roles, but Analytics Engineer or BI Lead roles are also interesting when the work fits. I have about six years of experience, with the last three focused on logistics and operations analytics.
 
 ChatGPT extracts all useful facts from that answer and skips questions already resolved.
+
+Public examples are intentionally fictional and should not be generated from the user's private profile or prior conversations.
 
 Normal questions are not labeled `Required` or `필수`.
 Only optional questions are marked. In Korean, optional questions use:
@@ -43,6 +45,25 @@ Only optional questions are marked. In Korean, optional questions use:
 `선택 질문입니다. 필요하지 않다면 답변하지 않으셔도 됩니다.`
 
 Examples are shown when useful, but users do not need to copy the format.
+
+#### The user can see how much setup remains
+
+Before career questions, ChatGPT shows this setup roadmap once:
+
+1. Career direction & evidence
+2. Search constraints
+3. Automation & job-alert sources
+4. Schedule, create, and test
+
+Most setups take about **8-12 user answers** when recommended settings are used. Detailed answers can reduce the number because one response may resolve several topics.
+
+Before each direct onboarding question, ChatGPT shows a compact progress line such as:
+
+`Setup progress: 1/4 - Career direction & evidence - about 7-10 answers remaining`
+
+The remaining-answer range is recalculated from unresolved topics. Permission dialogs and approval clicks do not count as onboarding answers.
+
+When the final schedule question is resolved, ChatGPT explicitly tells the user that the Q&A portion is complete before it moves on to resource creation and testing.
 
 #### Understand the person before narrowing the search
 
@@ -61,7 +82,7 @@ ChatGPT first gathers enough evidence about:
 - leadership or mentoring
 - specialty or differentiating expertise
 
-For experienced users, a title such as `Senior Product Designer` is not considered sufficient evidence by itself. ChatGPT asks role-specific depth questions when needed to understand what actually distinguishes the person.
+For experienced users, a title alone is not considered sufficient evidence. ChatGPT asks role-specific depth questions when needed to understand what actually distinguishes the person.
 
 #### Infer search scope instead of forcing a whitelist
 
@@ -71,7 +92,7 @@ ChatGPT treats:
 - nearby titles or broader levels as **Consider if fit**
 - explicitly unwanted roles or constraints as **Hard exclude**
 
-A user mainly targeting `Senior Product Designer` does not need to decide in advance whether every Staff or Lead role is allowed. If the actual responsibilities and scope fit the user's evidence, those jobs can still be considered.
+For example, a user mainly targeting `Senior Data Analyst` does not need to decide in advance whether every `Analytics Engineer` or `BI Lead` role is allowed. If the actual responsibilities and scope fit the user's evidence, those jobs can still be considered.
 
 ChatGPT then shows a concise interpretation summary. The user can correct or narrow it in normal language.
 
@@ -81,12 +102,12 @@ After the person's career evidence is understood, ChatGPT asks only unresolved c
 
 Resume-version tracking is not part of the core workflow.
 
-### Step 4 - GPT - Create private profile and new Tracker
+### Step 4 - GPT - Create private profile and a brand-new Tracker
 
 ChatGPT creates:
 
 1. a private career profile
-2. a new Google Sheet Tracker
+2. a **new** Google Sheet Tracker using Job Mail Collector's own schema
 
 Preferred profile:
 `Job_Mail_Collector_Profile.md`
@@ -94,8 +115,10 @@ Preferred profile:
 Fallback:
 a private Google Doc containing the same Markdown text.
 
-Default Sheet:
+Preferred Sheet name:
 `Job_Mail_Collector`
+
+If that name already exists, ChatGPT automatically creates a uniquely named new Sheet such as `Job_Mail_Collector_2`. It does not ask to reuse the existing file.
 
 Tabs:
 - Config
@@ -111,7 +134,16 @@ There are no ATS, ResumeVersion, Channel, or RejectionStage columns.
 
 `Source` is the single provenance field. If recruiter or agency context is important for a row, it goes in Notes.
 
-A new Tracker is created by default. Existing application history is imported only when the user explicitly requests it.
+#### Existing trackers are deliberately outside bootstrap
+
+Bootstrap does not ask whether the user already has a spreadsheet or tracker.
+It does not search for, import, adapt, merge, or reuse an existing tracker.
+
+This avoids trying to fit automation into an arbitrary spreadsheet structure whose columns, formulas, or semantics may not match Job Mail Collector.
+
+If the user wants historical application rows migrated, that should be handled separately in another ChatGPT conversation after setup is complete.
+
+Later Gmail-based missing-application detection is different. A scheduled run can still create an Applied row when a clear confirmation email or recruiter-submission message proves that the application occurred.
 
 ### Step 5 - USER + GPT - Configure automation and schedule
 
@@ -128,7 +160,7 @@ ATS and rejection-stage inference are not part of the core workflow.
 
 The user chooses a daily run time and timezone in plain language. A city name is acceptable when ChatGPT can normalize it.
 
-ChatGPT creates the recurring Scheduled Task.
+ChatGPT then creates the recurring Scheduled Task.
 
 ### Step 6 - GPT - Validate setup
 
@@ -242,7 +274,7 @@ Paste bootstrap prompt into ChatGPT
         |
         v
 USER + GPT
-Natural-language onboarding
+Natural-language onboarding with visible progress
         |
         v
 GPT
@@ -250,7 +282,7 @@ Build fit-based profile with real differentiators
         |
         v
 GPT
-Create private profile + 13-column Tracker
+Create private profile + NEW 13-column Tracker
         |
         v
 GPT
