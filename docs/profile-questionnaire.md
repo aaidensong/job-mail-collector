@@ -8,15 +8,65 @@ The user does not fill out this file directly. ChatGPT collects information insi
 
 The onboarding is a conversation, not a form.
 
-Users may answer in free-form natural language. They do not need to provide one exact value for each question.
+Users may answer in free-form natural language and may include several useful facts in one response. ChatGPT should extract all useful information, resolve multiple profile fields when appropriate, and skip later questions that are already answered.
 
-Fictional example:
+Public examples must be generic and fictional. Do not reuse personal facts from the current user, prior conversations, Memory, or the private career profile as examples.
 
-> I am mainly looking for Senior Data Analyst roles, but Analytics Engineer or BI Lead roles are also interesting when the work fits. I have about six years of experience, with the last three focused on logistics and operations analytics.
+## User-facing turn format
 
-ChatGPT should extract every useful fact from that answer and use it to resolve multiple profile fields when appropriate.
+Keep every onboarding turn compact.
 
-Public examples must be generic and fictional. Do not reuse personal facts from the current user, prior conversations, Memory, or a private career profile as examples.
+Do not show a setup roadmap, stage number, stage name, `Setup progress`, `설정 진행`, or an initial estimate of the total number of answers.
+
+For a normal career or preference question, use this order:
+
+1. at most one short context sentence when needed;
+2. the question in **bold**;
+3. one concise fictional answer example directly below the question;
+4. at the very bottom, an approximate remaining-question count.
+
+Korean pattern:
+
+> **최근 또는 현재 역할에서 실제로 어떤 일을 맡았는지 설명해주세요. 직함, 담당 영역, 책임 범위를 함께 말해주시면 됩니다.**
+>
+> 예: 물류 회사의 Senior Data Analyst로 배송 성과 지표 정의부터 데이터 모델링, 대시보드 배포까지 맡았습니다.
+>
+> 남은 질문: 약 7개
+
+English pattern:
+
+> **Tell me about your current or most recent role and what you actually owned. You can include your title, domain, and scope.**
+>
+> Example: I was a Senior Data Analyst on a logistics team and owned delivery-performance analytics from metric definition through dashboard rollout.
+>
+> Questions remaining: about 7
+
+The question is the primary visual emphasis. Do not bold the remaining-question line.
+
+## Remaining-question count
+
+The user should know roughly how much Q&A remains without being shown the internal setup process.
+
+Rules:
+
+- Korean: `남은 질문: 약 N개`
+- English: `Questions remaining: about N`
+- use one approximate integer, not a range;
+- recalculate after every answer based on unresolved topics;
+- one detailed answer may reduce the number by several questions;
+- permission dialogs, connection clicks, approval taps, resource creation, and tests do not count;
+- do not imply that a changed estimate means the user answered incorrectly;
+- after the final answer, say briefly that the Q&A is complete and continue with setup actions.
+
+## Question examples
+
+Every question about career direction, experience, strengths, constraints, or preferences must show one concise example immediately below the question.
+
+Examples are illustrative only. The user does not need to copy the format.
+
+Prefer examples whose domain, product context, location, years, and metrics are different from the user's actual facts. Do not mirror the user's employer, industry, metric, or other personal career details.
+
+Simple operational yes/no questions such as whether to use recommended automation or whether to auto-discover Gmail sources do not require an example unless the choice could be confusing.
 
 ## Conversation rules
 
@@ -30,75 +80,31 @@ ChatGPT must:
 6. mark only optional questions;
 7. for Korean optional questions, use `선택 질문입니다. 필요하지 않다면 답변하지 않으셔도 됩니다.`;
 8. for English optional questions, use `Optional question. You can skip this if it is not useful for your search.`;
-9. explain unfamiliar concepts in plain language;
-10. include answer examples when useful, while making clear the example format is not required;
-11. avoid unexplained internal terms such as `target_seniority`, `adjacent_titles`, or `management_roles`;
-12. collect factual career evidence and differentiators before narrow exclusions;
-13. prefer recommended defaults for technical settings;
-14. ask follow-up questions only when unresolved information could materially change job-fit decisions;
-15. summarize the inferred search direction before finalizing it and let the user correct the interpretation naturally;
-16. show setup progress and an approximate remaining-answer range before each direct onboarding question.
+9. explain unfamiliar concepts only when necessary;
+10. collect factual career evidence and differentiators before narrow exclusions;
+11. prefer recommended defaults for technical settings;
+12. ask follow-up questions only when unresolved information could materially change job-fit decisions;
+13. summarize the inferred search direction before finalizing it and let the user correct the interpretation naturally.
 
-## Progress visibility
-
-The user should never have to wonder how long setup will continue.
-
-Use four stages:
-
-1. **Career direction & evidence**
-2. **Search constraints**
-3. **Automation & job-alert sources**
-4. **Schedule, create, and test**
-
-At the start, show the roadmap once and explain that most setups take about **8-12 user answers** when recommended settings are used. A detailed answer can cover several topics and reduce the remaining count. Custom settings or new ambiguities can add a few questions.
-
-This number is an estimate, not a quota.
-
-Before each direct question, show one compact line such as:
-
-> Setup progress: 1/4 - Career direction & evidence - about 7-10 answers remaining
-
-In Korean:
-
-> 설정 진행: 1/4 - 구직 방향과 경력 파악 - 약 7-10개의 답변이 남았습니다.
-
-Recalculate the range from unresolved topics after each answer. Use a range rather than false precision. If the estimate increases materially, explain why in one short sentence.
-
-Do not count permission dialogs, connection clicks, or approval taps as user answers.
-Do not repeat the entire roadmap every turn.
-When the final user question is resolved, tell the user that the Q&A portion is complete and that resource creation and testing will continue automatically where permissions allow.
-
-## Stage 1: career direction and evidence
-
-### Opening guidance
-
-Before the first career question, say something equivalent to:
-
-> Answer naturally. You do not need to use a specific format or give only one value. You can mention several roles, preferences, or pieces of experience in one answer. I will organize the useful information and skip questions you have already answered. I will show example answers when they help, but you do not need to follow the example format.
+## Understand the person first
 
 ### Search direction
 
 Ask an open-ended question such as:
 
-> What kind of work are you looking for? Describe it in your own words.
+> **What kind of work are you looking for? Describe it in your own words.**
+>
+> Example: I am mainly looking for Senior Data Analyst roles, but Analytics Engineer or BI Lead roles are also interesting when the actual work fits my experience.
 
-Fictional example:
-
-> I am mainly looking for Senior Data Analyst roles, but Analytics Engineer or BI Lead roles are also interesting when the actual work fits my experience.
-
-From this answer, ChatGPT may populate or partially populate target titles, nearby roles, career-level clues, role interpretation notes, preferred domains, strong skills, and exclusions.
-
-Do not immediately ask the user to enumerate every acceptable title or career level.
+Do not force the user to provide a single exact title or enumerate every acceptable level.
 
 ### Recent role, domain, and ownership
 
-If still unclear, ask for the current or most recent role and what the user actually owned.
+If still unclear, ask what the user actually owned, not only their title.
 
 Fictional example:
 
 > I was a Senior Data Analyst on a logistics team. I owned delivery-performance analytics from metric definition and data modeling through dashboard rollout and stakeholder adoption.
-
-Capture scope and ownership, not only the title.
 
 ### Relevant experience
 
@@ -114,11 +120,7 @@ A rough answer is sufficient.
 
 For experienced users, title and years are not enough.
 
-Once the role family and rough experience level are known, ask role-specific depth questions one at a time as needed.
-
-For Senior, Staff, Lead, Manager, Director, Principal, or similarly experienced users, normally collect evidence across at least three relevant dimensions and ask at least two depth questions unless earlier answers already provide equivalent evidence.
-
-Useful dimensions:
+Collect evidence across useful dimensions such as:
 
 - ownership and scope
 - recurring problem types
@@ -129,189 +131,88 @@ Useful dimensions:
 - systems or process improvement
 - specialty or differentiating expertise
 
-Possible question:
+For Senior, Staff, Lead, Manager, Director, Principal, or similarly experienced users, normally ask at least two depth questions unless earlier answers already provide equivalent evidence.
 
-> What kinds of problems are you especially good at solving, or what kinds of problems did teammates tend to rely on you for?
+Possible questions and fictional examples:
 
-Fictional example:
+> **What kinds of problems are you especially good at solving, or what kinds of problems did teammates tend to rely on you for?**
+>
+> Example: Teams often disagreed on what an operational KPI meant. I was good at tracing inconsistent data sources, defining a shared metric, and turning it into something teams could use for decisions.
 
-> Teams often disagreed on what an operational KPI meant. I was good at tracing inconsistent data sources, defining a shared metric, and turning it into something teams could use for decisions.
+> **What changed because of your work?**
+>
+> Example: I automated a weekly reporting workflow and reduced preparation time by about 35%.
 
-Another useful question:
+> **How have you influenced work beyond your own individual tasks?**
+>
+> Example: I led KPI-definition workshops, mentored a junior analyst, and coordinated with operations and engineering without having direct reports.
 
-> What changed because of your work? This can be a metric, launch, reduced risk, faster delivery, better quality, or another concrete outcome.
-
-Fictional answer:
-
-> I automated a weekly reporting workflow and reduced preparation time by about 35%.
-
-Another:
-
-> How have you influenced work beyond your own individual tasks?
-
-Fictional answer:
-
-> I led KPI-definition workshops, mentored a junior analyst, and coordinated with operations and engineering without having direct reports.
-
-Another:
-
-> If a hiring team compared you with someone who has a similar title and years of experience, what would you want them to understand about what you do particularly well?
-
-Do not ask all examples mechanically. Adapt them to the user's role family while keeping examples fictional.
+Do not ask all examples mechanically.
 
 ## Leadership versus people management
 
-Keep these concepts separate.
+Keep leadership separate from direct people management.
 
-Leadership can include:
+Leadership can include leading projects, setting direction, mentoring, cross-functional alignment, reviews, or process leadership.
 
-- leading projects or initiatives
-- setting direction
-- mentoring
-- running cross-functional reviews
-- facilitating alignment
-- leading team processes
-- owning major initiatives
-
-People management means direct reports and responsibilities such as:
-
-- 1:1 meetings
-- performance reviews
-- hiring
-- managing team members' growth or workload
+People management means direct reports and responsibilities such as 1:1s, performance reviews, hiring, or managing team members' growth or workload.
 
 If the user's answers already make this clear, do not ask again.
-If unresolved and likely to affect recommendations, ask one plain-language question at a time.
 
 ## Infer the search interpretation
 
-After enough factual evidence exists, infer the user's likely search scope instead of making the user configure a whitelist.
+After enough factual evidence exists, infer the user's search scope instead of making the user configure a whitelist.
 
-Internally, think in three concepts:
+Internally use:
 
-### Core target
-The main role family or direction.
+- **Core target**: the main role family or direction
+- **Consider if fit**: nearby titles or broader levels worth evaluating when actual scope fits
+- **Hard exclude**: roles, levels, domains, or conditions the user explicitly does not want
 
-### Consider if fit
-Nearby titles, broader role labels, or different career levels that can still be worth applying to when actual responsibilities and scope fit the user's evidence.
+Title and level are anchors, not automatic whitelists.
 
-### Hard exclude
-Roles, levels, domains, or conditions the user explicitly does not want.
+Before moving to practical constraints, show one concise interpretation summary and ask a single bold confirmation question with a fictional example answer.
 
-Do not ask users to enumerate every acceptable title or level.
-
-Fictional examples:
-
-- A user mainly targeting `Senior Data Analyst` can still receive an `Analytics Engineer` role when the actual scope is supported.
-- A `BI Lead` role can be considered when it is compatible with the user's demonstrated ownership.
-- A `Data Analytics Manager` role can be excluded when the user explicitly does not want direct people management.
-
-Use title and level as anchors. Evaluate actual job scope before deciding.
-
-## Search interpretation checkpoint
-
-Once enough evidence exists, show a concise interpretation and ask one confirmation question.
-
-Fictional example:
-
-> Here is how I currently understand your search:
-> - Main direction: Senior Data Analyst
-> - Also consider when the work fits: Analytics Engineer, BI Analyst, BI Lead
-> - Strong evidence: SQL, metric design, data modeling, operational analytics
-> - Differentiator: turning ambiguous operational questions into reliable metrics across inconsistent data sources
-> - Leadership: cross-functional analytics leadership
-> - Hard exclusions: none confirmed yet
->
-> Does anything here need to be corrected or narrowed?
-
-The user can correct several things in one answer. ChatGPT should update all affected fields.
-
-## Stage 2: search constraints
+## Ask only meaningful constraints
 
 Ask only unresolved conditions that materially affect recommendations.
 
-### Hard role or level exclusions
+These can include:
 
-Optional. Prefer asking what the user definitely does not want rather than asking for every acceptable role.
+- explicit role or level exclusions
+- domain preferences or exclusions
+- hard skill blockers
+- location and work model
+- employment type
+- work authorization and sponsorship
+- minimum compensation
+- company, keyword, or language preferences
 
-### Domain preferences and exclusions
+Each career or preference question should include a concise fictional answer example.
 
-Ask only when unresolved or materially useful.
-Preferred domains are usually soft preferences. Explicit exclusions can be hard rules.
-
-### Hard skill blockers
-
-Optional. Ask only when a missing requirement should make a posting ineligible rather than merely lower its fit.
-
-### Geography and work model
-
-Ask when unresolved.
-
-Fictional example:
-
-> Austin is my first choice, but US-remote roles are also fine. Hybrid is okay, but I do not want five days a week on-site.
-
-### Employment conditions
-
-Ask employment type and work authorization when relevant.
-Ask sponsorship handling only when it could materially change results.
-
-### Minimum compensation
-
-Optional. Ask only if the user wants compensation filtering.
-
-### Company, keyword, or language preferences
-
-Optional. Ask only when useful. Do not turn these into a fixed checklist.
-
-Do not ask about resume versions. Resume-version tracking is not part of the core profile or Tracker.
+Do not ask about resume versions.
 
 ## Fresh Tracker policy
 
-Bootstrap always creates a **new Job Mail Collector Tracker** using the workflow's own schema.
+Bootstrap always creates a new Job Mail Collector Tracker using the workflow's own schema.
 
-Do not ask whether the user already has a spreadsheet or tracker.
-Do not search Drive for one.
-Do not import, adapt, map, merge, or reuse an existing tracker during bootstrap.
+Do not ask whether the user already has a spreadsheet or tracker. Do not search Drive for one. Do not import, adapt, map, merge, or reuse an existing tracker during bootstrap.
 
-If the user mentions prior application history, explain that setup intentionally starts with a fresh compatible Tracker. If they want old history migrated later, recommend doing that separately in another ChatGPT conversation after setup.
+If the user mentions prior application history, explain briefly that setup intentionally starts with a fresh compatible Tracker. Historical migration can be handled separately in another ChatGPT conversation after setup.
 
-Ongoing Gmail reconciliation is different from spreadsheet migration. A later scheduled run may create a missing Applied row when a clear application-confirmation email or recruiter-submission message proves that an application happened.
+If a file named `Job_Mail_Collector` already exists, create a uniquely named new Sheet automatically rather than asking to reuse the old one.
 
-If a file named `Job_Mail_Collector` already exists, create a new uniquely named Sheet automatically rather than asking to reuse the old one.
+## Automation, sources, and schedule
 
-## Stage 3: automation settings and Gmail sources
+Use recommended defaults whenever possible and keep user-facing explanations short.
 
-Ask one plain-language question about recommended automation.
+For automation settings, ask one plain-language yes/no question and explain the recommended behavior in one short sentence.
 
-Recommended behavior:
+For Gmail sources, ask whether ChatGPT should find likely job-alert senders automatically. If yes, show the proposed source list and ask one confirmation question.
 
-- automatically add suitable jobs to Tracker
-- detect clear application-confirmation emails
-- detect explicit recruiter submission evidence
-- update clear application status changes
-- detect employer or recruiter responses
-- flag no-response applications after 14 days
+For schedule and timezone, ask only what is unresolved. Because schedule and timezone are preferences, include concise fictional examples.
 
-Do not configure ATS inference or rejection-stage inference.
-
-If the user wants customization, ask only about requested changes one at a time.
-
-Then ask whether ChatGPT should find likely job-alert senders automatically.
-If yes, search recent Gmail and show a proposed source list for confirmation.
-Never enable an unconfirmed sender.
-
-A sender address is not itself a message type. The same sender can produce a job alert, application confirmation, or other content. Message classification should use sender + subject + body.
-
-## Stage 4: schedule, create, and test
-
-Ask schedule questions near the end.
-Allow a city instead of requiring an IANA timezone string.
-
-Do not ask the user to configure a technical email scan window.
-The workflow uses `Control.last_successful_scan_date` to recover missed runs automatically.
-
-Once the final schedule/timezone question is resolved, say that the Q&A portion is complete. Then create the private profile, create a brand-new Tracker, create the Scheduled Task, and run the setup test.
+Do not ask the user to configure a technical email scan window. The workflow uses `Control.last_successful_scan_date` to recover missed runs automatically.
 
 ## Rule severity
 
