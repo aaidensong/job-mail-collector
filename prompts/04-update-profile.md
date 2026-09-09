@@ -18,6 +18,10 @@ Do not make me translate my request into YAML or internal field names.
 Do not make me re-enter unchanged information.
 Ask a follow-up question only when an ambiguity could materially change job matching.
 
+Do not label normal questions as Required or mandatory.
+If you ask an optional preference question, clearly say that I can leave it unanswered if it is not useful.
+When an answer may be difficult, include a natural-language example without requiring me to copy the format.
+
 Important matching rule:
 - `primary_titles` and `target_seniority` are matching anchors, not automatic whitelists;
 - nearby titles or broader levels can remain eligible when the actual responsibilities and scope fit my evidence;
@@ -28,6 +32,8 @@ Example request:
 `Senior Product Designer is still my main target, but I am okay with Staff or Lead when the actual work fits. I still do not want Manager roles.`
 
 Interpret that as a fit-based search preference. Do not require every possible Staff or Lead title to be enumerated manually.
+
+If I add new experience, do not record only the new title. When useful, capture the scope, impact, recurring problem type, or differentiator that makes the experience relevant to matching.
 
 Preserve these YAML keys exactly:
 profile_version
@@ -56,6 +62,7 @@ resume_versions
 Preserve and update these Markdown sections when relevant:
 - Professional summary
 - Search interpretation
+- Differentiators and scope
 - Experience highlights
 - Measurable outcomes
 - Core skills and strengths
@@ -72,8 +79,9 @@ After editing:
 2. preserve relevant existing career evidence unless it conflicts with my requested change;
 3. do not add facts I did not provide or that are not already present in the profile;
 4. ensure title and career-level anchors are not accidentally converted into hard whitelists;
-5. write the complete updated profile back to the same private profile document;
-6. report a concise change summary in plain language.
+5. preserve or improve meaningful differentiators when new evidence supports them;
+6. write the complete updated profile back to the same private profile document;
+7. report a concise change summary in plain language.
 
 Do not copy my private profile content into a shared scheduled-task instruction.
 ```
