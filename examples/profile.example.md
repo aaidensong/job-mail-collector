@@ -1,40 +1,40 @@
 ---
 profile_version: 2
 primary_titles:
-  - Senior Product Designer
+  - Senior Data Analyst
 adjacent_titles:
-  - Product Designer
-  - UX/UI Designer
-  - Growth Product Designer
+  - Analytics Engineer
+  - Business Intelligence Analyst
+  - BI Lead
 target_seniority:
   - Senior
 excluded_titles:
-  - Graphic Designer
-  - Industrial Designer
+  - Data Entry Clerk
+  - Junior Data Analyst
   - Intern
 management_roles: unacceptable
 preferred_domains:
-  - B2C marketplace
-  - SaaS
-  - recruiting technology
+  - logistics
+  - operations technology
+  - B2B SaaS
 excluded_domains:
-  - industrial hardware
+  - ad-tech
 strong_skills:
-  - funnel optimization
-  - design systems
-  - user research
-  - cross-functional product design
+  - SQL
+  - metric design
+  - data modeling
+  - dashboard design
+  - stakeholder communication
 hard_skill_blockers: []
 target_locations:
-  - Toronto, ON
-  - Canada remote
+  - Austin, TX
+  - United States remote
 work_models:
   - remote
   - hybrid
 employment_types:
   - full-time
-  - contract
-work_authorization: Authorized to work in Canada
+work_authorization: Authorized to work in the United States
 sponsorship_rule: warning
 minimum_compensation: ""
 preferred_company_types:
@@ -49,56 +49,63 @@ languages:
 
 # Job Mail Collector Career Profile
 
+> Fictional example only. This profile does not describe the project author or a real user.
+
 ## Professional summary
 
-Senior product designer with substantial experience in consumer digital products, marketplace funnels, and cross-functional product teams.
+Senior data analyst with six years of analytics experience, including three years focused on logistics and operational decision support. Strongest in turning unclear business questions into reliable metrics, data models, and decision-ready reporting.
 
 ## Search interpretation
 
-Senior Product Designer is the main target. Product Designer, UX/UI Designer, and Growth Product Designer roles should also be considered when the work is primarily digital product design and the responsibilities fit the user's experience.
+Senior Data Analyst is the main target. Analytics Engineer, Business Intelligence Analyst, and BI Lead roles should also be considered when the work remains hands-on and the required ownership is supported by the user's experience.
 
-Staff or Lead-level product design roles should not be rejected only because the title is above the main Senior target. They should still be evaluated when the required ownership, product scope, and leadership expectations are supported by the user's experience.
+The Senior label is an anchor rather than a whitelist. Roles with different titles should be evaluated by actual analytical scope, technical requirements, stakeholder ownership, and leadership expectations.
 
-Direct people-management roles should be excluded. Project leadership, mentoring, and cross-functional leadership are acceptable and should count positively when the posting values those skills.
+Direct people-management roles should be excluded. Project leadership and mentoring without direct reports are acceptable.
 
 ## Differentiators and scope
 
-- Strongest in ambiguous B2C funnel problems where behavioral data and user research can be combined to identify a breakpoint and redesign the experience.
-- Comfortable owning work from problem definition and research through interaction design, validation, launch, and post-launch measurement.
-- Has experience influencing PM and engineering decisions rather than working only at the screen-production level.
-- Brings both growth-oriented product design and reusable design-system experience.
+- Strongest in ambiguous operational problems where teams use inconsistent definitions or conflicting data sources.
+- Comfortable moving from business-question framing through SQL analysis, metric definition, data modeling, dashboard delivery, and stakeholder adoption.
+- Experienced in creating shared KPI definitions that allow operations and product teams to make decisions from the same data.
+- Has influenced cross-functional work without formal people-management responsibility.
 
 ## Experience highlights
 
-- Owned product design work across discovery, interaction design, validation, and launch.
-- Worked on job-search and marketplace experiences with measurable funnel outcomes.
-- Contributed to reusable design-system foundations and product-team operating practices.
+- Owned delivery-performance analytics for a logistics operation.
+- Defined shared operational metrics across several source systems.
+- Built and maintained analytical data models used by operations and product teams.
+- Partnered with engineering and operations leaders to improve reporting reliability.
 
 ## Measurable outcomes
 
-- Improved conversion in a core application funnel.
-- Shipped recommendation and discovery improvements backed by behavioral data.
+- Automated a weekly reporting workflow and reduced preparation time by about 35%.
+- Replaced several conflicting metric definitions with one shared KPI framework used across teams.
 
 ## Core skills and strengths
 
-- Product strategy and interaction design
-- Funnel analysis and conversion optimization
-- User research and usability testing
-- Design systems
+- SQL and exploratory analysis
+- Metric and KPI definition
+- Data modeling
+- Dashboard and reporting design
+- Cross-functional stakeholder communication
 
 ## Portfolio or specialty areas
 
-B2C growth, marketplace UX, recruiting technology, and design systems.
+Operations analytics, logistics, B2B SaaS, data quality, and decision-support systems.
 
 ## Leadership experience
 
-- Led product-design initiatives and cross-functional decision making.
-- Supported team processes and mentoring without direct people-management responsibility.
+- Led cross-functional KPI-definition workshops.
+- Mentored a junior analyst on analysis planning and stakeholder communication.
+- Coordinated analytics work with operations and engineering without direct reports.
 
 ## Role preferences and interpretation notes
 
-Title labels should be treated as signals rather than strict gates. A Staff or Lead role can be a valid match when the actual work is supported by the profile. Pure visual, graphic, spatial, industrial, and non-digital design roles should be excluded.
+Analytics Engineer or BI Lead roles can be valid matches when they remain sufficiently hands-on and do not require unsupported people-management scope. Data Analytics Manager roles should be excluded when direct reports are a core requirement.
+
+Austin is preferred, but remote roles anywhere in the United States are acceptable. Hybrid work is acceptable, while five-day on-site roles should be treated as a poor fit.
 
 ## Additional context
 
-Prefer roles where product designers work directly with product management and engineering.
+Prefer roles where analytics is used to influence operational or product decisions rather than producing recurring reports without decision ownership.
