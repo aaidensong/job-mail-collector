@@ -81,7 +81,7 @@ Prefer concrete career evidence over generic self-description.
 
 ## Portfolio or specialty areas
 
-- Add specialty areas such as growth, design systems, research, enterprise UX, AI, accessibility, marketplace, fintech, healthcare, etc.
+- Add specialty areas such as operations analytics, machine learning, accessibility, fintech, healthcare, logistics, enterprise systems, research, or other relevant domains.
 
 ## Leadership experience
 
@@ -90,7 +90,7 @@ Record leadership evidence separately from people-management evidence.
 Leadership can include:
 
 - leading projects or major initiatives;
-- setting design or product direction;
+- setting direction;
 - mentoring;
 - facilitating cross-functional alignment;
 - leading reviews or team processes;
@@ -102,14 +102,18 @@ When the user has direct reports, hiring responsibility, performance reviews, 1:
 
 ## Role preferences and interpretation notes
 
-Explain nuance that cannot be represented cleanly in the YAML fields above. Examples:
+Explain nuance that cannot be represented cleanly in the YAML fields above.
 
-- `Senior is the main target, but Staff or Lead roles should still be considered when the actual scope is supported by the user's experience.`
-- `UX/UI roles are acceptable when the work is primarily digital product design.`
-- `Lead roles are acceptable when they remain individual-contributor roles.`
-- `Manager roles should be excluded because the user does not want direct people management.`
-- A location that is acceptable only for hybrid work.
-- A skill gap that should create a warning rather than exclude the job.
+Fictional examples:
+
+- `Senior Data Analyst is the main target, but Analytics Engineer or BI Lead roles should still be considered when the actual scope is supported by the user's experience.`
+- `BI roles are acceptable when the work includes hands-on analysis and metric ownership.`
+- `Lead roles are acceptable when they remain individual-contributor or project-lead roles.`
+- `Data Analytics Manager roles should be excluded because the user does not want direct people management.`
+- `Austin is preferred, but US-remote roles are acceptable.`
+- `A missing visualization tool should create a warning rather than exclude the job when the core analytics work is supported.`
+
+These are generic fictional examples. Do not copy them into a user's profile unless the user actually provided equivalent information.
 
 ## Additional context
 
