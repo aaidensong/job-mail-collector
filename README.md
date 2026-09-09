@@ -16,107 +16,146 @@ The setup is designed so a new user only needs to do four things:
 
 1. Connect Gmail and Google Drive to ChatGPT.
 2. Copy `prompts/01-bootstrap.md` from this repository into a new ChatGPT conversation.
-3. Talk through the onboarding questions in that conversation.
+3. Talk with ChatGPT about the kind of work they want and the experience they bring.
 4. Open the job links that ChatGPT recommends and apply on the employer's site.
 
 Everything else is handled by ChatGPT when the required permissions are available.
 
 ## Onboarding is a conversation, not a form
 
-Users do not need to know the internal schema or provide one exact value per question.
+Users do not need to know the internal schema or provide one exact value for every question.
 
-A natural answer such as this is valid:
+For example, this is a valid answer:
 
-> I am mainly looking for Senior Product Designer roles, but I would also like to see UX/UI or Lead roles when the actual work fits my experience. I have about nine years of B2C product design experience and a lot of design-system and growth work.
+> I am mainly looking for Senior Product Designer roles, but UX/UI, Growth, or Lead roles are also interesting when the actual work fits my experience. I have about nine years of B2C product design experience and a lot of design-system work.
 
-ChatGPT should extract every useful piece of information from the answer, organize it internally, and skip later questions that have already been answered.
+ChatGPT should extract every useful piece of information from the answer and skip later questions that have already been answered.
 
-The onboarding follows these principles:
+The onboarding follows these rules:
 
-- ask exactly one question per turn;
-- accept free-form answers that contain several pieces of information;
-- collect factual career evidence before asking for narrow restrictions;
-- mark direct questions as `Required` or `Optional` when useful, while making clear that no rigid answer format is required;
-- explain unfamiliar concepts in plain language;
-- skip questions already resolved by earlier answers;
-- ask follow-up questions only when the missing information could materially change job matching;
-- use recommended defaults for technical settings.
+- one question per turn;
+- free-form answers are welcome;
+- examples are shown when a question may be hard to answer;
+- examples are guidance only and do not define a required format;
+- normal questions are not labeled `Required`;
+- only optional questions are marked as optional;
+- optional questions explicitly say they can be skipped;
+- career evidence is collected before narrow title or level boundaries;
+- technical settings use recommended defaults whenever possible.
 
-See `docs/profile-questionnaire.md` for the complete question design and `docs/user-flow.md` for the user/GPT responsibility map.
+In Korean, optional questions use:
 
-## Fit-based matching instead of title-gated matching
+`선택 질문입니다. 필요하지 않다면 답변하지 않으셔도 됩니다.`
 
-Job Mail Collector does not assume that a user must decide every acceptable title or career level in advance.
+In English:
 
-A target such as `Senior Product Designer` is treated as an anchor, not automatically as a whitelist.
+`Optional question. You can skip this if it is not useful for your search.`
 
-If a `Staff Product Designer`, `Lead Product Designer`, UX/UI role, or another nearby title has responsibilities and scope that are supported by the user's actual experience, it can still be recommended.
+## The profile goes deeper than title and years
 
-Likewise, a superficially similar title can be downgraded when its actual responsibilities are materially unsupported.
+A title such as `Senior Product Designer` is not enough to produce useful matching by itself.
 
-The matcher compares:
+For experienced candidates, the onboarding asks a small number of role-specific depth questions to understand evidence such as:
+
+- what the user actually owned;
+- the kinds of problems they are especially good at solving;
+- measurable or observable impact;
+- decision-making and ambiguity;
+- cross-functional influence;
+- leadership or mentoring;
+- systems or process improvement;
+- distinctive specialty areas.
+
+For a product designer, ChatGPT may ask questions such as:
+
+- What kinds of product problems are you especially good at solving?
+- What did you own end to end?
+- What changed because of your work?
+- How did you influence PM, engineering, other designers, or team processes?
+- What strength or experience would you most want a hiring team to notice?
+
+The answers are stored in the private profile as evidence used for matching.
+
+## Job fit is based on actual scope, not title alone
+
+Job Mail Collector does not assume that the user must enumerate every acceptable title or career level in advance.
+
+A stated target such as `Senior Product Designer` is treated as an anchor, not a whitelist.
+
+A `Staff Product Designer`, `Lead Product Designer`, UX/UI role, or another nearby title can still be recommended when the actual responsibilities and required scope fit the user's evidence.
+
+Likewise, a job with the same title can still be a weak match when the actual work is materially different.
+
+Matching considers:
 
 - actual responsibilities and role scope;
 - required experience and ownership;
-- leadership and people-management expectations;
-- product and domain fit;
-- relevant skills, outcomes, and career evidence;
-- location and work-model constraints;
-- employment, work authorization, sponsorship, and compensation rules when relevant.
+- decision-making and leadership expectations;
+- direct people-management requirements;
+- distinctive strengths and specialty evidence;
+- measurable or observable outcomes;
+- product and domain experience;
+- location and work model;
+- employment type, work authorization, sponsorship, and compensation rules.
 
-The user mainly needs to identify meaningful hard exclusions, such as roles, domains, management responsibilities, or conditions they definitely do not want.
+The matcher should explain Strong and Possible matches using real evidence, not just `same title`.
 
-People management is kept separate from leadership. Project leadership, mentoring, design direction, and cross-functional influence do not automatically imply direct people-management experience.
+## People management and leadership are different
 
-See `docs/matching-rules.md` for the detailed matching model.
+Leadership can include project leadership, mentoring, design direction, cross-functional influence, or team-process leadership without direct reports.
+
+People management means direct reports and responsibilities such as 1:1s, performance reviews, hiring, and managing team members.
+
+The workflow records these separately so a hands-on Lead role is not automatically treated like a people-manager role.
 
 ## Where to connect Gmail and Google Drive
 
-In ChatGPT, open `Settings > Apps` or `Settings > Plugins`, depending on the interface available to your account. Connect the Google account that receives your job-alert emails and owns the Drive files you want Job Mail Collector to use.
+In ChatGPT, open `Settings > Apps` or `Settings > Plugins`, depending on the interface available to your account.
 
-After the apps are connected, the bootstrap prompt is run in a normal ChatGPT conversation. You do not run a local program, terminal command, Python script, or GitHub Action.
+Connect the Google account that receives your job-alert emails and owns the Drive files you want Job Mail Collector to use.
+
+After the apps are connected, run the bootstrap prompt in a normal ChatGPT conversation.
+
+You do not run a local program, terminal command, Python script, or GitHub Action.
 
 ## One-time setup
 
 1. Connect Gmail and Google Drive in ChatGPT.
 2. Open `prompts/01-bootstrap.md` on GitHub.
 3. Copy the entire prompt into a new ChatGPT conversation.
-4. Answer naturally while ChatGPT asks one question at a time.
-5. ChatGPT collects career evidence and summarizes how it understands your search.
-6. Correct or narrow that interpretation only where needed.
-7. ChatGPT creates the private career profile and a new Google Sheet Tracker in your connected Google Drive.
-8. If you already have application history, you can optionally choose to import it into the new Tracker.
-9. ChatGPT creates a recurring Scheduled Task at the time you selected.
+4. Answer naturally as ChatGPT asks one question at a time.
+5. ChatGPT collects enough career evidence to understand scope, impact, and differentiators.
+6. ChatGPT summarizes how it currently interprets the search and lets the user correct or narrow it.
+7. ChatGPT creates the private career profile and a new Google Sheet Tracker in the connected Google Drive.
+8. Existing application history can optionally be imported.
+9. ChatGPT creates a recurring Scheduled Task at the selected time.
 10. ChatGPT runs a validation test before setup is considered complete.
 
 You do not need an existing job tracker before using this project.
 
-You do not manually create or move the generated profile or Tracker files after setup. ChatGPT creates and references them in your connected Drive.
-
 ### Existing application history is optional
 
-Job Mail Collector does not search your Drive for an old tracker during initial access checks.
+Job Mail Collector does not search Drive for an old tracker during initial access checks.
 
-If you say that you have past application history you want imported, ChatGPT can locate it after your explicit authorization and copy compatible history into the new `Job_Mail_Collector` Tracker.
+If the user says they have past application history they want imported, ChatGPT can locate it after explicit authorization and copy compatible history into the new `Job_Mail_Collector` Tracker.
 
-If you have no previous tracker, setup continues normally with a new empty Tracker.
+If there is no previous tracker, setup continues normally with a new empty Tracker.
 
 ## Daily automation
 
 At the scheduled time, ChatGPT should automatically:
 
 1. load the user's private career profile;
-2. read the configured job-alert emails from Gmail;
+2. read configured job-alert emails from Gmail;
 3. expand digest emails into individual jobs;
 4. extract company, role, location, compensation, work model, source, and application links when available;
-5. remove explicit mismatches and duplicates;
-6. compare the remaining jobs with the user's actual career evidence and constraints;
-7. keep plausible nearby or stretch titles when the role scope is supported;
-8. write suitable new jobs to the Tracker Sheet when Google Drive write access allows it;
-9. return the best matches and application links in the Scheduled Task result;
-10. scan clear application confirmations and employer or recruiter responses;
-11. update Tracker status fields automatically when the evidence is unambiguous;
-12. report anything that requires human review.
+5. remove obvious hard mismatches and duplicates;
+6. compare the remaining jobs with the user's actual career evidence and differentiators;
+7. write suitable new jobs to the Tracker Sheet when Google Drive write access allows it;
+8. return the best matches and application links in the Scheduled Task result;
+9. scan clear application confirmations and employer or recruiter responses;
+10. update Tracker status fields automatically when the evidence is unambiguous;
+11. report anything that requires human review.
 
 The default email scan window is the previous local calendar day. The user only needs to configure a different window if they want one.
 
@@ -140,7 +179,9 @@ When Google Drive write actions are available and authorized, the Scheduled Task
 - record a clear rejection result and rejection stage when evidence supports it;
 - keep ambiguous changes for human review instead of guessing.
 
-Some ChatGPT accounts or managed workspaces can require approval before an external data change. If a scheduled write cannot proceed without approval, the task must not silently fail. It should return the intended changes as paste-ready TSV and clearly say that Tracker write approval was unavailable.
+Some ChatGPT accounts or managed workspaces can require approval before an external data change.
+
+If a scheduled write cannot proceed without approval, the task must not silently fail. It should return the intended changes as paste-ready TSV and clearly say that Tracker write approval was unavailable.
 
 ## Personal data architecture
 
@@ -154,17 +195,15 @@ Preferred name:
 
 Contains:
 
-- career background and actual responsibility scope;
-- main role direction;
-- nearby roles or career levels to consider when actual fit is strong;
-- explicit hard exclusions;
-- relevant skills and experience;
-- preferred and excluded domains;
-- location and work-model rules;
-- work authorization and sponsorship handling;
-- company and keyword preferences;
-- measurable evidence used for job matching;
-- leadership evidence kept separate from direct people-management experience.
+- professional summary;
+- fit-based search interpretation;
+- differentiators and actual scope;
+- experience highlights;
+- measurable outcomes;
+- core skills and strengths;
+- specialty areas;
+- leadership and people-management evidence;
+- location, work-model, authorization, and preference rules.
 
 If direct raw Markdown creation or reading is not supported, ChatGPT creates a private Google Doc containing the same Markdown text and stores that document reference in the Sheet configuration.
 
@@ -187,18 +226,18 @@ The career profile is the source of truth for matching. The Sheet does not dupli
 
 ## Core capabilities
 
-- one-question-at-a-time conversational onboarding
-- free-form answers instead of rigid field entry
-- evidence-first career profiling
-- fit-based title and career-level interpretation
-- explicit hard-exclusion handling
+- conversational onboarding with one question per turn
+- free-form answers with examples when useful
+- optional-only question labeling
+- role-specific depth questions for stronger career evidence
 - private career profile creation
+- fit-based title and career-level interpretation
 - automatic creation of a new Google Sheet Tracker
 - optional import of existing application history
 - Gmail job-alert source discovery and confirmation
 - recurring Scheduled Task creation
 - digest-email expansion
-- hard filtering and evidence-based soft matching
+- hard filtering and evidence-based matching
 - application-link extraction without invented URLs
 - current-run and historical deduplication
 - automatic Tracker writes when authorized
@@ -242,23 +281,20 @@ job-mail-collector/
 
 ## Design principles
 
-- **ChatGPT-first onboarding.** A new user should not need to understand the internal schema before setup.
-- **Conversation, not a form.** Users can answer naturally and include multiple ideas in one response.
-- **Evidence before restrictions.** Collect what the user has actually done before asking them to define narrow role boundaries.
-- **One question at a time.** Do not overwhelm users with batch questionnaires.
-- **Extract once, do not ask twice.** One answer can resolve several internal fields.
-- **Fit over title labels.** Main titles and career levels are anchors, not automatic whitelists.
-- **Ask for hard exclusions, not exhaustive allowlists.** Keep plausible roles open unless the user explicitly closes them.
-- **People management and leadership are separate concepts.** Direct reports are not inferred from project or mentoring leadership.
-- **A new Tracker is created automatically.** Existing history is optional and imported only after explicit user choice.
-- **Private profile outside the public prompt.** Career data lives in a user-owned Drive resource.
-- **No fabricated links.** Missing or unreadable application URLs stay blank.
-- **Hard filters before matching.** Clear exclusions should not be rescued by a strong score elsewhere.
-- **Evidence with every judgment.** A match, exclusion, or status update must be explainable from the email, posting, profile, or Tracker.
-- **No absence claims from partial data.** Tracker-dependent judgments stop when the Tracker read cannot be verified as complete.
-- **Automatic writes with a safe fallback.** Write to the Tracker when authorized. Return TSV when scheduled writes cannot proceed.
-- **No invented application state.** Application and response status changes require clear evidence.
-- **Configuration outside the task prompt.** Users can update profile and operational settings without rewriting the daily logic.
+- **Conversation, not form filling.** Users can answer naturally and provide several pieces of information at once.
+- **Examples without rigidity.** Examples help users know what to say without forcing a format.
+- **Only optional questions are labeled.** Normal questions are not presented as mandatory form fields.
+- **Depth before narrow filters.** Matching should understand scope, impact, and differentiators before asking for fine-grained exclusions.
+- **Fit before title labels.** Exact title equality is not required.
+- **People management and leadership are separate concepts.**
+- **A new Tracker is created automatically.**
+- **Private profile outside the public prompt.**
+- **No fabricated links.**
+- **Hard filters before soft matching.**
+- **Evidence with every judgment.**
+- **No absence claims from partial data.**
+- **Automatic writes with a safe fallback.**
+- **No invented application state.**
 
 ## Versioning
 
@@ -267,7 +303,7 @@ The current repository structure uses:
 - `config_version = 3`
 - `profile_version = 1`
 
-This update changes onboarding and matching interpretation without changing the YAML key set or Sheet schema, so the versions remain unchanged.
+These onboarding and matching changes do not alter the YAML key set or Sheet schema, so the configuration and profile versions remain unchanged.
 
 ## OpenAI references
 
