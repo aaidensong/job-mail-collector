@@ -12,15 +12,46 @@ User responsibilities:
 
 GPT responsibilities:
 - verify app access
+- show setup progress and an approximate remaining-answer range
 - collect career evidence and matching constraints conversationally
 - create the private profile
 - discover and confirm Gmail alert sources
-- create the Tracker Sheet
+- create a brand-new Tracker Sheet using the workflow's own schema
 - verify read and write behavior
 - create the Scheduled Task
 - run a setup test
 
 The user should not manually create, move, or wire together the profile and Tracker resources.
+
+### Progress-visible onboarding
+
+The setup conversation has four user-facing stages:
+
+1. Career direction & evidence
+2. Search constraints
+3. Automation & job-alert sources
+4. Schedule, create, and test
+
+Most setups are expected to take about 8-12 user answers when recommended settings are used, but the estimate is dynamic. One detailed response can resolve multiple topics and remove later questions.
+
+Before each direct onboarding question, ChatGPT shows a compact stage and remaining-answer estimate. Permission dialogs and approval taps are not counted as onboarding answers.
+
+### Fresh Tracker boundary
+
+Bootstrap always creates a new Job Mail Collector Tracker.
+
+It does not:
+- ask whether the user already has a tracker;
+- search Drive for an existing tracker;
+- import historical spreadsheet data;
+- adapt the workflow to an arbitrary existing schema;
+- reuse an existing `Job_Mail_Collector` file.
+
+If the preferred name already exists, the setup creates a uniquely named new Sheet automatically.
+
+Historical spreadsheet migration, if desired, is a separate post-setup task that should be handled in another ChatGPT conversation.
+
+This boundary does not affect ongoing Gmail reconciliation. A scheduled run may still create a missing Applied row from clear application-confirmation or recruiter-submission evidence.
 
 ## 2. Private profile layer
 
@@ -43,6 +74,8 @@ The profile stores:
 
 The profile uses `profile_version = 2`.
 It does not track resume versions.
+
+Public examples must be fictional and must not be derived from a user's private profile or prior conversation history.
 
 ## 3. Operational configuration layer
 
@@ -182,11 +215,11 @@ Paste bootstrap prompt into ChatGPT
         |
         v
 USER + GPT
-Conversational onboarding
+Conversational onboarding with visible progress
         |
         v
 GPT
-Create profile + Tracker + Scheduled Task
+Create private profile + NEW Tracker + Scheduled Task
         |
         v
 ================ SCHEDULED RUN ================
