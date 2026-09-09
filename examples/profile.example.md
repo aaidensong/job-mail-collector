@@ -64,6 +64,13 @@ Staff or Lead-level product design roles should not be rejected only because the
 
 Direct people-management roles should be excluded. Project leadership, mentoring, and cross-functional leadership are acceptable and should count positively when the posting values those skills.
 
+## Differentiators and scope
+
+- Strongest in ambiguous B2C funnel problems where behavioral data and user research can be combined to identify a breakpoint and redesign the experience.
+- Comfortable owning work from problem definition and research through interaction design, validation, launch, and post-launch measurement.
+- Has experience influencing PM and engineering decisions rather than working only at the screen-production level.
+- Brings both growth-oriented product design and reusable design-system experience.
+
 ## Experience highlights
 
 - Owned product design work across discovery, interaction design, validation, and launch.
