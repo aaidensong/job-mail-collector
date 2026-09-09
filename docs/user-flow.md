@@ -31,6 +31,10 @@ The onboarding is a conversation, not a form.
 
 The user can answer naturally and may mention several pieces of information in one message. ChatGPT extracts useful facts from each answer and skips questions that are already resolved.
 
+The user does not need to provide a complete career biography during setup. The private profile can be improved later, so onboarding should collect enough information for useful matching without making the user feel that every detail must be finalized immediately.
+
+If the user is unsure, cannot remember a detail, or wants to add something later, ChatGPT continues once enough evidence exists for useful matching unless the missing information is genuinely required for eligibility or core operation.
+
 Public examples are fictional and should not reuse facts from the user's private profile, prior conversations, or Memory.
 
 A fictional answer can look like this:
@@ -61,6 +65,8 @@ The question itself is the visual emphasis. The remaining-question line is not e
 
 Every career, experience, strength, preference, or constraint question includes a concise fictional answer example directly below it. Simple operational yes/no questions may omit an example when the choice is obvious.
 
+Before the first question, ChatGPT may use one short reassurance sentence explaining that the user can answer naturally, does not need to provide everything now, and can update the profile later.
+
 #### Understand the person before narrowing the search
 
 ChatGPT gathers enough evidence about:
@@ -79,6 +85,8 @@ ChatGPT gathers enough evidence about:
 - specialty or differentiating expertise
 
 For experienced users, a title alone is not considered sufficient evidence. ChatGPT asks role-specific depth questions when needed to understand what actually distinguishes the person.
+
+Depth questions are not a requirement to document every achievement immediately. If enough evidence already exists for useful matching, setup can proceed and missing details can be added later.
 
 #### Infer search scope instead of forcing a whitelist
 
@@ -160,6 +168,67 @@ ChatGPT then creates the recurring Scheduled Task.
 ### Step 6 - GPT - Validate setup
 
 The setup test checks profile access, Gmail access, source parsing, digest expansion, Tracker completeness, 13-column output, application-link extraction, write capability, fit-based matching, and missed-run recovery logic.
+
+At completion, ChatGPT tells the user that the profile does not need to be perfect today and that future career or search changes can simply be mentioned naturally in the same conversation.
+
+## Ongoing updates after setup
+
+The setup conversation remains useful after bootstrap.
+
+The user does not need to know which internal field should change and does not need to say `update my profile`.
+
+### Step A - USER - Mention a change naturally
+
+Examples:
+
+- a new project or responsibility
+- a newly quantified outcome
+- a stronger specialty the user wants to emphasize
+- a change in target roles
+- a new role or domain the user wants to exclude
+- a location or work-model change
+- a work-authorization or sponsorship change
+- a change in people-management preference
+
+The user can simply mention the new fact in normal conversation.
+
+### Step B - GPT - Decide whether it matters for future matching
+
+ChatGPT does not propose an update for every casual statement.
+
+If the new information is stable and likely to improve or materially change future job matching, ChatGPT proactively proposes a profile update.
+
+Example:
+
+> This could affect future job matching. Would you like me to update your Job Mail Collector profile with it?
+
+Korean:
+
+> 이 내용을 Job Mail Collector 프로필에 업데이트할까요?
+
+### Step C - USER - Confirm
+
+The profile is not changed until the user confirms.
+
+If the user explicitly asked for a profile change in the first place, that explicit request already counts as confirmation and ChatGPT should not ask redundantly.
+
+### Step D - GPT - Update the existing private profile directly
+
+After confirmation, ChatGPT:
+
+1. reads the current private profile;
+2. updates all affected structured fields and Markdown sections;
+3. preserves unrelated information;
+4. writes the complete profile back to the same private document;
+5. confirms the change concisely.
+
+Normal profile updates do not require the Scheduled Task to be recreated because the daily workflow reloads the private profile referenced by `Config.profile_reference` on every run.
+
+### Operational settings use the same approval pattern
+
+If the user's statement instead implies a change to run time, automation modules, no-response threshold, or Gmail sources, ChatGPT explains what operational setting would change and asks for confirmation.
+
+After confirmation, ChatGPT updates the existing Config, Sources, or Scheduled Task directly when supported. The user should not be asked to copy and paste a newly generated scheduled prompt when the existing task can be updated directly.
 
 ## Daily scheduled workflow
 
@@ -282,6 +351,22 @@ Create private profile + NEW 13-column Tracker
         v
 GPT
 Create and test Scheduled Task
+        |
+        v
+USER
+Later mentions career/search changes naturally
+        |
+        v
+GPT
+Offers profile update when it matters
+        |
+        v
+USER
+Confirms
+        |
+        v
+GPT
+Updates the same private profile directly
         |
         v
 ================ DAILY ================
