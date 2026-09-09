@@ -16,22 +16,17 @@ Return:
 2. Config.profile_reference and profile_storage_format;
 3. whether the private profile was readable;
 4. profile_version and whether all required YAML keys were interpretable;
-5. whether the Markdown career-evidence sections, including Search interpretation and Leadership experience when present, were readable;
-6. enabled Sources and message count for each;
-7. one example of a digest email expanded into individual jobs, if available;
-8. Tracker row count read vs Control.tracker_data_rows;
-9. up to three extracted jobs with their parsed application URLs;
-10. hard-filter result and match class for those examples when profile validation passes;
-11. for any example whose title or career-level label differs from the user's main target, whether the decision was based on actual responsibilities and scope rather than exact title equality;
-12. whether the previously verified automatic Tracker write capability is still available when automatic writing is enabled, or whether the TSV fallback would be required;
-13. all permissions, profile, parsing, source, or completeness failures.
-
-Fit-based validation rules:
-- `primary_titles` and `target_seniority` are anchors, not automatic whitelists;
-- a job must not fail only because its exact title or level is absent from those fields;
-- Staff, Lead, or another nearby title should remain eligible when the actual responsibilities and scope are supported by the user's evidence, unless explicitly excluded;
-- a superficially similar title can still be low-fit when its actual requirements are materially unsupported;
-- people-management requirements must be distinguished from project leadership, mentoring, or cross-functional leadership.
+5. whether the Markdown career-evidence sections were readable, including Search interpretation and Differentiators and scope when present;
+6. whether an experienced user's profile contains enough evidence beyond title and years to explain meaningful fit differences;
+7. enabled Sources and message count for each;
+8. one example of a digest email expanded into individual jobs, if available;
+9. Tracker row count read vs Control.tracker_data_rows;
+10. up to three extracted jobs with their parsed application URLs;
+11. hard-filter result and match class for those examples when profile validation passes;
+12. for every Strong or Possible example, the specific profile evidence used to justify the match;
+13. whether the matcher avoided rejecting plausible roles solely because the title or career-level label differs from the user's main target;
+14. whether the previously verified automatic Tracker write capability is still available when automatic writing is enabled, or whether the TSV fallback would be required;
+15. all permissions, profile, parsing, source, or completeness failures.
 
 Pass criteria:
 - private profile readable and valid
@@ -41,8 +36,9 @@ Pass criteria:
 - enabled source search works
 - digest extraction works when a digest exists
 - no fabricated application link
-- no plausible job is excluded solely because its exact title or career-level label differs from the main target
 - output schema is exactly 17 columns
+- plausible nearby titles are evaluated by actual scope, not title label alone
+- Strong matches for experienced users use at least one meaningful evidence signal beyond exact title similarity when that evidence is available
 
 Do not say the setup passed if the profile, Gmail, or Sheet required permission failed.
 ```
