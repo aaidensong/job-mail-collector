@@ -45,6 +45,8 @@ The onboarding is a conversation, not a form.
 
 At the beginning, ChatGPT tells the user that they can answer naturally and do not need to provide one exact value per question.
 
+It also tells the user that example answers will be shown when useful, but the examples are only guidance and do not define a required format.
+
 For example, the user can write:
 
 > I am mainly looking for Senior Product Designer roles, but UX/UI or Lead roles are also interesting when the work fits. I have about nine years of B2C product design experience and a lot of design-system work.
@@ -52,6 +54,16 @@ For example, the user can write:
 ChatGPT should extract every useful piece of information from that answer, organize it internally, and skip later questions that have already been answered.
 
 The user does not need to know terms such as `target_seniority`, `adjacent_titles`, YAML, or internal matching fields.
+
+Normal questions are not labeled `Required` or `필수`.
+
+Only optional questions receive an optional marker. In Korean, the user should see:
+
+`선택 질문입니다. 필요하지 않다면 답변하지 않으셔도 됩니다.`
+
+In English:
+
+`Optional question. You can skip this if it is not useful for your search.`
 
 #### Phase 1: understand the user first
 
@@ -61,15 +73,29 @@ ChatGPT first collects broad factual evidence about:
 - current or recent work;
 - relevant experience;
 - products, industries, and business context;
-- strongest responsibilities and skills;
-- measurable outcomes when available;
-- leadership and people-management evidence when relevant.
+- actual ownership and responsibility;
+- recurring problems the user is especially good at solving;
+- measurable or observable impact;
+- leadership, influence, and people-management evidence when relevant;
+- distinctive strengths or specialty areas.
 
 ChatGPT asks exactly one question per turn, but a single user answer may resolve several topics at once.
 
-`Required` means the topic eventually needs to be understood for reliable matching. It does not mean the user must enter a rigid or exact-format value.
+A short answer such as `Senior Product Designer` is not treated as sufficient evidence by itself.
 
-Optional questions can be skipped or answered with `none`, `not sure`, or natural-language equivalents.
+If the user appears experienced or senior, ChatGPT asks a small number of role-specific depth questions unless the user's earlier answers already contain equivalent evidence.
+
+For a Senior Product Designer, examples of useful depth questions include:
+
+- What kinds of product problems are you especially good at solving?
+- What did you own end to end?
+- What changed because of your work?
+- How did you influence PM, engineering, other designers, or team processes?
+- What strength or experience would you most want a hiring team to notice?
+
+Each question includes a natural-language answer example when that would make it easier to answer.
+
+The examples are adapted to the user's role family and are not templates that the user must copy.
 
 #### Phase 2: infer the search scope
 
@@ -86,6 +112,17 @@ ChatGPT treats:
 - the main title or direction as a **core target**;
 - nearby titles or broader levels as **consider if fit** when supported by evidence;
 - only explicit unwanted roles or constraints as **hard exclusions**.
+
+The interpretation summary should include more than title and years of experience.
+
+A useful summary can include:
+
+- main search direction;
+- nearby roles to consider when the work fits;
+- distinctive strengths;
+- evidence of ownership and scope;
+- leadership or influence;
+- explicit hard exclusions.
 
 The user is shown a short interpretation summary and can correct it in normal language.
 
@@ -108,6 +145,8 @@ After career evidence and search direction are understood, ChatGPT asks only for
 - optional company or keyword preferences.
 
 It should prefer asking what the user definitely does not want over making the user enumerate every title or career level they would accept.
+
+Optional preference questions must include the optional marker and the sentence saying the user may leave them unanswered.
 
 People management is kept separate from leadership.
 
@@ -136,12 +175,24 @@ Compatibility fallback:
 
 A Google Doc containing the exact Markdown content.
 
-The private profile stores both structured fields and natural-language interpretation notes.
+The private profile stores both structured fields and natural-language evidence.
+
+The profile should preserve:
+
+- search interpretation;
+- differentiators and actual scope;
+- experience highlights;
+- measurable outcomes;
+- core skills;
+- specialty areas;
+- leadership and people-management evidence;
+- explicit preferences and exclusions.
 
 The role interpretation should preserve nuance such as:
 
 - `Senior is the main target, but Staff or Lead roles should still be considered when the actual scope fits.`
 - `Manager roles are excluded because the user does not want direct people management.`
+- `The user is especially strong at diagnosing funnel breakpoints using behavioral data and user research.`
 
 Default Sheet:
 
@@ -193,7 +244,8 @@ Before setup is considered complete, ChatGPT performs a test run and checks:
 - Sheet access;
 - Tracker read completeness;
 - application-link extraction;
-- Tracker write capability when automatic writing is enabled.
+- Tracker write capability when automatic writing is enabled;
+- whether plausible jobs can be explained using actual career evidence rather than exact-title matching alone.
 
 ## Daily scheduled workflow
 
@@ -208,7 +260,7 @@ ChatGPT:
 3. expands digest emails into individual jobs;
 4. extracts job data and application links;
 5. removes duplicates and explicit hard mismatches;
-6. evaluates remaining jobs against the user's actual career evidence and constraints.
+6. evaluates remaining jobs against the user's actual career evidence, differentiators, and constraints.
 
 The user does not manually trigger this daily scan.
 
@@ -222,7 +274,9 @@ For each role, ChatGPT compares:
 - required experience;
 - ownership and decision-making scope;
 - leadership or people-management expectations;
-- relevant skills and evidence;
+- distinctive strengths and specialty evidence;
+- measurable or observable outcomes;
+- relevant skills;
 - domain context;
 - location, work model, employment, and authorization constraints.
 
@@ -309,7 +363,12 @@ Paste bootstrap prompt into a new ChatGPT chat
         v
 USER + GPT
 User answers naturally
-GPT asks one question at a time and extracts multiple facts when possible
+GPT asks one question at a time and shows examples when useful
+        |
+        v
+GPT
+Ask a few role-specific depth questions
+Extract scope, impact, and differentiators
         |
         v
 GPT
@@ -318,6 +377,7 @@ Build a fit-based search interpretation from career evidence
         v
 USER + GPT
 User corrects or narrows only what matters
+Optional questions can be skipped
         |
         v
 GPT
