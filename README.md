@@ -25,11 +25,13 @@ Everything else is handled by ChatGPT when the required permissions are availabl
 
 Users do not need to know the internal schema or give one exact value per question.
 
-A valid answer can look like this:
+A fictional example answer can look like this:
 
-> I am mainly looking for Senior Product Designer roles, but UX/UI, Growth, or Lead roles are also interesting when the actual work fits. I have about nine years of B2C product design experience and a lot of design-system and funnel work.
+> I am mainly looking for Senior Data Analyst roles, but Analytics Engineer or BI Lead roles are also interesting when the actual work fits. I have about six years of experience, with the last three focused on logistics and operations analytics.
 
 ChatGPT extracts all useful information from the answer and skips questions that are already resolved.
+
+Public examples in this repository are intentionally fictional. They should not be generated from a user's private career profile, prior conversations, or Memory.
 
 The onboarding follows these rules:
 
@@ -43,13 +45,32 @@ The onboarding follows these rules:
 - factual career evidence is collected before narrow filters;
 - technical settings use recommended defaults whenever possible.
 
-For experienced users, a title such as `Senior Product Designer` is not enough by itself. The onboarding asks role-specific depth questions when needed to understand actual ownership, problem-solving strengths, impact, decision-making, cross-functional influence, leadership, process improvements, and differentiating expertise.
+For experienced users, a title alone is not enough. The onboarding asks role-specific depth questions when needed to understand actual ownership, problem-solving strengths, impact, decision-making, cross-functional influence, leadership, process improvements, and differentiating expertise.
+
+## Setup progress is visible
+
+The user should not have to wonder when onboarding will end.
+
+The setup is divided into four visible stages:
+
+1. **Career direction & evidence**
+2. **Search constraints**
+3. **Automation & job-alert sources**
+4. **Schedule, create, and test**
+
+Most setups take about **8-12 user answers** when recommended settings are used. A detailed answer can cover several topics and reduce the remaining count.
+
+Before each direct onboarding question, ChatGPT shows a compact progress line such as:
+
+`Setup progress: 1/4 - Career direction & evidence - about 7-10 answers remaining`
+
+The range is recalculated as information is collected. Permission dialogs and approval clicks are not counted as onboarding answers.
 
 ## Fit is based on actual scope, not title labels alone
 
 A stated target title or career level is an anchor, not automatically a whitelist.
 
-A user mainly targeting `Senior Product Designer` can still receive Staff, Lead, UX/UI, Growth, or other nearby roles when the actual responsibilities and required scope are supported by the user's evidence.
+For example, a user mainly targeting `Senior Data Analyst` may still receive an `Analytics Engineer` or `BI Lead` role when the actual responsibilities and required scope are supported by the user's evidence.
 
 Internally, the workflow treats roles as:
 
@@ -64,14 +85,30 @@ For experienced users, a Strong match should normally have a meaningful reason b
 1. Connect Gmail and Google Drive in ChatGPT.
 2. Open `prompts/01-bootstrap.md`.
 3. Paste the full prompt into a new ChatGPT conversation.
-4. ChatGPT collects career evidence and matching preferences conversationally.
-5. ChatGPT creates a private career profile and a new Google Sheet Tracker.
-6. Existing application history can optionally be imported.
+4. ChatGPT collects career evidence and matching preferences conversationally, with visible setup progress.
+5. ChatGPT creates a private career profile.
+6. ChatGPT creates a **brand-new** Google Sheet Tracker using Job Mail Collector's schema.
 7. ChatGPT discovers or collects Gmail job-alert sources and asks the user to confirm them.
 8. ChatGPT creates the recurring Scheduled Task.
 9. ChatGPT runs a validation test.
 
 No local program, Python script, terminal command, server, or GitHub Action is required.
+
+## Always start with a fresh Tracker
+
+Bootstrap intentionally does **not** ask whether the user already has a spreadsheet or tracker.
+
+It does not search for, import, adapt, merge, or reuse an existing tracker. A fresh bot-native Sheet avoids relying on arbitrary column layouts, formulas, or status semantics that may not be compatible with the workflow.
+
+Preferred Sheet name:
+
+`Job_Mail_Collector`
+
+If that name already exists, ChatGPT creates a uniquely named new Sheet such as `Job_Mail_Collector_2` instead of asking to reuse the existing file.
+
+If a user wants historical application data migrated, that should be done separately in another ChatGPT conversation after setup. This keeps bootstrap predictable and avoids silently corrupting an existing tracker.
+
+This does not disable ongoing missing-application detection. Scheduled runs can still create an Applied row when clear Gmail evidence proves an application occurred.
 
 ## Private career profile
 
@@ -99,10 +136,6 @@ The current profile schema uses `profile_version = 2`.
 Resume-version tracking is intentionally not part of the core profile.
 
 ## Tracker Sheet
-
-Default name:
-
-`Job_Mail_Collector`
 
 Tabs:
 
@@ -294,8 +327,10 @@ job-mail-collector/
 ## Design principles
 
 - **Conversation, not configuration forms.** Users answer naturally.
-- **Understand the person before narrowing the search.** Senior candidates need evidence beyond title and years.
+- **Visible progress.** Users can see the current setup stage and an approximate remaining-answer range.
+- **Understand the person before narrowing the search.** Experienced candidates need evidence beyond title and years.
 - **Actual scope over title labels.** Plausible nearby roles stay open unless explicitly excluded.
+- **Fresh Tracker every setup.** Bootstrap never adapts an arbitrary existing spreadsheet.
 - **Keep only useful tracking fields.** ATS, ResumeVersion, Channel, and RejectionStage are not part of the core Tracker.
 - **Recover missed runs.** A failed scheduled day should not silently lose opportunities.
 - **Classify messages by content.** Sender address alone is insufficient.
@@ -312,8 +347,7 @@ Current versions:
 - `config_version = 4`
 - `profile_version = 2`
 
-Version 4 simplifies the Tracker to 13 user-relevant fields and adds durable missed-run recovery.
-Profile version 2 removes resume-version tracking from the private profile schema.
+The latest onboarding changes do not alter either schema version.
 
 ## OpenAI references
 
