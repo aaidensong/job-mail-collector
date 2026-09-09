@@ -24,7 +24,7 @@ Job Mail Collector는 Gmail로 들어오는 채용 알림 메일을 읽고, 개�
 
 별도 앱, 로컬 프로그램, Python 스크립트, 터미널, 서버, GitHub Action은 필요하지 않습니다.
 
-`01-bootstrap.md` 안에는 Scheduled Task 생성에 필요한 daily prompt가 이미 포함되어 있습니다. 새 사용자는 `02-daily-job-mail-collector.md`를 따로 복사해 붙여넣을 필요가 없습니다.
+`01-bootstrap.md` 하나에 워크플로 설정에 필요한 내용이 모두 포함되어 있습니다.
 
 ## ChatGPT가 처음 설정하는 것
 
