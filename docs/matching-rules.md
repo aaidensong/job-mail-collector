@@ -46,12 +46,92 @@ Use the user's `Differentiators and scope`, experience highlights, outcomes, ski
 
 1. Read and validate the private career profile.
 2. Parse the posting.
-3. Apply explicit hard exclusions.
-4. Deduplicate within the current run.
-5. Compare with history when Tracker completeness is verified.
-6. Evaluate actual fit using career evidence, differentiators, and job scope.
-7. Extract and validate the best usable application link.
-8. Produce shortlist and Tracker rows.
+3. Derive comparison-normalized Company and Title values.
+4. Apply explicit hard exclusions.
+5. Deduplicate within the current run using the comparison values.
+6. Compare with Tracker history using the same comparison values when completeness is verified.
+7. Evaluate actual fit using career evidence, differentiators, and job scope.
+8. Extract and validate the best usable application link.
+9. Apply storage/display normalization before writing a new row.
+10. Produce shortlist and Tracker rows.
+
+## Company and Title normalization
+
+Comparison normalization and Tracker display normalization are separate concerns.
+
+### Comparison-only values
+
+Derive temporary comparison values for Company and Title. These values are used only for identity checks and are not stored as additional Tracker columns.
+
+Apply to both Company and Title:
+
+- normalize Unicode compatibility forms consistently;
+- trim leading and trailing whitespace;
+- convert non-breaking and other spacing variants to normal spaces;
+- collapse repeated whitespace to one space;
+- convert common dash variants, including en dash, em dash, Unicode hyphen, non-breaking hyphen, and minus sign, to ASCII hyphen;
+- use exactly one space around hyphen separators;
+- compare case-insensitively using Unicode-aware case folding;
+- normalize curly double quotes to straight double quotes and curly single quotes/apostrophes to straight single quotes;
+- remove spaces around slash so variants such as `UX / UI` and `UX/UI` compare consistently.
+
+For Title only:
+
+- when a middle dot or bullet is clearly used as a spaced separator, treat it like a hyphen separator for comparison;
+- preserve parentheses and their contents;
+- preserve commas, colons, slashes, and other punctuation that can distinguish real roles;
+- do not normalize unspaced middle dots that may be part of a real name or title.
+
+For Company only:
+
+- ignore these terminal legal designators for comparison, case-insensitively and punctuation-tolerantly: `Inc`, `Inc.`, `Incorporated`, `Ltd`, `Ltd.`, `Limited`, `LLC`, `Corp`, `Corp.`, `Corporation`;
+- remove only terminal legal designators, plus a preceding comma and whitespace when present;
+- do not remove the same words when they occur inside the company name;
+- do not infer parent, subsidiary, or brand relationships.
+
+Example:
+
+`Lead Product Designer, Design Systems – AI Enablement`
+
+and
+
+`Lead Product Designer, Design Systems - AI Enablement`
+
+must produce the same comparison-normalized Title.
+
+### Tracker storage/display values
+
+Do not store the lowercased or legal-suffix-stripped comparison value in Tracker.
+
+For newly written Title values:
+
+- trim and collapse whitespace;
+- normalize common dash variants to ASCII hyphen with one space around the separator;
+- remove spaces around slash;
+- otherwise preserve source capitalization and meaningful punctuation.
+
+For newly written Company values:
+
+- trim and collapse whitespace;
+- normalize common dash variants when used as separators;
+- preserve capitalization, legal suffixes, and source wording by default;
+- if Tracker already contains a Company display value with the same comparison-normalized Company, reuse that existing display value for a new row.
+
+Existing Tracker rows are not rewritten retroactively as part of this rule. They are still comparison-normalized in memory whenever they participate in duplicate or message-association checks.
+
+### Where the comparison rule applies
+
+Use the same Company + Title comparison normalization for:
+
+- Web Discovery `new` counting;
+- Mail-to-Mail, Search-to-Search, and Mail-to-Search deduplication within a run;
+- historical Tracker duplicate checks;
+- missing-application detection;
+- application-confirmation association;
+- recruiter-submission association;
+- employer/recruiter response association.
+
+Do not use raw string equality for these identity checks.
 
 ## Hard exclusions
 
