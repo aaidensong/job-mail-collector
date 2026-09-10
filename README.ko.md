@@ -2,7 +2,7 @@
 
 # Job Mail Collector
 
-Job Mail Collector는 Gmail로 들어오는 채용 알림 메일을 읽고, 개인 커리어 프로필과 비교해 적합한 공고를 선별하고, 권한이 허용되는 경우 Google Sheets Tracker에 정리하는 ChatGPT Scheduled Task 워크플로입니다.
+Job Mail Collector는 Gmail로 들어오는 채용 알림 메일을 읽고, 필요하면 공개 웹에서도 추가 공고를 찾고, 개인 커리어 프로필과 비교해 적합도를 판단한 뒤 Google Sheets Tracker에 정리하는 ChatGPT Scheduled Task 워크플로입니다.
 
 공개 저장소에는 워크플로 로직과 템플릿만 포함됩니다. 실제 커리어 프로필, 이메일 데이터, 지원 이력은 각 사용자의 연결된 Google 계정 안에 남습니다.
 
@@ -34,6 +34,7 @@ Job Mail Collector는 Gmail로 들어오는 채용 알림 메일을 읽고, 개�
 - Google Drive에 비공개 커리어 프로필 생성
 - 새로운 Job Mail Collector Google Sheet 생성. 사용자가 보는 탭은 `Tracker` 하나로 두고, 내부 운영 탭은 지원되는 경우 숨김 처리
 - Gmail에서 채용 알림 소스 탐색 또는 입력 후 사용자 확인
+- 메일에 없는 공고를 웹에서도 추가로 찾을지 한 번 확인
 - 지원 확인, 회신 감지 등 추천 자동화 설정
 - 반복 Scheduled Task 생성
 - 설정 완료 전 검증 테스트 실행
@@ -98,19 +99,28 @@ Job Mail Collector는 직무명이 정확히 같다는 이유만으로 적합하
 예약 시간이 되면 워크플로는 다음을 수행할 수 있습니다.
 
 1. 아직 처리하지 않은 기간의 Gmail 채용 알림 읽기
-2. 한 메일 안의 여러 공고를 개별 공고로 분리
-3. sender + subject + body를 함께 보고 메일 유형 분류
-4. 공고 정보와 실제 사용 가능한 지원 링크 추출
-5. 현재 실행 내 중복 제거
-6. 비공개 커리어 프로필을 기준으로 적합도 평가
-7. 검증된 Tracker 이력과 비교
-8. 명확한 지원 확인 또는 리크루터 제출 근거 감지
-9. 회사 또는 리크루터 회신 감지
-10. 허용된 경우 Tracker 업데이트
-11. 설정된 기간 이상 회신이 없는 지원 건 표시
-12. 소스 상태, Human review 항목, Diagnostics 반환
+2. Web Discovery가 켜져 있고 오늘 아직 실행하지 않았다면 ATS와 공개 웹에서 추가 공고 탐색
+3. 웹 검색 결과는 실제 공고 페이지를 열어 현재 열려 있는지 확인
+4. 메일과 웹에서 찾은 공고를 하나의 후보 흐름으로 합침
+5. 한 메일 안의 여러 공고를 분리하고 sender + subject + body로 메일 유형 분류
+6. 공고 정보와 실제 사용 가능한 지원 링크 추출
+7. 현재 실행과 검증된 Tracker 이력을 기준으로 중복 확인
+8. 비공개 커리어 프로필을 기준으로 적합도 평가
+9. 명확한 지원 확인 또는 리크루터 제출 근거 감지
+10. 회사 또는 리크루터 회신 감지
+11. 허용된 경우 Tracker 업데이트
+12. 무응답 지원 건과 Diagnostics 반환
 
 Job Mail Collector는 사용자를 대신해 실제 지원서를 제출한다고 주장하지 않습니다.
+
+## Mail과 Search는 시트에서 구분됩니다
+
+중복 감지를 위해 하나의 Tracker를 사용하지만, `DiscoveryType`으로 각 행이 처음 들어온 경로를 구분합니다.
+
+- `Mail`: Gmail에서 발견
+- `Search`: 공개 웹 검색에서 발견
+
+`Source`에는 LinkedIn, Indeed, Greenhouse, Workday, Company Careers처럼 실제 플랫폼을 따로 기록합니다. 따라서 Mail/Search 기준 필터와 플랫폼 기준 필터를 각각 사용할 수 있습니다.
 
 ## 항상 새 Tracker로 시작합니다
 
@@ -153,6 +163,7 @@ README는 일반 사용자 중심으로 단순하게 유지합니다. 구현 세
 - [`docs/user-flow.md`](docs/user-flow.md) - 전체 사용자 및 시스템 흐름
 - [`docs/profile-questionnaire.md`](docs/profile-questionnaire.md) - 온보딩 UX와 질문 규칙
 - [`docs/matching-rules.md`](docs/matching-rules.md) - 적합도 및 제외 기준
+- [`docs/web-job-discovery.md`](docs/web-job-discovery.md) - Phase 1 공개 웹 공고 탐색 규칙
 - [`docs/sheet-schema.md`](docs/sheet-schema.md) - Tracker, Config, Sources, Control 구조
 - [`docs/architecture.md`](docs/architecture.md) - 전체 아키텍처와 책임 구분
 - [`docs/profile-file.md`](docs/profile-file.md) - 비공개 프로필 형식
@@ -184,7 +195,7 @@ job-mail-collector/
 
 현재 버전:
 
-- `config_version = 4`
+- `config_version = 5`
 - `profile_version = 2`
 
 ## OpenAI 참고 문서
