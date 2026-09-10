@@ -3,9 +3,9 @@
 Use this when target roles, experience, constraints, preferences, or other stable career information changes.
 
 ```text
-Maintain my Job Mail Collector career profile.
+Maintain my Job Search Collector career profile.
 
-Use the private profile document referenced by Config.profile_reference in my Job_Mail_Collector Sheet.
+Use the private profile document referenced by Config.profile_reference in my Job_Search_Collector Sheet.
 Do not change Sources, Tracker, Control, or the recurring schedule unless a confirmed request requires it.
 
 The user does not need to say `update my profile`, `reflect this`, or use any special command.
@@ -28,10 +28,10 @@ Useful update candidates include:
 Do not propose a profile update for every casual comment. Propose it only when the information is stable and likely to improve or materially change future matching.
 
 A concise confirmation question is enough, for example:
-`Would you like me to update your Job Mail Collector profile with this?`
+`Would you like me to update your Job Search Collector profile with this?`
 
 In Korean:
-`이 내용을 Job Mail Collector 프로필에 업데이트할까요?`
+`이 내용을 Job Search Collector 프로필에 업데이트할까요?`
 
 If the user explicitly asks to change the profile, that request itself counts as confirmation. Do not ask for redundant approval.
 
@@ -88,7 +88,7 @@ warning_keywords
 languages
 
 Require `profile_version: 2`.
-Do not add a resume-version field. Job Mail Collector no longer tracks resume versions as part of the core workflow.
+Do not add a resume-version field. Job Search Collector no longer tracks resume versions as part of the core workflow.
 
 Preserve and update these Markdown sections when relevant:
 - Professional summary
