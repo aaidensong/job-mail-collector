@@ -14,11 +14,11 @@ The public repository contains workflow logic and templates only. Each user's ca
 
 You only need **one prompt** to get started: [`prompts/01-bootstrap.md`](prompts/01-bootstrap.md).
 
-1. Connect Gmail and Google Drive to ChatGPT.
-2. Open `prompts/01-bootstrap.md`.
-3. Paste the full prompt into a new ChatGPT conversation.
-4. Answer the questions naturally.
-5. Open recommended job links and apply on the employer's site.
+Before starting, connect Gmail and Google Drive to ChatGPT.
+
+1. Paste the full `01-bootstrap.md` prompt into a new ChatGPT conversation.
+2. Answer ChatGPT's setup questions naturally.
+3. After setup, the Scheduled Task automatically checks job-alert email and the public web, matches relevant jobs, and adds them to Google Sheets.
 
 No local app, script, terminal command, server, or GitHub Action is required.
 
