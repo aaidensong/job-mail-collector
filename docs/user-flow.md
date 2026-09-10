@@ -136,13 +136,13 @@ Tabs are created in this order:
 
 If hiding is unavailable, `Tracker` still stays first and the user is told once that the other tabs are internal and do not need normal interaction.
 
-The Tracker has exactly 13 columns:
+The Tracker has exactly 14 columns:
 
-`Status, Company, Title, Location, Salary, WorkMode, Notes, Link, ReceivedAt, AppliedAt, RespondedAt, Result, Source`
+`Status, Company, Title, Location, Salary, WorkMode, Notes, Link, ReceivedAt, AppliedAt, RespondedAt, Result, DiscoveryType, Source`
 
 There are no ATS, ResumeVersion, Channel, or RejectionStage columns.
 
-`Source` is the single provenance field. If recruiter or agency context is important for a row, it goes in Notes.
+`DiscoveryType` is `Mail` or `Search`, so users can filter how an opportunity was first discovered. `Source` stores the concrete platform such as LinkedIn, Indeed, Greenhouse, Workday, or Company Careers. If the same posting is later found through another route, the original DiscoveryType and Source stay unchanged and the later path is added to Notes.
 
 #### Existing trackers are deliberately outside bootstrap
 
@@ -162,8 +162,11 @@ Recommended automation includes:
 - reconcile clear application status changes
 - detect employer or recruiter responses
 - flag no-response applications after 14 days
+- optionally discover additional jobs from the public web that may not appear in email alerts
 
 ATS and rejection-stage inference are not part of the core workflow.
+
+Bootstrap asks one additional plain-language question about whether Web Job Discovery should be enabled. The user does not choose ATS sites, queries, query counts, weekdays, or other technical search settings.
 
 The user chooses a daily run time and timezone in plain language. A city name is acceptable when ChatGPT can normalize it.
 
@@ -171,7 +174,7 @@ ChatGPT then creates the recurring Scheduled Task.
 
 ### Step 6 - GPT - Validate setup
 
-The setup test checks profile access, Gmail access, source parsing, digest expansion, Tracker completeness, 13-column output, application-link extraction, write capability, fit-based matching, and missed-run recovery logic.
+The setup test checks profile access, Gmail access, source parsing, digest expansion, Tracker completeness, 14-column output, application-link extraction, Web Discovery availability when enabled, write capability, fit-based matching, and missed-run recovery logic.
 
 At completion, ChatGPT tells the user that the profile does not need to be perfect today and that future career or search changes can simply be mentioned naturally in the same conversation.
 
@@ -230,7 +233,7 @@ Normal profile updates do not require the Scheduled Task to be recreated because
 
 ### Operational settings use the same approval pattern
 
-If the user's statement instead implies a change to run time, automation modules, no-response threshold, or Gmail sources, ChatGPT explains what operational setting would change and asks for confirmation.
+If the user's statement instead implies a change to run time, automation modules, Web Discovery enablement, no-response threshold, or Gmail sources, ChatGPT explains what operational setting would change and asks for confirmation.
 
 After confirmation, ChatGPT updates the existing Config, Sources, or Scheduled Task directly when supported. The user should not be asked to copy and paste a newly generated scheduled prompt when the existing task can be updated directly.
 
@@ -248,7 +251,17 @@ The task shows the scan period at the top of the result.
 
 The success marker is updated only after the full target period was processed successfully enough to produce normal output or a complete TSV write fallback.
 
-### Step 8 - GPT - Read and classify Gmail messages
+### Step 8 - GPT - Collect from Gmail and, when due, the public web
+
+Candidate collection always searches the confirmed Gmail Sources for the target period.
+
+When Web Discovery is enabled and `Control.last_successful_web_discovery_date` is blank or earlier than the current local calendar date, the same Scheduled Task also runs Web Discovery. This happens automatically at the scheduled time. The user does not manually trigger a second task.
+
+Web Discovery first searches the configured Phase 1 ATS domain families using profile-generated queries. It verifies real posting pages and their open state. If the first pass yields fewer than five verified new Strong/Possible roles, remaining query budget is used for broader web search. Mail and web candidates then enter the same matching and deduplication pipeline.
+
+A Web Discovery failure does not cause the Gmail workflow to fail, and its success marker is tracked separately.
+
+### Step 9 - GPT - Read and classify Gmail messages
 
 Candidate collection searches the confirmed Sources for the target period.
 
@@ -267,17 +280,17 @@ Useful categories include:
 
 One sender may produce several message types.
 
-### Step 9 - GPT - Extract, normalize, and deduplicate jobs
+### Step 10 - GPT - Extract, normalize, and deduplicate jobs
 
 ChatGPT expands digest messages, extracts individual jobs, preserves valid links, normalizes stable LinkedIn links when a job ID is explicit, and never invents missing URLs.
 
 Within-run duplicates use Company + Title, with location as a tie-breaker when needed.
 
-If the same job appears from multiple sources, Source can contain a combined value such as `Glassdoor + LinkedIn`.
+If the same job appears through multiple routes, keep one row. Preserve the DiscoveryType and Source that first caused the row to enter Tracker, and record later discovery paths in Notes.
 
 If company identity is ambiguous, ChatGPT does not guess the parent company. Suspected duplicates go to Human review rather than being merged automatically.
 
-### Step 10 - GPT - Evaluate actual fit
+### Step 11 - GPT - Evaluate actual fit
 
 Hard exclusions are applied first.
 
@@ -285,13 +298,13 @@ Remaining jobs are judged using actual responsibilities, required scope, ownersh
 
 A Strong match for an experienced user should normally have a meaningful reason beyond title similarity.
 
-### Step 11 - GPT - Compare with Tracker
+### Step 12 - GPT - Compare with Tracker
 
 Before absence or historical duplicate judgments, ChatGPT verifies that the number of Tracker rows read matches `Control.tracker_data_rows`.
 
 If the read is incomplete, it does not claim that a row is absent and skips history-dependent reconciliation.
 
-### Step 12 - GPT - Reconcile applications and responses in one inbox pass
+### Step 13 - GPT - Reconcile applications and responses in one inbox pass
 
 When enabled, ChatGPT reads target-period inbox messages once and compares likely application confirmations, recruiter submissions, and employer/recruiter responses against relevant Tracker rows.
 
@@ -302,7 +315,7 @@ A targeted follow-up search is used only when a specific ambiguity needs resolut
 Clear application evidence can include an explicit recruiter statement that a profile, resume, or application was submitted for a specific company and role.
 Ambiguous future-intent language goes to Human review.
 
-### Step 13 - GPT - Update Tracker
+### Step 14 - GPT - Update Tracker
 
 When writes are permitted:
 
@@ -314,15 +327,15 @@ When writes are permitted:
 
 No ATS or rejection-stage field is stored.
 
-If an automatic write is blocked, ChatGPT returns exact 13-column TSV as a fallback.
+If an automatic write is blocked, ChatGPT returns exact 14-column TSV as a fallback.
 
-### Step 14 - USER - Apply to jobs
+### Step 15 - USER - Apply to jobs
 
 The user opens recommended links and completes applications on external sites.
 
 Job Mail Collector does not claim to submit applications on the user's behalf.
 
-### Step 15 - GPT - Monitor no-response cases and source health
+### Step 16 - GPT - Monitor no-response cases and source health
 
 When enabled, ChatGPT identifies Applied rows with no response after the configured number of days.
 
@@ -350,7 +363,7 @@ Build fit-based profile with real differentiators
         |
         v
 GPT
-Create private profile + NEW 13-column Tracker
+Create private profile + NEW 14-column Tracker
         |
         v
 GPT
@@ -381,11 +394,15 @@ Calculate catch-up scan period
         |
         v
 GPT
-Read alerts + classify messages
+Read alerts + run Web Discovery when due
         |
         v
 GPT
-Extract + deduplicate + evaluate actual fit
+Verify web postings + classify messages
+        |
+        v
+GPT
+Merge candidates + deduplicate + evaluate actual fit
         |
         v
 GPT
