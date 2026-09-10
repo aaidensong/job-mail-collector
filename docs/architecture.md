@@ -12,8 +12,8 @@ User responsibilities:
 
 GPT responsibilities:
 - verify app access
-- show setup progress and an approximate remaining-answer range
 - collect career evidence and matching constraints conversationally
+- show only the approximate remaining-question count at the bottom of onboarding turns
 - create the private profile
 - discover and confirm Gmail alert sources
 - create a brand-new Tracker Sheet using the workflow's own schema
@@ -23,18 +23,20 @@ GPT responsibilities:
 
 The user should not manually create, move, or wire together the profile and Tracker resources.
 
-### Progress-visible onboarding
+### Compact conversational onboarding
 
-The setup conversation has four user-facing stages:
+The setup conversation does not expose internal stages, a setup roadmap, stage numbers, stage names, or an upfront estimate of total answers.
 
-1. Career direction & evidence
-2. Search constraints
-3. Automation & job-alert sources
-4. Schedule, create, and test
+ChatGPT asks exactly one onboarding question per turn. A natural-language answer may resolve several profile fields at once, and already resolved questions are skipped.
 
-Most setups are expected to take about 8-12 user answers when recommended settings are used, but the estimate is dynamic. One detailed response can resolve multiple topics and remove later questions.
+For career, experience, preference, and constraint questions, the question is the main visual emphasis and one concise fictional example appears directly below it.
 
-Before each direct onboarding question, ChatGPT shows a compact stage and remaining-answer estimate. Permission dialogs and approval taps are not counted as onboarding answers.
+The only progress indicator is an approximate remaining-question count at the very bottom of the message:
+
+- Korean: `남은 질문: 약 N개`
+- English: `Questions remaining: about N`
+
+The count is recalculated from unresolved topics. Permission dialogs, approval taps, resource creation, and tests are not counted as onboarding questions.
 
 ### Fresh Tracker boundary
 
@@ -246,7 +248,7 @@ Paste bootstrap prompt into ChatGPT
         |
         v
 USER + GPT
-Conversational onboarding with visible progress
+Compact conversational onboarding
         |
         v
 GPT
