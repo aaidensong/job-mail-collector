@@ -148,6 +148,7 @@ A few important safeguards are built into the workflow:
 - missed scheduled runs can catch up using `Control.last_successful_scan_date`;
 - sender address alone does not define a message type;
 - partial Tracker reads are not used to prove that something is absent;
+- harmless Company/Title formatting differences such as dash variants, whitespace, case, and supported legal suffixes are normalized for duplicate comparison;
 - missing links are left blank instead of being invented;
 - unfamiliar company relationships are not guessed;
 - ambiguous recruiter or response evidence goes to Human review;
@@ -170,7 +171,7 @@ The README is intentionally user-focused. Implementation details live in `docs/`
 ## Repository structure
 
 ```text
-job-mail-collector/
+job-search-collector/
 ├── README.md
 ├── README.ko.md
 ├── LICENSE
