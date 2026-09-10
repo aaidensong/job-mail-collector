@@ -8,9 +8,9 @@ Run Job Mail Collector in TEST MODE only.
 Use the configured Job Mail Collector Google Sheet, the private profile referenced by Config.profile_reference, and the configured Gmail sources.
 Do not create, edit, delete, or append Tracker rows.
 Do not change the recurring schedule.
-Do not update Control.last_successful_scan_date in test mode.
+Do not update Control.last_successful_scan_date or Control.last_successful_web_discovery_date in test mode.
 
-Require Config.config_version = 4 and profile_version = 2.
+Require Config.config_version = 5 and profile_version = 2.
 
 Use the same scan-period logic as the daily workflow:
 - target end = previous local calendar day in Config.schedule_timezone;
@@ -34,8 +34,13 @@ Return:
 13. whether messages from the same sender were classified by sender + subject + body rather than sender alone;
 14. if response or missing-application detection is enabled, whether a single-pass inbox scan can be performed for the target period without running a separate company search for every Applied row;
 15. whether clear application-confirmation or recruiter-submission evidence can be distinguished from ambiguous evidence;
-16. whether automatic Tracker writing is available when enabled, or whether TSV fallback would be required;
-17. all permissions, profile, parsing, source, or completeness failures.
+16. whether Web Discovery is enabled, whether it is due today under `last_successful_web_discovery_date < today`, and whether web search is available;
+17. when Web Discovery is due, validate the first-pass query plan against the 12 ATS domain families without exceeding 20 total queries, and report whether broader search would be triggered by the verified-new Strong/Possible threshold;
+18. verify that a web result is not accepted from a search snippet alone and that a real posting page/open state is checked;
+19. verify that mail rows use DiscoveryType=Mail and web rows use DiscoveryType=Search, with Source reserved for the concrete platform;
+20. verify that unknown eligibility details are flagged for confirmation rather than guessed as hard exclusions;
+21. whether automatic Tracker writing is available when enabled, or whether TSV fallback would be required;
+22. all permissions, profile, parsing, source, web-discovery, or completeness failures.
 
 Pass criteria:
 - private profile readable and valid
@@ -45,11 +50,14 @@ Pass criteria:
 - enabled-source search works
 - digest extraction works when a digest exists
 - no fabricated application link
-- Tracker output schema is exactly 13 columns
+- Tracker output schema is exactly 14 columns
+- DiscoveryType and Source are separate fields; DiscoveryType is only Mail or Search
 - no ATS, ResumeVersion, Channel, or RejectionStage field is produced
 - plausible nearby titles are evaluated by actual scope, not title label alone
 - Strong matches for experienced users use at least one meaningful evidence signal beyond exact title similarity when that evidence is available
 - missed-run catch-up period is calculated correctly
+- Web Discovery never advances or blocks the Gmail successful-scan marker
+- Web Discovery marker is not changed in test mode
 
 Do not say the setup passed if the profile, Gmail, or Sheet required permission failed.
 ```
