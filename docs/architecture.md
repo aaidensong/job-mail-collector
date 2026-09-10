@@ -124,8 +124,9 @@ Responsibilities:
 - classify messages by actual content
 - merge mail and web candidates into one candidate pool
 - extract structured jobs
+- derive comparison-normalized Company and Title identity values
 - normalize links
-- deduplicate within the run
+- deduplicate within the run using normalized Company + Title
 
 The scan marker advances only after the target period is fully processed successfully enough to produce normal output or a complete TSV write fallback.
 
@@ -147,6 +148,21 @@ Two-stage decision model:
 Matching prioritizes actual responsibilities and demonstrated career evidence over exact title equality.
 
 For experienced users, Strong matches should normally include a meaningful reason beyond title similarity, such as matching problem type, ownership scope, measurable impact, specialty, domain depth, or leadership evidence.
+
+## 5A. Identity normalization layer
+
+Company and Title identity normalization sits after extraction and before every duplicate or row-association judgment.
+
+The workflow keeps two representations:
+
+- comparison values: temporary, aggressively normalized enough to absorb harmless source differences such as dash variants, whitespace, case, quote style, slash spacing, and supported terminal Company legal suffixes;
+- display values: conservative values written to Tracker so the source wording remains readable.
+
+Comparison values are not Tracker columns.
+
+The same comparison logic is used for within-run deduplication, historical Tracker comparison, Web Discovery new-role counting, application-confirmation association, recruiter-submission association, and response association.
+
+Existing Tracker rows are not migrated or rewritten by this layer. They are normalized in memory when compared.
 
 ## 6. History and completeness layer
 
@@ -246,7 +262,7 @@ Control.last_successful_scan_date -> calculate catch-up period
 Private profile + Config + Sources + Tracker
         |
         v
-Job-alert Gmail -> extraction -> hard filters -> fit matching
+Job-alert Gmail + Web Discovery -> extraction -> identity normalization -> hard filters -> fit matching
         |
         +------------------------------+
         |                              |
