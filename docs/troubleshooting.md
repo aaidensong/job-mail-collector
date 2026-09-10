@@ -119,7 +119,7 @@ The workflow must not claim a write succeeded when it did not. When an unattende
 
 ## I applied but the row still says Candidate
 
-Job Mail Collector normally learns that an application was submitted from clear Gmail evidence such as an application-confirmation email or an explicit recruiter-submission message.
+Job Search Collector normally learns that an application was submitted from clear Gmail evidence such as an application-confirmation email or an explicit recruiter-submission message.
 
 If neither exists, there may be no reliable evidence that the application happened. In that case, manually change the Tracker row to `Applied` and enter `AppliedAt` if desired.
 
