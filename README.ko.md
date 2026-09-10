@@ -16,11 +16,11 @@ Job Search Collector는 Gmail로 들어오는 채용 알림 메일을 읽고, �
 
 [`prompts/01-bootstrap.md`](prompts/01-bootstrap.md)
 
-1. ChatGPT에 Gmail과 Google Drive를 연결합니다.
-2. `prompts/01-bootstrap.md`를 엽니다.
-3. 전체 내용을 새 ChatGPT 대화에 붙여넣습니다.
-4. 질문에 자연스럽게 답합니다.
-5. 추천된 공고 링크를 열어 실제 지원서를 제출합니다.
+시작하기 전에 ChatGPT에 Gmail과 Google Drive를 연결합니다.
+
+1. `01-bootstrap.md` 전체 내용을 새 ChatGPT 대화에 붙여넣습니다.
+2. ChatGPT의 설정 질문에 자연스럽게 답합니다.
+3. 설정이 끝나면 Scheduled Task가 채용 알림 메일과 공개 웹을 자동으로 확인하고, 적합한 공고를 찾아 Google Sheets에 추가합니다.
 
 별도 앱, 로컬 프로그램, Python 스크립트, 터미널, 서버, GitHub Action은 필요하지 않습니다.
 
