@@ -3,9 +3,9 @@
 Use this after bootstrap or after changing the profile, sources, or schema.
 
 ```text
-Run Job Mail Collector in TEST MODE only.
+Run Job Search Collector in TEST MODE only.
 
-Use the configured Job Mail Collector Google Sheet, the private profile referenced by Config.profile_reference, and the configured Gmail sources.
+Use the configured Job Search Collector Google Sheet, the private profile referenced by Config.profile_reference, and the configured Gmail sources.
 Do not create, edit, delete, or append Tracker rows.
 Do not change the recurring schedule.
 Do not update Control.last_successful_scan_date or Control.last_successful_web_discovery_date in test mode.
