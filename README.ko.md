@@ -32,7 +32,7 @@ Job Mail Collector는 Gmail로 들어오는 채용 알림 메일을 읽고, 개�
 
 - 경력, 강점, 희망 직무, 실제 구직 조건 파악
 - Google Drive에 비공개 커리어 프로필 생성
-- 새로운 Job Mail Collector Google Sheet Tracker 생성
+- 새로운 Job Mail Collector Google Sheet 생성. 사용자가 보는 탭은 `Tracker` 하나로 두고, 내부 운영 탭은 지원되는 경우 숨김 처리
 - Gmail에서 채용 알림 소스 탐색 또는 입력 후 사용자 확인
 - 지원 확인, 회신 감지 등 추천 자동화 설정
 - 반복 Scheduled Task 생성
