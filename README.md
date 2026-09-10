@@ -30,7 +30,7 @@ During the setup conversation, ChatGPT can:
 
 - understand your experience, strengths, target roles, and practical constraints;
 - create a private career profile in Google Drive;
-- create a brand-new Job Mail Collector Google Sheet Tracker;
+- create a brand-new Job Mail Collector Google Sheet with `Tracker` as the only user-facing tab, while keeping internal operational tabs hidden when supported;
 - find or collect job-alert sources from Gmail and ask you to confirm them;
 - configure recommended application and response tracking behavior;
 - create the recurring Scheduled Task;
