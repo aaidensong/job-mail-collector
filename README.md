@@ -1,12 +1,12 @@
 [English](README.md) | [한국어](README.ko.md)
 
-# Job Mail Collector
+# Job Search Collector
 
-Job Mail Collector is a ChatGPT Scheduled Task workflow that reads job-alert emails from Gmail, can discover additional jobs on the public web, matches postings against a private career profile, and keeps opportunities organized in Google Sheets when permissions allow.
+Job Search Collector is a ChatGPT Scheduled Task workflow that reads job-alert emails from Gmail, can discover additional jobs on the public web, matches postings against a private career profile, and keeps opportunities organized in Google Sheets when permissions allow.
 
 The public repository contains workflow logic and templates only. Each user's career profile, email data, and application history stay in that user's connected Google account.
 
-![Job Mail Collector workflow](job-mail-collector-flow.png)
+![Job Search Collector workflow](job-search-collector-flow.png)
 
 > Product behavior, available apps, and Scheduled Task capabilities can change. Last verified against OpenAI documentation: 2026-09-08.
 
@@ -30,7 +30,7 @@ During the setup conversation, ChatGPT can:
 
 - understand your experience, strengths, target roles, and practical constraints;
 - create a private career profile in Google Drive;
-- create a brand-new Job Mail Collector Google Sheet with `Tracker` as the only user-facing tab, while keeping internal operational tabs hidden when supported;
+- create a brand-new Job Search Collector Google Sheet with `Tracker` as the only user-facing tab, while keeping internal operational tabs hidden when supported;
 - find or collect job-alert sources from Gmail and ask you to confirm them;
 - ask whether you want additional Web Job Discovery enabled;
 - configure recommended application and response tracking behavior;
@@ -78,7 +78,7 @@ Normal career-profile updates do not require recreating the Scheduled Task becau
 
 ## Matching is based on actual fit
 
-Job Mail Collector does not treat an exact title match as the main definition of fit.
+Job Search Collector does not treat an exact title match as the main definition of fit.
 
 A stated title or seniority level is an anchor, not automatically a whitelist. The workflow considers actual responsibilities, ownership, problem types, impact, leadership expectations, domain, skills, and practical constraints.
 
@@ -120,9 +120,9 @@ The Tracker keeps one unified job history for reliable duplicate detection, whil
 
 ## Fresh Tracker by design
 
-Bootstrap always creates a new Job Mail Collector Tracker using this workflow's own schema.
+Bootstrap always creates a new Job Search Collector Tracker using this workflow's own schema.
 
-It does not ask to reuse, import, adapt, or merge an existing spreadsheet during setup. If a file named `Job_Mail_Collector` already exists, a new unique name such as `Job_Mail_Collector_2` is used automatically.
+It does not ask to reuse, import, adapt, or merge an existing spreadsheet during setup. If a file named `Job_Search_Collector` already exists, a new unique name such as `Job_Search_Collector_2` is used automatically.
 
 If historical application data needs to be migrated, handle that separately after setup in another ChatGPT conversation.
 
@@ -175,11 +175,11 @@ job-search-collector/
 ├── README.md
 ├── README.ko.md
 ├── LICENSE
-├── job-mail-collector-flow.png
-├── job-mail-collector-flow-ko.png
+├── job-search-collector-flow.png
+├── job-search-collector-flow-ko.png
 ├── prompts/
 │   ├── 01-bootstrap.md
-│   ├── 02-daily-job-mail-collector.md
+│   ├── 02-daily-job-search-collector.md
 │   ├── 03-test-run.md
 │   └── 04-update-profile.md
 ├── profiles/
@@ -210,6 +210,6 @@ Except where otherwise noted, the original prompts, documentation, examples, and
 
 Suggested attribution:
 
-> Job Mail Collector by Aiden, licensed under CC BY 4.0.
+> Job Search Collector by Aiden, licensed under CC BY 4.0.
 
 See `LICENSE` and https://creativecommons.org/licenses/by/4.0/ for details.
