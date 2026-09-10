@@ -10,6 +10,23 @@ Historical spreadsheet migration, if desired, is outside bootstrap and should be
 
 Career history and job-fit rules do not live in this Sheet. They live in the private profile document described in `profile-file.md`.
 
+## User-facing tab layout
+
+The workbook still uses four tabs for reliability, but only `Tracker` is intended for normal user interaction.
+
+Create the tabs in this order:
+
+1. `Tracker`
+2. `Config`
+3. `Sources`
+4. `Control`
+
+After setup data is populated, hide `Config`, `Sources`, and `Control` when the available Google Sheets actions support hiding tabs. Keep `Tracker` visible, first, and active when possible.
+
+Hiding is presentation only. The scheduled workflow must continue to read and write the hidden internal tabs by name. Never delete those tabs merely to simplify the user interface.
+
+If tab hiding is unavailable, keep `Tracker` first and tell the user that `Tracker` is the only tab they need for normal use.
+
 ## Config
 
 | Column | Name | Purpose |
