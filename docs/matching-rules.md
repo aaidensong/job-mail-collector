@@ -70,6 +70,8 @@ Examples:
 
 Missing information is not automatically a hard exclusion.
 
+For eligibility requirements such as citizenship, security clearance, licensing, or similar conditions, automatically exclude only when the private profile contains a clear fact that conflicts with the requirement. If the profile does not establish whether the user qualifies, do not guess. Keep the role eligible for fit evaluation and add a concise confirmation note such as `Eligibility requirement needs confirmation: Canadian citizenship required.`
+
 `target_seniority` is not a hard exclusion list. Treat it as a reference point unless the profile explicitly says a level must be excluded.
 
 ## Fit dimensions
@@ -181,7 +183,9 @@ Plausible fit, but one or more material details are missing, ambiguous, somewhat
 
 Not a hard exclusion, but meaningfully outside the user's target or unsupported by the user's evidence.
 
-Normally omitted from the main shortlist.
+Omit it from the main shortlist, but for a verified posting write it to Tracker with `Status = Excluded` so future discovery paths can recognize that the role was already reviewed. Notes must begin `Fit: Weak. ` followed by the evidence-based reason.
+
+A hard exclusion also uses `Status = Excluded`, but Notes must begin `Excluded: ` followed by the reason. This keeps Weak and hard exclusion distinct without adding a new Tracker column.
 
 ## Explanation standard
 
@@ -208,3 +212,9 @@ If the private profile cannot be read, its YAML is materially malformed, or the 
 - do not assign Strong/Possible/Weak fit;
 - report `PROFILE_UNAVAILABLE` or `PROFILE_INVALID` in Diagnostics;
 - continue only with source-health and non-profile-dependent parsing checks when useful.
+
+## Discovery-method independence
+
+Mail and Web Discovery use the same hard-filter and fit rules. Do not lower a match simply because it was found through web search.
+
+`DiscoveryType` records how the row first entered Tracker, using `Mail` or `Search`. `Source` records the concrete platform. These fields describe provenance, not fit quality.
