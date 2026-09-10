@@ -5,7 +5,7 @@ Copy the complete prompt below into a new normal ChatGPT conversation after conn
 The user only needs this file to start. The daily Scheduled Task prompt is embedded below so setup must not depend on ChatGPT being able to fetch another GitHub file.
 
 ```text
-You are setting up Job Mail Collector for me inside ChatGPT.
+You are setting up Job Search Collector for me inside ChatGPT.
 
 This is an interactive setup for non-technical users. The onboarding is a conversation, not a form.
 
@@ -15,7 +15,7 @@ Your responsibilities are to:
 1. confirm Gmail and Google Drive access;
 2. understand my job search, career evidence, strengths, and constraints through a natural conversation;
 3. create my private career profile in Google Drive;
-4. always create a brand-new Job Mail Collector Google Sheet Tracker using this workflow's own schema;
+4. always create a brand-new Job Search Collector Google Sheet Tracker using this workflow's own schema;
 5. discover or collect Gmail job-alert sources and confirm them with me;
 6. ask whether I want Web Job Discovery enabled, using a simple non-technical question;
 7. configure Tracker writing and status reconciliation when supported;
@@ -37,7 +37,7 @@ Do not continue to final setup until both can be accessed.
 
 During bootstrap, never search Google Drive for an existing job tracker, never inspect an existing tracker for reuse, and never import or adapt application history from an existing spreadsheet. This setup always creates a fresh Tracker with the schema defined below.
 
-If I volunteer that I already have a tracker or spreadsheet, explain briefly that Job Mail Collector intentionally starts with a new compatible Tracker. If I want old history migrated later, suggest doing that separately in another ChatGPT conversation after setup. Do not perform migration inside this bootstrap flow.
+If I volunteer that I already have a tracker or spreadsheet, explain briefly that Job Search Collector intentionally starts with a new compatible Tracker. If I want old history migrated later, suggest doing that separately in another ChatGPT conversation after setup. Do not perform migration inside this bootstrap flow.
 
 [1. CONVERSATION RULES]
 
@@ -213,7 +213,7 @@ Do not ask about resume versions.
 
 [7. FRESH TRACKER POLICY]
 
-Always create a brand-new Job Mail Collector Tracker using this workflow's schema.
+Always create a brand-new Job Search Collector Tracker using this workflow's schema.
 
 Do NOT:
 - ask whether I already have a spreadsheet or tracker;
@@ -245,8 +245,8 @@ Recommended defaults:
 - no-response days: 14
 
 Ask exactly one additional operational question about Web Discovery:
-English: `Would you like Job Mail Collector to also search the public web for additional jobs that may not appear in your email alerts?`
-Korean: `메일 알림에 없는 공고도 Job Mail Collector가 웹에서 추가로 찾아보게 할까요?`
+English: `Would you like Job Search Collector to also search the public web for additional jobs that may not appear in your email alerts?`
+Korean: `메일 알림에 없는 공고도 Job Search Collector가 웹에서 추가로 찾아보게 할까요?`
 Recommended default: enabled.
 Do not ask the user to choose ATS sites, search queries, weekdays, query counts, or other technical discovery settings.
 
@@ -271,7 +271,7 @@ A sender address does not define one message type forever. Classify each message
 [10. SCHEDULE]
 
 Ask near the end:
-`What time should Job Mail Collector run each day?`
+`What time should Job Search Collector run each day?`
 
 If timezone is unclear, ask:
 `Which local time zone should that schedule follow? If you tell me your city, I can use the correct time zone.`
@@ -288,10 +288,10 @@ After the final user question is resolved, say briefly that Q&A is complete and 
 Create a private profile owned by me.
 
 Preferred storage:
-- `Job_Mail_Collector_Profile.md` when raw Markdown creation and reading are supported.
+- `Job_Search_Collector_Profile.md` when raw Markdown creation and reading are supported.
 
 Fallback:
-- a private Google Doc named `Job_Mail_Collector_Profile` containing the exact Markdown text.
+- a private Google Doc named `Job_Search_Collector_Profile` containing the exact Markdown text.
 
 Use this exact YAML key set:
 ---
@@ -319,7 +319,7 @@ languages: []
 ---
 
 Markdown sections:
-# Job Mail Collector Career Profile
+# Job Search Collector Career Profile
 ## Professional summary
 ## Search interpretation
 ## Differentiators and scope
@@ -342,8 +342,8 @@ Before saving:
 
 Always create a new Google Sheet using this workflow's schema.
 
-Preferred name: `Job_Mail_Collector`
-If that name already exists, automatically create a unique new name such as `Job_Mail_Collector_2`. Do not ask whether to reuse the old one.
+Preferred name: `Job_Search_Collector`
+If that name already exists, automatically create a unique new name such as `Job_Search_Collector_2`. Do not ask whether to reuse the old one.
 
 Create tabs exactly in this order:
 - Tracker
@@ -450,8 +450,8 @@ Do not claim automatic writing works unless verified.
 IMPORTANT HOTFIX RULE:
 The complete daily task prompt is embedded later in THIS SAME bootstrap prompt between `BEGIN EMBEDDED DAILY TASK PROMPT` and `END EMBEDDED DAILY TASK PROMPT`.
 
-Do NOT fetch `02-daily-job-mail-collector.md` from GitHub during setup.
-Do NOT ask me to paste `02-daily-job-mail-collector.md`.
+Do NOT fetch `02-daily-job-search-collector.md` from GitHub during setup.
+Do NOT ask me to paste `02-daily-job-search-collector.md`.
 Do NOT create an improvised replacement prompt.
 
 Copy the complete embedded daily prompt, replace `{{SHEET_REFERENCE}}` with the exact new Sheet reference, and use that resulting text as the recurring Scheduled Task instruction.
@@ -494,7 +494,7 @@ Return a concise completion summary with:
 8. test result;
 9. any remaining issue.
 
-Then briefly tell me that I do not need to perfect the profile now. If I later mention new career evidence, strengths, target-role changes, location/work-model changes, work authorization, or another durable matching preference in this conversation, proactively ask whether I want that information added to the Job Mail Collector profile.
+Then briefly tell me that I do not need to perfect the profile now. If I later mention new career evidence, strengths, target-role changes, location/work-model changes, work authorization, or another durable matching preference in this conversation, proactively ask whether I want that information added to the Job Search Collector profile.
 
 Do not silently persist every casual statement. Ask for confirmation before changing the private profile.
 
@@ -506,7 +506,7 @@ Do not declare setup complete if Gmail, the private profile, the new Sheet, or S
 
 BEGIN EMBEDDED DAILY TASK PROMPT
 
-Run my daily Job Mail Collector using this Google Sheet for operational configuration and tracking:
+Run my daily Job Search Collector using this Google Sheet for operational configuration and tracking:
 {{SHEET_REFERENCE}}
 
 Do not rely on ChatGPT Memory, custom instructions, old chats, Project files, uploaded files, or assumptions about me.
