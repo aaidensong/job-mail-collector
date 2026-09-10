@@ -224,6 +224,18 @@ For automation settings, ask one plain-language yes/no question and explain the 
 
 For Gmail sources, ask whether ChatGPT should find likely job-alert senders automatically. If yes, show the proposed source list and ask one confirmation question.
 
+Ask exactly one additional plain-language operational question about Web Discovery:
+
+> **Would you like Job Mail Collector to also search the public web for additional jobs that may not appear in your email alerts?**
+
+Korean:
+
+> **메일 알림에 없는 공고도 Job Mail Collector가 웹에서 추가로 찾아보게 할까요?**
+
+Recommended default: enabled.
+
+Do not ask the user to choose ATS sites, search queries, query counts, weekdays, or search frequency.
+
 For schedule and timezone, ask only what is unresolved. Because schedule and timezone are preferences, include concise fictional examples.
 
 Do not ask the user to configure a technical email scan window. The workflow uses `Control.last_successful_scan_date` to recover missed runs automatically.
@@ -258,7 +270,7 @@ Do not propose updates for every casual comment. Only propose them for stable in
 
 After confirmation, update the existing private profile directly. Normal career-profile changes should not require recreating the recurring Scheduled Task because the daily task reloads `Config.profile_reference` on every run.
 
-If the user instead changes operational behavior such as run time, automation modules, no-response threshold, or Gmail sources, explain what would change and ask for confirmation. After confirmation, update the existing Config, Sources, or Scheduled Task directly when supported instead of asking the user to copy and paste a newly generated scheduled prompt.
+If the user instead changes operational behavior such as run time, automation modules, Web Discovery enablement, no-response threshold, or Gmail sources, explain what would change and ask for confirmation. After confirmation, update the existing Config, Sources, or Scheduled Task directly when supported instead of asking the user to copy and paste a newly generated scheduled prompt.
 
 ## Rule severity
 
