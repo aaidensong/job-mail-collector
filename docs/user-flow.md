@@ -113,18 +113,18 @@ Resume-version tracking is not part of the core workflow.
 ChatGPT creates:
 
 1. a private career profile
-2. a new Google Sheet Tracker using Job Mail Collector's own schema
+2. a new Google Sheet Tracker using Job Search Collector's own schema
 
 Preferred profile:
-`Job_Mail_Collector_Profile.md`
+`Job_Search_Collector_Profile.md`
 
 Fallback:
 a private Google Doc containing the same Markdown text.
 
 Preferred Sheet name:
-`Job_Mail_Collector`
+`Job_Search_Collector`
 
-If that name already exists, ChatGPT automatically creates a uniquely named new Sheet such as `Job_Mail_Collector_2`. It does not ask to reuse the existing file.
+If that name already exists, ChatGPT automatically creates a uniquely named new Sheet such as `Job_Search_Collector_2`. It does not ask to reuse the existing file.
 
 Tabs are created in this order:
 - Tracker
@@ -207,11 +207,11 @@ If the new information is stable and likely to improve or materially change futu
 
 Example:
 
-> This could affect future job matching. Would you like me to update your Job Mail Collector profile with it?
+> This could affect future job matching. Would you like me to update your Job Search Collector profile with it?
 
 Korean:
 
-> 이 내용을 Job Mail Collector 프로필에 업데이트할까요?
+> 이 내용을 Job Search Collector 프로필에 업데이트할까요?
 
 ### Step C - USER - Confirm
 
@@ -333,7 +333,7 @@ If an automatic write is blocked, ChatGPT returns exact 14-column TSV as a fallb
 
 The user opens recommended links and completes applications on external sites.
 
-Job Mail Collector does not claim to submit applications on the user's behalf.
+Job Search Collector does not claim to submit applications on the user's behalf.
 
 ### Step 16 - GPT - Monitor no-response cases and source health
 
