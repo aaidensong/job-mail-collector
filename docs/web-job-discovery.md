@@ -108,7 +108,7 @@ Definitions:
 
 - `verified`: the actual posting page was opened and confirmed to represent a currently open job
 - `new`: not a historical duplicate under the existing Tracker comparison rules
-- default historical duplicate key: normalized Company + normalized Title
+- default historical duplicate key: comparison-normalized Company + comparison-normalized Title using the shared rules in `docs/matching-rules.md`
 - a materially different requisition can be treated as a distinct opening when supported by evidence
 
 If first pass yields at least 5 verified new Strong/Possible roles:
@@ -128,6 +128,14 @@ If first pass yields fewer than 5 verified new Strong/Possible roles:
 Never exceed 20 total queries.
 
 This allocation is an initial Phase 1 rule and is expected to be tuned after operating data is available.
+
+## Shared identity normalization
+
+Web Discovery does not define its own duplicate-normalization rules. After a posting is parsed, use the shared Company and Title comparison normalization from `docs/matching-rules.md` before deciding whether the posting is new.
+
+This is required for Search-to-Search and Mail-to-Search comparisons. For example, a Title using an en dash and the same Title using a hyphen must not become separate opportunities solely because of that character difference.
+
+Tracker storage/display values remain separate from these comparison-only values.
 
 ## Posting verification
 
