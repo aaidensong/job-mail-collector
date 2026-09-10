@@ -448,7 +448,61 @@ Do not claim automatic writing works unless verified.
 [14. CREATE THE SCHEDULED TASK]
 
 IMPORTANT HOTFIX RULE:
-The complete daily task prompt is embedded later in THIS SAME bootstrap prompt between `BEGIN EMBEDDED DAILY TASK PROMPT
+The complete daily task prompt is embedded later in THIS SAME bootstrap prompt between `BEGIN EMBEDDED DAILY TASK PROMPT` and `END EMBEDDED DAILY TASK PROMPT`.
+
+Do NOT fetch `02-daily-job-mail-collector.md` from GitHub during setup.
+Do NOT ask me to paste `02-daily-job-mail-collector.md`.
+Do NOT create an improvised replacement prompt.
+
+Copy the complete embedded daily prompt, replace `{{SHEET_REFERENCE}}` with the exact new Sheet reference, and use that resulting text as the recurring Scheduled Task instruction.
+Create the task at my selected time and timezone.
+
+If Scheduled Task creation itself is unavailable in my account, explain that specific limitation. Do not turn a GitHub-fetch failure into a user action because no GitHub fetch is required.
+
+[15. TEST RUN]
+
+Before setup is complete, run the workflow in test mode.
+Verify:
+- profile can be read and profile_version = 2;
+- `Tracker` is the visible user-facing tab and internal `Config`, `Sources`, and `Control` remain accessible to the workflow even when hidden;
+- the Tracker schema is exactly 14 columns including DiscoveryType and Source;
+- Gmail can be searched;
+- when Web Discovery is enabled and due today, public-web search can run or a clear discovery-specific limitation is reported without failing Gmail processing;
+- enabled sources can be searched;
+- digest emails expand into individual jobs;
+- message classification uses sender + subject + body;
+- the newly created Sheet can be read;
+- tracker_data_rows matches the rows actually read;
+- 14-column Tracker schema is used;
+- at least one link can be parsed when a matching email exists;
+- automatic writing is available when enabled, or TSV fallback is configured;
+- plausible roles are not rejected only because title or level differs;
+- catch-up scan-period calculation is correct.
+
+[16. SETUP COMPLETION AND FUTURE UPDATES]
+
+Return a concise completion summary with:
+1. profile name/reference and storage format;
+2. new Sheet name/reference;
+3. Scheduled Task name, time, and timezone;
+4. enabled Gmail sources;
+5. concise search interpretation;
+6. enabled automation behavior, including whether Web Discovery is enabled;
+7. Tracker write mode;
+8. test result;
+9. any remaining issue.
+
+Then briefly tell me that I do not need to perfect the profile now. If I later mention new career evidence, strengths, target-role changes, location/work-model changes, work authorization, or another durable matching preference in this conversation, proactively ask whether I want that information added to the Job Mail Collector profile.
+
+Do not silently persist every casual statement. Ask for confirmation before changing the private profile.
+
+For ordinary career/profile changes, update the private profile after approval. Do not recreate the Scheduled Task because the daily task reads Config.profile_reference every run.
+
+If I later express an operational change such as schedule time, timezone, no-response threshold, enabled Gmail sources, or automation behavior, explain the intended change briefly and ask for approval. After approval, directly update the relevant Config and/or existing Scheduled Task when supported. Do not make me copy a newly generated prompt when the existing task can be updated directly.
+
+Do not declare setup complete if Gmail, the private profile, the new Sheet, or Scheduled Task creation failed.
+
+BEGIN EMBEDDED DAILY TASK PROMPT
 
 Run my daily Job Mail Collector using this Google Sheet for operational configuration and tracking:
 {{SHEET_REFERENCE}}
@@ -1085,475 +1139,6 @@ DIAGNOSTIC RULES
 - Separate confirmed from suspected.
 - Never claim absence when the relevant source was not fully read.
 - Never substitute Memory when the private profile is unavailable.
-
-END EMBEDDED DAILY TASK PROMPT`.
-
-Do NOT fetch `02-daily-job-mail-collector.md` from GitHub during setup.
-Do NOT ask me to paste `02-daily-job-mail-collector.md`.
-Do NOT create an improvised replacement prompt.
-
-Copy the complete embedded daily prompt, replace `{{SHEET_REFERENCE}}` with the exact new Sheet reference, and use that resulting text as the recurring Scheduled Task instruction.
-Create the task at my selected time and timezone.
-
-If Scheduled Task creation itself is unavailable in my account, explain that specific limitation. Do not turn a GitHub-fetch failure into a user action because no GitHub fetch is required.
-
-[15. TEST RUN]
-
-Before setup is complete, run the workflow in test mode.
-Verify:
-- profile can be read and profile_version = 2;
-- `Tracker` is the visible user-facing tab and internal `Config`, `Sources`, and `Control` remain accessible to the workflow even when hidden;
-- the Tracker schema is exactly 14 columns including DiscoveryType and Source;
-- Gmail can be searched;
-- when Web Discovery is enabled and due today, public-web search can run or a clear discovery-specific limitation is reported without failing Gmail processing;
-- enabled sources can be searched;
-- digest emails expand into individual jobs;
-- message classification uses sender + subject + body;
-- the newly created Sheet can be read;
-- tracker_data_rows matches the rows actually read;
-- 14-column Tracker schema is used;
-- at least one link can be parsed when a matching email exists;
-- automatic writing is available when enabled, or TSV fallback is configured;
-- plausible roles are not rejected only because title or level differs;
-- catch-up scan-period calculation is correct.
-
-[16. SETUP COMPLETION AND FUTURE UPDATES]
-
-Return a concise completion summary with:
-1. profile name/reference and storage format;
-2. new Sheet name/reference;
-3. Scheduled Task name, time, and timezone;
-4. enabled Gmail sources;
-5. concise search interpretation;
-6. enabled automation behavior, including whether Web Discovery is enabled;
-7. Tracker write mode;
-8. test result;
-9. any remaining issue.
-
-Then briefly tell me that I do not need to perfect the profile now. If I later mention new career evidence, strengths, target-role changes, location/work-model changes, work authorization, or another durable matching preference in this conversation, proactively ask whether I want that information added to the Job Mail Collector profile.
-
-Do not silently persist every casual statement. Ask for confirmation before changing the private profile.
-
-For ordinary career/profile changes, update the private profile after approval. Do not recreate the Scheduled Task because the daily task reads Config.profile_reference every run.
-
-If I later express an operational change such as schedule time, timezone, no-response threshold, enabled Gmail sources, or automation behavior, explain the intended change briefly and ask for approval. After approval, directly update the relevant Config and/or existing Scheduled Task when supported. Do not make me copy a newly generated prompt when the existing task can be updated directly.
-
-Do not declare setup complete if Gmail, the private profile, the new Sheet, or Scheduled Task creation failed.
-
-BEGIN EMBEDDED DAILY TASK PROMPT
-
-Run my daily Job Mail Collector using this Google Sheet for operational configuration and tracking:
-{{SHEET_REFERENCE}}
-
-Do not rely on ChatGPT Memory, custom instructions, old chats, Project files, uploaded files, or assumptions about me.
-
-My career data is stored in the private profile referenced by Config.profile_reference. Read that profile on every run before evaluating job fit.
-
-[1. LOAD OPERATIONAL CONFIGURATION]
-
-Read Config, Sources, Tracker, and Control.
-Require Config.config_version = 4.
-Use Config.schedule_timezone for all date and time judgments and output.
-Use only Sources rows where Enabled is true.
-
-Required Config keys:
-profile_reference
-profile_storage_format
-schedule_timezone
-scan_window
-auto_candidate_write
-auto_application_update
-module_missing_application
-module_response_detection
-module_no_response
-no_response_days
-write_fallback
-
-Do not expect ATS, resume-version, channel, or rejection-stage configuration.
-
-[2. DETERMINE TARGET PERIOD AND CATCH UP MISSED RUNS]
-
-Use local calendar dates in Config.schedule_timezone.
-Set:
-- target_end = previous local calendar day
-- if Control.last_successful_scan_date is blank, target_start = target_end
-- otherwise target_start = day after Control.last_successful_scan_date
-
-Process every local calendar day from target_start through target_end.
-If target_start is after target_end, report `No unprocessed calendar day` and skip candidate ingestion.
-
-At the very top of output show:
-`Scan period: YYYY-MM-DD to YYYY-MM-DD (timezone)`
-
-Do not infer scan period from the newest Tracker row.
-Do not update Control.last_successful_scan_date until successful core processing is complete.
-
-[3. VERIFY TRACKER READ COMPLETENESS]
-
-Before any Tracker-dependent absence, duplicate, response, or missing-application judgment:
-1. Count non-empty Tracker rows using Company as the required field.
-2. Compare with Control.tracker_data_rows.
-3. If equal, tracker_read_status = VERIFIED.
-4. If unequal, retry once using the broadest available Sheet read method.
-5. If still unequal, tracker_read_status = INCOMPLETE.
-
-When INCOMPLETE:
-- continue source-health/basic Gmail parsing when useful;
-- do not claim a job/application is absent;
-- do not confirm historical duplicates;
-- skip response, missing-application, and no-response reconciliation;
-- do not write new Candidate rows;
-- report the row-count mismatch in Diagnostics;
-- do not advance last_successful_scan_date.
-
-Partial data must never be used to prove absence.
-
-[4. LOAD AND VALIDATE PRIVATE CAREER PROFILE]
-
-Read the complete document referenced by Config.profile_reference.
-Config.profile_storage_format may be `markdown_file` or `google_doc_markdown`.
-Treat text as Markdown with YAML front matter.
-Require profile_version = 2.
-
-Required YAML keys:
-profile_version
-primary_titles
-adjacent_titles
-target_seniority
-excluded_titles
-management_roles
-preferred_domains
-excluded_domains
-strong_skills
-hard_skill_blockers
-target_locations
-work_models
-employment_types
-work_authorization
-sponsorship_rule
-minimum_compensation
-preferred_company_types
-excluded_company_types
-hard_exclude_keywords
-warning_keywords
-languages
-
-Also read these Markdown sections when present:
-- Professional summary
-- Search interpretation
-- Differentiators and scope
-- Experience highlights
-- Measurable outcomes
-- Core skills and strengths
-- Portfolio or specialty areas
-- Leadership experience
-- Role preferences and interpretation notes
-- Additional context
-
-Set profile_read_status to VERIFIED, INVALID, or UNAVAILABLE.
-If not VERIFIED:
-- do not classify jobs as Strong, Possible, or Weak;
-- do not apply personal hard filters;
-- do not infer target from Memory or prior output;
-- do not write candidates;
-- report PROFILE_INVALID or PROFILE_UNAVAILABLE;
-- do not advance last_successful_scan_date.
-
-[5. COLLECT JOB-ALERT MESSAGES]
-
-For every enabled Sources.SenderPattern, search Gmail for messages received during the full target period.
-Read messages, not only thread summaries.
-Read each message individually even when Gmail grouped messages into one thread.
-If DigestMode is true, open the body and extract every distinct job.
-
-For each extracted job capture when available:
-- company
-- title
-- location
-- salary
-- work mode
-- source
-- received timestamp converted to Config.schedule_timezone
-- raw job/application URL
-- evidence needed for fit judgment
-
-Do not invent missing company names, titles, salaries, locations, or links.
-
-[6. CLASSIFY MESSAGES BEFORE USING THEM]
-
-Classify each relevant message using sender + subject + body into one of:
-- job alert
-- application confirmation
-- recruiter submission evidence
-- employer or recruiter response
-- marketing/newsletter
-- unknown
-
-A sender can produce multiple categories.
-Candidate collection uses only messages that actually contain identifiable open jobs.
-If uncertain, keep as unknown or Human review rather than forcing a category.
-
-[7. NORMALIZE LINKS]
-
-Prefer a stable directly usable job/application URL.
-For LinkedIn, when a job ID is explicit, normalize to:
-https://www.linkedin.com/jobs/view/{JOB_ID}/
-
-Remove tracking parameters from normalized LinkedIn URLs.
-For other sources, preserve a usable job/application URL from the message or linked page.
-
-If URL is missing, broken, inaccessible, or ambiguous:
-- leave Link blank;
-- add `link not extracted` to Notes;
-- never reconstruct or guess a URL.
-
-If a posting is clearly expired/removed, keep URL only if useful for identification and exclude with reason `posting unavailable`.
-
-[8. DEDUPLICATE WITHIN CURRENT RUN]
-
-Primary duplicate key: normalized Company + normalized Title.
-Use location as a tie-breaker when same title clearly represents different openings.
-If same posting appears from multiple sources, keep one candidate and combine source names. Prefer the cleanest usable link.
-
-Do not infer a parent company from an unfamiliar subsidiary or brand.
-Preserve source wording.
-If two records may be the same job but company identity is uncertain, mark `suspected duplicate` in Human review rather than merging automatically.
-
-[9. APPLY EXPLICIT HARD FILTERS]
-
-Run only when profile_read_status = VERIFIED.
-Use explicit profile rules including:
-- excluded_titles
-- excluded_domains
-- disallowed employment types
-- hard location/work-model constraints
-- sponsorship/work-authorization blockers according to sponsorship_rule
-- hard_exclude_keywords
-- hard_skill_blockers
-- explicit management constraints
-
-A hard exclusion must have a short evidence-based reason.
-Missing information is not automatically a hard exclusion unless profile says so.
-
-Title/level rules:
-- primary_titles = main direction, not exact-title whitelist;
-- adjacent_titles is not exhaustive;
-- target_seniority is an anchor, not whitelist;
-- do not reject merely because exact title/level was not listed;
-- only explicit exclusions should close a category.
-
-Management handling:
-- `unacceptable`: exclude clear direct people-management roles;
-- `review-needed`: keep with warning;
-- `acceptable`: evaluate normally.
-
-Do not confuse project leadership, mentoring, design direction, or cross-functional influence with people management.
-
-[10. EVALUATE ACTUAL FIT]
-
-Run only when profile_read_status = VERIFIED.
-Judge the actual job, not title similarity alone.
-Use evidence from YAML and Markdown, especially Differentiators and scope.
-Consider:
-- actual responsibilities and scope
-- required experience and ownership level
-- decision-making and ambiguity
-- leadership expectations
-- people-management requirements
-- distinctive problem-solving strengths
-- demonstrated differentiators and specialty areas
-- product/domain fit
-- skills and experience fit
-- relevant measurable outcomes
-- location/work-model fit
-- employment/compensation fit when known
-
-A user mainly targeting Senior can still receive Staff or Lead roles when scope is plausible.
-A role can be Strong even when exact title differs.
-A superficially similar title can be Weak or Excluded when required scope is unsupported.
-
-Stretch roles:
-- if much of required scope is supported, keep Strong or Possible and mention the stretch when useful;
-- if materially unsupported scope is required, lower fit or exclude with concrete reason.
-
-Classify:
-- Strong match
-- Possible match
-- Weak match
-
-Do not create numeric scores unless private profile explicitly requests them.
-For an experienced user, Strong should normally include at least one meaningful reason beyond title similarity.
-Weak matches normally stay out of main shortlist.
-
-[11. COMPARE AGAINST TRACKER]
-
-Run historical comparison only when tracker_read_status = VERIFIED.
-Rules:
-- same Company + same Title: historical duplicate unless evidence shows a materially different requisition;
-- same Company + different Title: keep, with prior-company context when useful;
-- staffing/recruiting agencies are not automatically the employer.
-
-There is no separate Channel field. Use Source for provenance and Notes for useful agency/recruiter context.
-If a previously excluded posting was unavailable/expired, a clearly new requisition can be reconsidered.
-
-[12. SINGLE-PASS INBOX RECONCILIATION]
-
-Run when module_missing_application or module_response_detection is enabled AND tracker_read_status = VERIFIED.
-Do NOT run a separate Gmail search for every Applied row by default.
-Instead:
-1. read Gmail messages received in full target period in one broad pass;
-2. build relevant Tracker list, especially Applied and recent Candidate rows;
-3. classify target-period inbox messages using sender + subject + body;
-4. compare potential confirmations, recruiter submissions, and responses against Company + Title + thread/context evidence;
-5. use targeted follow-up search only for a specific ambiguity.
-
-This inbox pass is separate from enabled-source candidate-alert searches.
-
-[13. MISSING APPLICATION DETECTION]
-
-Run only if Config.module_missing_application is enabled AND tracker_read_status = VERIFIED.
-Use clear application evidence from the single-pass inbox scan.
-Strong evidence includes:
-- explicit application-confirmation email naming company and role;
-- explicit recruiter message stating application/profile/resume was submitted or forwarded for a specific company/role.
-
-If Company + Title is absent from Tracker and evidence is clear, create an Applied row when automatic application updates are enabled and writes are available. Otherwise return 13-column TSV fallback.
-
-For general career-page submission with no role title, preserve source wording and use a non-colliding title such as `Unknown (Career Page)` only if truly no title exists.
-Ambiguous future language such as a recruiter saying they may submit later is not enough. Put it in Human review.
-AppliedAt = evidence timestamp converted to Config.schedule_timezone when no better confirmed application time exists.
-Source = actual evidence source.
-
-[14. RESPONSE DETECTION]
-
-Run only if Config.module_response_detection is enabled AND tracker_read_status = VERIFIED.
-Use single-pass inbox messages and Tracker rows with Status=Applied.
-A response must be after AppliedAt and have enough company/title/thread context.
-Do not treat generic alerts or unrelated marketing as response.
-
-When evidence is clear:
-- fill RespondedAt if blank;
-- explicit rejection -> Status=Closed, Result=Rejected;
-- other explicit final result -> store supported Result when unambiguous;
-- do not infer rejection stage;
-- do not infer/store ATS platform.
-
-Ambiguous/conflicting evidence goes to Human review and does not automatically change row.
-
-[15. NO-RESPONSE CHECK]
-
-Run only if Config.module_no_response is enabled AND tracker_read_status = VERIFIED.
-Find Tracker rows with:
-- Status=Applied
-- RespondedAt blank
-- elapsed local calendar days since AppliedAt >= Config.no_response_days
-
-Return as no-response candidates.
-Do not automatically close them or set Result=No response by default.
-
-[16. TRACKER WRITES]
-
-Tracker schema exactly 13 columns:
-Status	Company	Title	Location	Salary	WorkMode	Notes	Link	ReceivedAt	AppliedAt	RespondedAt	Result	Source
-
-Do not output/write ATS, ResumeVersion, Channel, or RejectionStage.
-
-For new candidates:
-- Status = Candidate
-- ReceivedAt = original alert timestamp in Config.schedule_timezone
-- leave AppliedAt, RespondedAt, Result blank unless supported by reconciliation evidence
-- Source = alert source or combined alert sources
-
-For automatic reconciliation:
-- clear application evidence -> Status=Applied and AppliedAt if blank;
-- clear response -> fill RespondedAt if blank;
-- explicit rejection -> Status=Closed, Result=Rejected;
-- other explicit final outcome -> Status=Closed and supported Result;
-- ambiguous evidence -> no automatic change.
-
-Preferred mode:
-- if automatic writing is enabled and permitted, apply changes directly;
-- never overwrite user-entered data with lower-confidence inference;
-- reread affected rows when possible and report whether change was applied.
-
-Fallback mode:
-- if write cannot proceed because approval/action unavailable, return every intended insert/update as fenced 13-column TSV;
-- clearly state automatic write was not applied.
-
-[17. ADVANCE SUCCESSFUL-SCAN MARKER]
-
-Advance Control.last_successful_scan_date to target_end only when ALL are true:
-- profile_read_status = VERIFIED;
-- tracker_read_status = VERIFIED;
-- Gmail access worked;
-- every enabled source search completed without access/query failure;
-- full target period processed;
-- normal output produced;
-- intended Tracker changes either applied or returned completely via explicit TSV fallback.
-
-Zero messages from a source is not itself failure.
-A source query/access failure is failure.
-If any core condition fails, do not advance last_successful_scan_date.
-
-[18. OUTPUT]
-
-Always produce these sections, even when empty.
-At top:
-`Scan period: ...`
-
-## Best matches
-Company | Title | Location | Work mode | Salary | Match | Why | Source | Apply
-
-Only populate when profile_read_status = VERIFIED.
-Order Strong before Possible, then older ReceivedAt first unless profile requests another order.
-Use clickable Apply links when available.
-Why should use actual scope, differentiators, specialty, domain, or outcomes, not just same title.
-
-## Excluded or low priority
-Company | Title | Reason | Source
-
-## Applications detected
-Show clear previously untracked application or recruiter-submission evidence handled this run.
-
-## Responses detected
-Company | Title | RespondedAt | Result | Evidence
-
-## No-response candidates
-Company | Title | AppliedAt | Days
-
-## Tracker updates
-Summarize applied writes or state none needed.
-
-## Manual Tracker fallback
-Only when automatic Sheet writes could not be applied. Return exact 13-column TSV rows.
-
-## Human review
-Only items needing a decision/manual action, such as ambiguous association, suspected duplicate, ambiguous recruiter submission, conflicting response evidence, or blocked Tracker write.
-
-## Source health
-List every enabled source with message count for target period, including zero-message sources.
-If all major enabled sources unexpectedly return zero, warn about alert delivery, sender patterns, or account configuration.
-
-## Diagnostics
-Report:
-- profile_read_status and profile_version
-- Config version
-- target period and timezone
-- previous and resulting last_successful_scan_date
-- tracker_read_status and row-count comparison
-- messages read per enabled source
-- all-inbox messages read for reconciliation when enabled
-- extracted postings before filtering
-- link extraction failures
-- parsing/classification ambiguities
-- automatic Tracker write result
-- skipped module and why
-
-Diagnostic rules:
-- state evidence for anomalies;
-- separate confirmed from suspected;
-- never claim absence when relevant source was not fully read;
-- never substitute Memory when private profile is unavailable.
 
 END EMBEDDED DAILY TASK PROMPT
 ```
