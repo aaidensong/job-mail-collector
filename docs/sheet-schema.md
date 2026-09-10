@@ -1,10 +1,10 @@
 # Google Sheet schema
 
-Preferred new file name: `Job_Mail_Collector`
+Preferred new file name: `Job_Search_Collector`
 
 Bootstrap always creates a **brand-new** Sheet using this schema. It does not search for, import, adapt, merge, or reuse an existing application tracker.
 
-If `Job_Mail_Collector` already exists, create a uniquely named new file such as `Job_Mail_Collector_2` rather than asking to reuse the existing one.
+If `Job_Search_Collector` already exists, create a uniquely named new file such as `Job_Search_Collector_2` rather than asking to reuse the existing one.
 
 Historical spreadsheet migration, if desired, is outside bootstrap and should be handled separately after setup.
 
