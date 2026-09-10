@@ -1,12 +1,12 @@
 [English](README.md) | [한국어](README.ko.md)
 
-# Job Mail Collector
+# Job Search Collector
 
-Job Mail Collector는 Gmail로 들어오는 채용 알림 메일을 읽고, 필요하면 공개 웹에서도 추가 공고를 찾고, 개인 커리어 프로필과 비교해 적합도를 판단한 뒤 Google Sheets Tracker에 정리하는 ChatGPT Scheduled Task 워크플로입니다.
+Job Search Collector는 Gmail로 들어오는 채용 알림 메일을 읽고, 필요하면 공개 웹에서도 추가 공고를 찾고, 개인 커리어 프로필과 비교해 적합도를 판단한 뒤 Google Sheets Tracker에 정리하는 ChatGPT Scheduled Task 워크플로입니다.
 
 공개 저장소에는 워크플로 로직과 템플릿만 포함됩니다. 실제 커리어 프로필, 이메일 데이터, 지원 이력은 각 사용자의 연결된 Google 계정 안에 남습니다.
 
-![Job Mail Collector 작업 흐름](job-mail-collector-flow-ko.png)
+![Job Search Collector 작업 흐름](job-search-collector-flow-ko.png)
 
 > 제품 동작, 연결 가능한 앱, Scheduled Task 기능은 변경될 수 있습니다. OpenAI 문서 기준 마지막 확인일: 2026-09-08.
 
@@ -32,7 +32,7 @@ Job Mail Collector는 Gmail로 들어오는 채용 알림 메일을 읽고, 필�
 
 - 경력, 강점, 희망 직무, 실제 구직 조건 파악
 - Google Drive에 비공개 커리어 프로필 생성
-- 새로운 Job Mail Collector Google Sheet 생성. 사용자가 보는 탭은 `Tracker` 하나로 두고, 내부 운영 탭은 지원되는 경우 숨김 처리
+- 새로운 Job Search Collector Google Sheet 생성. 사용자가 보는 탭은 `Tracker` 하나로 두고, 내부 운영 탭은 지원되는 경우 숨김 처리
 - Gmail에서 채용 알림 소스 탐색 또는 입력 후 사용자 확인
 - 메일에 없는 공고를 웹에서도 추가로 찾을지 한 번 확인
 - 지원 확인, 회신 감지 등 추천 자동화 설정
@@ -82,7 +82,7 @@ Google Sheets 직접 쓰기는 사용 가능한 기능과 권한이 있을 때�
 
 ## 직무명보다 실제 업무 적합도를 봅니다
 
-Job Mail Collector는 직무명이 정확히 같다는 이유만으로 적합하다고 판단하지 않습니다.
+Job Search Collector는 직무명이 정확히 같다는 이유만으로 적합하다고 판단하지 않습니다.
 
 사용자가 말한 희망 직무명과 직급은 기준점일 뿐 자동 허용 목록이 아닙니다. 실제 업무 책임, 오너십, 문제 유형, 성과, 리더십 기대 수준, 도메인, 스킬, 현실적인 근무 조건을 함께 봅니다.
 
@@ -111,7 +111,7 @@ Job Mail Collector는 직무명이 정확히 같다는 이유만으로 적합하
 11. 허용된 경우 Tracker 업데이트
 12. 무응답 지원 건과 Diagnostics 반환
 
-Job Mail Collector는 사용자를 대신해 실제 지원서를 제출한다고 주장하지 않습니다.
+Job Search Collector는 사용자를 대신해 실제 지원서를 제출한다고 주장하지 않습니다.
 
 ## Mail과 Search는 시트에서 구분됩니다
 
@@ -124,9 +124,9 @@ Job Mail Collector는 사용자를 대신해 실제 지원서를 제출한다고
 
 ## 항상 새 Tracker로 시작합니다
 
-Bootstrap은 Job Mail Collector 전용 구조를 사용하는 새 Tracker를 만듭니다.
+Bootstrap은 Job Search Collector 전용 구조를 사용하는 새 Tracker를 만듭니다.
 
-기존 스프레드시트를 가져오거나, 기존 열 구조에 맞춰 적응하거나, 자동 병합하지 않습니다. 같은 이름의 `Job_Mail_Collector`가 이미 있으면 `Job_Mail_Collector_2`처럼 구분되는 새 파일을 만듭니다.
+기존 스프레드시트를 가져오거나, 기존 열 구조에 맞춰 적응하거나, 자동 병합하지 않습니다. 같은 이름의 `Job_Search_Collector`가 이미 있으면 `Job_Search_Collector_2`처럼 구분되는 새 파일을 만듭니다.
 
 과거 지원 이력을 옮기고 싶다면 설정 완료 후 별도의 ChatGPT 대화에서 migration 작업으로 처리하는 것을 권장합니다.
 
@@ -177,11 +177,11 @@ job-search-collector/
 ├── README.md
 ├── README.ko.md
 ├── LICENSE
-├── job-mail-collector-flow.png
-├── job-mail-collector-flow-ko.png
+├── job-search-collector-flow.png
+├── job-search-collector-flow-ko.png
 ├── prompts/
 │   ├── 01-bootstrap.md
-│   ├── 02-daily-job-mail-collector.md
+│   ├── 02-daily-job-search-collector.md
 │   ├── 03-test-run.md
 │   └── 04-update-profile.md
 ├── profiles/
@@ -212,6 +212,6 @@ job-search-collector/
 
 권장 표기:
 
-> Job Mail Collector by Aiden, licensed under CC BY 4.0.
+> Job Search Collector by Aiden, licensed under CC BY 4.0.
 
 자세한 내용은 `LICENSE`와 https://creativecommons.org/licenses/by/4.0/ 를 참고하세요.
