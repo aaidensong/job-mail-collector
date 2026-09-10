@@ -1,6 +1,6 @@
 # Web Job Discovery Phase 1
 
-This document defines the Phase 1 public-web discovery module for Job Mail Collector.
+This document defines the Phase 1 public-web discovery module for Job Search Collector.
 
 ## Scope
 
@@ -22,11 +22,11 @@ Bootstrap asks one additional plain-language question:
 
 English:
 
-> Would you like Job Mail Collector to also search the public web for additional jobs that may not appear in your email alerts?
+> Would you like Job Search Collector to also search the public web for additional jobs that may not appear in your email alerts?
 
 Korean:
 
-> 메일 알림에 없는 공고도 Job Mail Collector가 웹에서 추가로 찾아보게 할까요?
+> 메일 알림에 없는 공고도 Job Search Collector가 웹에서 추가로 찾아보게 할까요?
 
 Recommended default: enabled.
 
