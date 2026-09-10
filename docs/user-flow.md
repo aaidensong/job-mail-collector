@@ -126,11 +126,15 @@ Preferred Sheet name:
 
 If that name already exists, ChatGPT automatically creates a uniquely named new Sheet such as `Job_Mail_Collector_2`. It does not ask to reuse the existing file.
 
-Tabs:
+Tabs are created in this order:
+- Tracker
 - Config
 - Sources
-- Tracker
 - Control
+
+`Tracker` is the only user-facing tab. After setup, ChatGPT hides `Config`, `Sources`, and `Control` when the available Google Sheets actions support tab hiding, while keeping them available to the workflow internally. `Tracker` stays visible and first, and should be left active when possible.
+
+If hiding is unavailable, `Tracker` still stays first and the user is told once that the other tabs are internal and do not need normal interaction.
 
 The Tracker has exactly 13 columns:
 
