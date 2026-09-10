@@ -115,7 +115,7 @@ Checks:
 - confirm the relevant Google Drive write actions are available;
 - review whether the workspace requires approval for external data changes.
 
-The workflow must not claim a write succeeded when it did not. When an unattended write is blocked, use the exact 13-column TSV fallback.
+The workflow must not claim a write succeeded when it did not. When an unattended write is blocked, use the exact 14-column TSV fallback.
 
 ## I applied but the row still says Candidate
 
@@ -131,4 +131,39 @@ They are intentionally not part of the current Tracker schema.
 
 The core workflow keeps only fields that materially help users find, review, apply to, and track opportunities.
 
-If recruiter or agency context matters for a specific application, put that detail in Notes. `Source` is the single provenance field.
+`DiscoveryType` separates `Mail` from `Search`. `Source` stores the concrete platform such as LinkedIn, Indeed, Greenhouse, Workday, or Company Careers. ATS is not a separate column because an ATS name can already be the Source for a search-discovered job.
+
+If recruiter or agency context matters for a specific application, put that detail in Notes.
+
+## Web Discovery did not run
+
+Web Discovery runs inside the same Scheduled Task only when it is enabled and `Control.last_successful_web_discovery_date` is blank or earlier than the current local calendar date in `Config.schedule_timezone`.
+
+Check:
+- `Config.module_web_discovery` is true;
+- `Config.web_discovery_max_queries` is 20;
+- the private profile and Tracker were readable and valid;
+- web search was available to the scheduled run;
+- the web-discovery marker was not already set to today.
+
+Do not create a separate Scheduled Task just to compensate for a skipped Web Discovery run.
+
+## A web search result looks relevant but was not added
+
+A search snippet is not enough. The workflow must open the actual posting page and verify that it represents a currently open job before a normal Candidate or Weak row is written.
+
+If the posting page cannot be opened or associated confidently with the search result, the item may appear in Human review or Diagnostics instead of Tracker.
+
+A missing posted date alone does not block a verified open role. Notes should say `Posted date unavailable` rather than inventing a date.
+
+## Eligibility requirement is unclear
+
+Do not infer citizenship, security clearance, licensing, or another eligibility fact that is not present in the private profile.
+
+Only auto-exclude when a known profile fact clearly conflicts with the requirement. Otherwise keep the role eligible for fit evaluation and add a concise confirmation note.
+
+## Web Discovery partially failed
+
+Partial web-search failures are reported separately from Gmail processing. Web Discovery failure must not prevent `Control.last_successful_scan_date` from advancing when the Gmail workflow itself succeeded.
+
+`Control.last_successful_web_discovery_date` advances only when enough of the planned web search completed to produce a normal discovery result. The exact numeric threshold between partial and majority query failure is intentionally not fixed yet.
