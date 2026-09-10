@@ -47,7 +47,7 @@ languages:
   - English
 ---
 
-# Job Mail Collector Career Profile
+# Job Search Collector Career Profile
 
 > Fictional example only. This profile does not describe the project author or a real user.
 
