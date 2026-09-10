@@ -105,6 +105,16 @@ Do not maintain separate ATS, resume-version, channel, or rejection-stage column
 
 `ReceivedAt` is retained so users can tell how old a discovered opportunity is even when they review or apply several days later.
 
+Company and Title have separate comparison and display behavior:
+
+- comparison-normalized values are temporary runtime values used for duplicate and message-association checks and are not stored as extra Tracker columns;
+- new Title display values receive safe formatting cleanup such as whitespace cleanup, dash normalization, and slash-spacing normalization while preserving capitalization and meaningful punctuation;
+- new Company display values receive conservative whitespace/dash cleanup, while legal suffixes and source wording are preserved by default;
+- when a comparison-normalized Company matches an existing Tracker Company, reuse the existing Tracker Company display value for a new row;
+- existing Tracker rows are not rewritten retroactively, but their Company and Title values are normalized in memory whenever they participate in comparisons.
+
+The Tracker remains exactly 14 columns.
+
 The daily task does not rely on formula columns inside Tracker.
 
 ## Control
