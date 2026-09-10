@@ -22,7 +22,7 @@ warning_keywords: []
 languages: []
 ---
 
-# Job Mail Collector Career Profile
+# Job Search Collector Career Profile
 
 > This is a private user profile. Do not commit a filled-in copy to a public repository.
 
