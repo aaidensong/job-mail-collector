@@ -38,14 +38,14 @@ Before each direct onboarding question, ChatGPT shows a compact stage and remain
 
 ### Fresh Tracker boundary
 
-Bootstrap always creates a new Job Mail Collector Tracker.
+Bootstrap always creates a new Job Search Collector Tracker.
 
 It does not:
 - ask whether the user already has a tracker;
 - search Drive for an existing tracker;
 - import historical spreadsheet data;
 - adapt the workflow to an arbitrary existing schema;
-- reuse an existing `Job_Mail_Collector` file.
+- reuse an existing `Job_Search_Collector` file.
 
 If the preferred name already exists, the setup creates a uniquely named new Sheet automatically.
 
@@ -58,7 +58,7 @@ This boundary does not affect ongoing Gmail reconciliation. A scheduled run may 
 A private Markdown-formatted document owned by the user.
 
 Preferred name:
-`Job_Mail_Collector_Profile.md`
+`Job_Search_Collector_Profile.md`
 
 The profile stores:
 - main target direction and nearby roles to consider when actual fit is strong
