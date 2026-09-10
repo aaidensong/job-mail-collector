@@ -43,10 +43,13 @@ None.
 
 ## Diagnostics
 
-- Config version: 4
+- Config version: 5
 - Profile version: 2
 - Previous last_successful_scan_date: 2026-09-06
 - Resulting last_successful_scan_date: 2026-09-07
+- Previous last_successful_web_discovery_date: 2026-09-06
+- Resulting last_successful_web_discovery_date: 2026-09-07
+- Web Discovery: completed, 12 site queries, broader search not needed
 - Tracker read: VERIFIED, 42 rows read / 42 expected
 - Extracted postings before filtering: 8
 - Automatic Tracker write: applied
@@ -57,9 +60,9 @@ None.
 This section appears only when an automatic Sheet write could not be applied.
 
 ```tsv
-Candidate\tExampleCo\tSenior Product Designer\tToronto, ON\t\tHybrid\tB2C funnel and design-system fit\thttps://example.com/job/123\t2026-09-07 09:15\t\t\t\tLinkedIn
+Candidate\tExampleCo\tSenior Product Designer\tToronto, ON\t\tHybrid\tB2C funnel and design-system fit\thttps://example.com/job/123\t2026-09-07 09:15\t\t\t\tMail\tLinkedIn
 ```
 
-The Tracker schema has exactly 13 columns:
+The Tracker schema has exactly 14 columns:
 
-`Status, Company, Title, Location, Salary, WorkMode, Notes, Link, ReceivedAt, AppliedAt, RespondedAt, Result, Source`
+`Status, Company, Title, Location, Salary, WorkMode, Notes, Link, ReceivedAt, AppliedAt, RespondedAt, Result, DiscoveryType, Source`
