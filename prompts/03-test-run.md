@@ -40,7 +40,15 @@ Return:
 19. verify that mail rows use DiscoveryType=Mail and web rows use DiscoveryType=Search, with Source reserved for the concrete platform;
 20. verify that unknown eligibility details are flagged for confirmation rather than guessed as hard exclusions;
 21. whether automatic Tracker writing is available when enabled, or whether TSV fallback would be required;
-22. all permissions, profile, parsing, source, web-discovery, or completeness failures.
+22. Company/Title normalization checks showing that:
+   - en dash, em dash, Unicode hyphen variants, and hyphen compare consistently;
+   - leading/trailing, repeated, and non-breaking whitespace do not create false differences;
+   - case differences do not create false differences;
+   - curly vs straight quote variants do not create false differences;
+   - `UX / UI` and `UX/UI` compare consistently;
+   - supported trailing Company legal suffix variants such as `Inc.` vs no suffix compare consistently;
+   - meaningful parentheses content remains distinct;
+23. all permissions, profile, parsing, source, web-discovery, normalization, or completeness failures.
 
 Pass criteria:
 - private profile readable and valid
@@ -58,6 +66,9 @@ Pass criteria:
 - missed-run catch-up period is calculated correctly
 - Web Discovery never advances or blocks the Gmail successful-scan marker
 - Web Discovery marker is not changed in test mode
+- normalization is applied before within-run dedupe, historical Tracker dedupe, missing-application association, recruiter-submission association, and response association
+- comparison normalization does not require or add Tracker columns
+- existing Tracker rows are not rewritten in test mode
 
 Do not say the setup passed if the profile, Gmail, or Sheet required permission failed.
 ```
