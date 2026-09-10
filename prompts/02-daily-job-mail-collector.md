@@ -140,6 +140,61 @@ If not VERIFIED:
 - report PROFILE_INVALID or PROFILE_UNAVAILABLE;
 - do not advance Control.last_successful_scan_date.
 
+[4A. NORMALIZE COMPANY AND TITLE FOR IDENTITY]
+
+Before any duplicate check, historical comparison, missing-application check, recruiter-submission association, or response association, derive comparison-only identity values for Company and Title.
+
+Keep comparison values separate from Tracker display/storage values. Do not add comparison fields to the Tracker schema.
+
+COMPARISON NORMALIZATION
+
+Apply to both Company and Title:
+1. normalize Unicode compatibility forms consistently;
+2. trim leading and trailing whitespace;
+3. convert non-breaking and other spacing variants to normal spaces;
+4. collapse consecutive whitespace to one space;
+5. convert common dash variants, including en dash, em dash, non-breaking hyphen, Unicode hyphen, and minus sign, to ASCII hyphen `-`;
+6. normalize spacing around hyphen separators to exactly one space on each side;
+7. compare case-insensitively using Unicode-aware case folding;
+8. normalize curly double quotes to `"` and curly single quotes/apostrophes to `'`;
+9. normalize spaces around `/` so `UX / UI` and `UX/UI` compare the same.
+
+Additional Title comparison rule:
+- when a middle dot or bullet is clearly used as a spaced title separator, such as `Designer · Growth`, treat it like ` - ` for comparison;
+- do not remove parentheses, commas, colons, slashes, or their contents;
+- do not remove unspaced middle dots or punctuation that may be part of a real title.
+
+Additional Company comparison rule:
+- remove trailing legal entity designators only for comparison, case-insensitively and punctuation-tolerantly: `Inc`, `Inc.`, `Incorporated`, `Ltd`, `Ltd.`, `Limited`, `LLC`, `Corp`, `Corp.`, `Corporation`;
+- remove only terminal legal designators, not the same words when they occur inside the company name;
+- after removing a terminal legal designator, trim a preceding comma and whitespace;
+- do not infer parent/subsidiary relationships or remove other company-name words.
+
+Examples:
+- `Lead Product Designer, Design Systems – AI Enablement` and `Lead Product Designer, Design Systems - AI Enablement` compare equal.
+- `Acme, Inc.` and `ACME` compare equal as Company.
+- `Product Designer (Growth)` and `Product Designer (Platform)` do not compare equal merely because the text outside parentheses matches.
+
+STORAGE/DISPLAY NORMALIZATION
+
+For a newly written Title:
+- trim leading/trailing whitespace;
+- collapse consecutive whitespace;
+- convert common dash variants to ASCII hyphen and use one space around the hyphen;
+- normalize spaces around `/` by removing spaces around the slash;
+- otherwise preserve source wording, capitalization, parentheses, quotes, commas, and other meaningful punctuation.
+
+For a newly written Company:
+- trim leading/trailing whitespace;
+- collapse consecutive whitespace;
+- normalize common dash variants to ASCII hyphen with one space around the hyphen when it is used as a separator;
+- preserve capitalization, legal suffixes, and other source wording by default;
+- if Tracker already contains a Company display value whose comparison-normalized Company equals the new Company, reuse the existing Tracker display value for the new row.
+
+Do not retroactively rewrite existing Tracker rows in this workflow. Existing rows must still be comparison-normalized in memory when used for duplicate or association checks.
+
+Use the same comparison-normalization rules everywhere Company + Title identity is used.
+
 [5. COLLECT CANDIDATES FROM MAIL AND WEB]
 
 A. MAIL DISCOVERY
@@ -222,7 +277,7 @@ First pass:
 Before deciding whether to broaden, evaluate first-pass results far enough to count `verified new Strong/Possible` roles:
 - `verified` = the actual posting page was opened and confirmed to represent a currently open job;
 - `new` = it is not a historical duplicate under the existing Tracker comparison rules;
-- the default duplicate key is normalized Company + normalized Title, but clear evidence of a materially different requisition may make it a distinct opening;
+- the default duplicate key is comparison-normalized Company + comparison-normalized Title using [4A], but clear evidence of a materially different requisition may make it a distinct opening;
 - use the SAME hard-filter and fit rules defined later in this prompt. This is a provisional pass for search branching, not a separate matching standard.
 
 If the first pass produces at least 5 verified new Strong/Possible roles:
@@ -323,7 +378,7 @@ If a posting is clearly expired or removed, keep the URL only if useful for iden
 
 [8. DEDUPLICATE WITHIN THE CURRENT RUN]
 
-Primary duplicate key: normalized Company + normalized Title.
+Primary duplicate key: comparison-normalized Company + comparison-normalized Title using [4A].
 Use location as a tie-breaker when the same title clearly represents different openings.
 
 If the same posting appears through more than one discovery path, keep one Tracker record and preserve the DiscoveryType and Source of the path that first caused the row to enter Tracker. Do not combine multiple methods or platforms into DiscoveryType or Source because users may filter those fields.
@@ -413,8 +468,8 @@ Weak matches stay out of the main shortlist, but when the posting itself is veri
 Run confirmed historical comparison only when tracker_read_status = VERIFIED.
 
 Rules:
-- same Company + same Title: historical duplicate, do not add unless evidence shows a materially different requisition;
-- same Company + different Title: keep, but add concise prior-company context when useful;
+- same comparison-normalized Company + same comparison-normalized Title: historical duplicate, do not add unless evidence shows a materially different requisition;
+- same comparison-normalized Company + different comparison-normalized Title: keep, but add concise prior-company context when useful;
 - staffing or recruiting agencies are not automatically the employer. Do not use an agency name by itself to prove a duplicate.
 
 `DiscoveryType` records the primary discovery method and `Source` records the concrete platform. Do not use a Channel field. Keep agency/recruiter context in Notes when it materially helps the user.
@@ -431,7 +486,7 @@ Instead:
 1. read Gmail messages received in the full target period in one broad pass;
 2. build a list of relevant Tracker rows, especially Status=Applied and recent Candidate rows;
 3. classify the target-period inbox messages using sender + subject + body;
-4. compare potential confirmations, recruiter submissions, and employer/recruiter responses against Company + Title + thread/context evidence;
+4. compare potential confirmations, recruiter submissions, and employer/recruiter responses using comparison-normalized Company + Title from [4A], plus thread/context evidence;
 5. use a targeted follow-up search only when needed to resolve a specific ambiguity.
 
 This inbox pass is separate from the enabled-source candidate-alert searches because employer and recruiter responses may come from completely different senders.
@@ -446,7 +501,7 @@ Strong evidence includes:
 - an explicit application-confirmation email naming the company and role;
 - an explicit recruiter message stating that the user's application, profile, or resume was submitted or forwarded for a specific company/role.
 
-If Company + Title is not present in Tracker and the evidence is clear, create an Applied row when automatic application updates are enabled and writes are available. Set DiscoveryType=Mail because the row was first discovered through Gmail evidence. Otherwise return the 14-column TSV fallback.
+If comparison-normalized Company + Title is not present in Tracker and the evidence is clear, create an Applied row when automatic application updates are enabled and writes are available. Set DiscoveryType=Mail because the row was first discovered through Gmail evidence. Otherwise return the 14-column TSV fallback.
 
 For a general career-page submission with no role title, preserve the source wording and use a non-colliding title such as `Unknown (Career Page)` only when the message truly provides no role title.
 
