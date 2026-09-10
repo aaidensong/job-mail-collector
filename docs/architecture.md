@@ -86,7 +86,7 @@ The workbook is presented Tracker-first: `Tracker` is the only user-facing tab, 
 ### Config
 Stores schedule, profile reference, automation settings, and write behavior.
 
-Current schema uses `config_version = 4`.
+Current schema uses `config_version = 5`.
 
 ### Sources
 Stores confirmed Gmail sender patterns plus source-specific parsing and message-classification notes.
@@ -94,35 +94,48 @@ Stores confirmed Gmail sender patterns plus source-specific parsing and message-
 A sender may produce more than one message type. Classification uses sender + subject + body.
 
 ### Tracker
-Stores job candidates and application history in 13 columns:
+Stores job candidates and application history in 14 columns:
 
-`Status, Company, Title, Location, Salary, WorkMode, Notes, Link, ReceivedAt, AppliedAt, RespondedAt, Result, Source`
+`Status, Company, Title, Location, Salary, WorkMode, Notes, Link, ReceivedAt, AppliedAt, RespondedAt, Result, DiscoveryType, Source`
 
 The Tracker intentionally does not store ATS, ResumeVersion, Channel, or RejectionStage.
 
-`Source` is the single provenance field. Agency or recruiter details go in Notes only when useful.
+`DiscoveryType` is `Mail` or `Search` and records the primary discovery method. `Source` records the concrete platform. The two fields remain separate so users can filter discovery method independently from platform. Agency or recruiter details go in Notes only when useful.
 
 ### Control
-Stores verification metrics and `last_successful_scan_date`.
+Stores verification metrics, `last_successful_scan_date`, and `last_successful_web_discovery_date`.
 
-`last_successful_scan_date` lets the workflow catch up automatically after a skipped or failed scheduled run.
+`last_successful_scan_date` lets the Gmail workflow catch up automatically after a skipped or failed scheduled run. `last_successful_web_discovery_date` independently prevents Web Discovery from running more than once per local calendar day. Web Discovery failure does not block the Gmail marker.
 
-## 4. Scheduled ingestion layer
+## 4. Scheduled ingestion and Web Discovery layer
 
-Runs automatically inside ChatGPT at the configured time.
+Runs automatically inside ChatGPT at the configured time. The user does not manually start the daily task.
 
 Responsibilities:
 - load Config and Control
-- calculate every unprocessed local calendar day through yesterday
+- calculate every unprocessed Gmail calendar day through yesterday
 - read and validate the private profile
 - read configured Gmail job-alert sources
+- when enabled and due, run public-web discovery at most once for the current local calendar day
+- generate search queries from the private profile
+- search the Phase 1 ATS domain families first and broaden only when the verified-new Strong/Possible threshold is not met
+- verify actual posting pages before normal candidate writes
 - expand digest messages
 - classify messages by actual content
+- merge mail and web candidates into one candidate pool
 - extract structured jobs
 - normalize links
 - deduplicate within the run
 
 The scan marker advances only after the target period is fully processed successfully enough to produce normal output or a complete TSV write fallback.
+
+### Phase 1 Web Discovery boundary
+
+Web Discovery is a conditional module inside the existing Scheduled Task, not a second task. It uses a maximum of 20 search queries per run. Search and mail use the same hard-filter and fit rules.
+
+The initial search pass covers 12 verified ATS domain families: Workday, Greenhouse, Ashby, Lever, BambooHR, iCIMS, Dayforce, SmartRecruiters, Rippling, Recruitee, Teamtailor, and Personio. If the first pass produces fewer than five verified new Strong/Possible roles, remaining query budget is used for broader web search. Hiring-post discovery is outside this Phase 1 boundary.
+
+A web result is not treated as a normal candidate from a snippet alone. The workflow must open and validate the actual posting page and open state. Missing posted dates are noted without being guessed.
 
 ## 5. Matching layer
 
@@ -176,7 +189,7 @@ When Tracker completeness is verified and Google Drive write actions are availab
 - close explicitly rejected applications with `Result = Rejected`
 - record other explicit final outcomes in Result
 
-ATS and rejection-stage inference are intentionally excluded from the core workflow because they add complexity without enough user value.
+ATS and rejection-stage inference are intentionally excluded from the Tracker schema. ATS names may still appear as `Source` values when a web-discovered job was found on that platform.
 
 Ambiguous evidence is not written automatically.
 
