@@ -2,7 +2,7 @@
 
 # Job Mail Collector
 
-Job Mail Collector is a ChatGPT Scheduled Task workflow that reads job-alert emails from Gmail, matches postings against a private career profile, and keeps suitable opportunities organized in Google Sheets when permissions allow.
+Job Mail Collector is a ChatGPT Scheduled Task workflow that reads job-alert emails from Gmail, can discover additional jobs on the public web, matches postings against a private career profile, and keeps opportunities organized in Google Sheets when permissions allow.
 
 The public repository contains workflow logic and templates only. Each user's career profile, email data, and application history stay in that user's connected Google account.
 
@@ -32,6 +32,7 @@ During the setup conversation, ChatGPT can:
 - create a private career profile in Google Drive;
 - create a brand-new Job Mail Collector Google Sheet with `Tracker` as the only user-facing tab, while keeping internal operational tabs hidden when supported;
 - find or collect job-alert sources from Gmail and ask you to confirm them;
+- ask whether you want additional Web Job Discovery enabled;
 - configure recommended application and response tracking behavior;
 - create the recurring Scheduled Task;
 - run a validation test before setup is considered complete.
@@ -94,19 +95,28 @@ For experienced users, a Strong match should normally have a meaningful reason b
 At the scheduled time, the workflow can:
 
 1. read the unprocessed job-alert period from Gmail;
-2. expand digest emails into individual jobs;
-3. classify messages from sender + subject + body;
-4. extract job details and usable application links;
-5. deduplicate postings;
-6. evaluate actual job fit using the private career profile;
-7. compare against verified Tracker history;
-8. detect clear application confirmations or recruiter submissions;
-9. detect employer or recruiter responses;
-10. update the Tracker when allowed;
-11. flag no-response applications after the configured threshold;
-12. report source health, human-review items, and diagnostics.
+2. when Web Discovery is enabled and due, search supported ATS domains and broader web results for additional roles;
+3. open and verify actual web posting pages before treating them as normal candidates;
+4. merge mail and web candidates into one matching pipeline;
+5. expand digest emails and classify messages from sender + subject + body;
+6. extract job details and usable application links;
+7. deduplicate postings against the current run and verified Tracker history;
+8. evaluate actual job fit using the private career profile;
+9. detect clear application confirmations or recruiter submissions;
+10. detect employer or recruiter responses;
+11. update the Tracker when allowed;
+12. flag no-response applications and report diagnostics.
 
 The workflow never claims to submit applications on the user's behalf.
+
+## Mail and Search stay distinguishable
+
+The Tracker keeps one unified job history for reliable duplicate detection, while `DiscoveryType` separates how each row first entered the Tracker:
+
+- `Mail` for Gmail-derived opportunities or application evidence
+- `Search` for public-web discovery
+
+`Source` separately stores the concrete platform, such as LinkedIn, Indeed, Greenhouse, Workday, or Company Careers. This keeps Mail/Search filtering independent from platform filtering.
 
 ## Fresh Tracker by design
 
@@ -151,6 +161,7 @@ The README is intentionally user-focused. Implementation details live in `docs/`
 - [`docs/user-flow.md`](docs/user-flow.md) - end-to-end user and system flow
 - [`docs/profile-questionnaire.md`](docs/profile-questionnaire.md) - onboarding UX and question rules
 - [`docs/matching-rules.md`](docs/matching-rules.md) - fit and exclusion logic
+- [`docs/web-job-discovery.md`](docs/web-job-discovery.md) - Phase 1 public-web discovery rules
 - [`docs/sheet-schema.md`](docs/sheet-schema.md) - Tracker, Config, Sources, and Control schema
 - [`docs/architecture.md`](docs/architecture.md) - system architecture and responsibilities
 - [`docs/profile-file.md`](docs/profile-file.md) - private profile format
@@ -182,7 +193,7 @@ For normal users, `01-bootstrap.md` is the only prompt they need to copy manuall
 
 Current versions:
 
-- `config_version = 4`
+- `config_version = 5`
 - `profile_version = 2`
 
 ## OpenAI references
