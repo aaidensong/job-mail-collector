@@ -338,11 +338,20 @@ Always create a new Google Sheet using this workflow's schema.
 Preferred name: `Job_Mail_Collector`
 If that name already exists, automatically create a unique new name such as `Job_Mail_Collector_2`. Do not ask whether to reuse the old one.
 
-Create tabs exactly:
+Create tabs exactly in this order:
+- Tracker
 - Config
 - Sources
-- Tracker
 - Control
+
+User-facing Sheet rule:
+- `Tracker` is the only user-facing tab.
+- Create and populate `Config`, `Sources`, and `Control` for internal workflow state, then hide those three tabs when the available Google Sheets actions support hiding tabs.
+- Keep `Tracker` visible and first. If sheet-tab activation is supported, leave `Tracker` as the active tab.
+- Never hide `Tracker`.
+- Hiding is presentation only. Hidden internal tabs must remain readable and writable by the scheduled workflow.
+- Never delete `Config`, `Sources`, or `Control` just to simplify the interface.
+- If hiding tabs is not supported by the available actions, still keep `Tracker` first and tell me once at setup completion that only `Tracker` is intended for normal use. Do not ask me to manage the internal tabs manually.
 
 Config columns:
 A Key
@@ -441,6 +450,7 @@ If Scheduled Task creation itself is unavailable in my account, explain that spe
 Before setup is complete, run the workflow in test mode.
 Verify:
 - profile can be read and profile_version = 2;
+- `Tracker` is the visible user-facing tab and internal `Config`, `Sources`, and `Control` remain accessible to the workflow even when hidden;
 - Gmail can be searched;
 - enabled sources can be searched;
 - digest emails expand into individual jobs;
