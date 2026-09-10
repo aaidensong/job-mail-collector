@@ -81,6 +81,8 @@ Public examples must be fictional and must not be derived from a user's private 
 
 Google Sheet owned by the user.
 
+The workbook is presented Tracker-first: `Tracker` is the only user-facing tab, while `Config`, `Sources`, and `Control` are internal operational tabs. When supported, the internal tabs are hidden after setup without changing their names or accessibility to the workflow. If hiding is unavailable, `Tracker` still remains first.
+
 ### Config
 Stores schedule, profile reference, automation settings, and write behavior.
 
