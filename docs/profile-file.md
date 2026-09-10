@@ -1,6 +1,6 @@
 # Private career profile file
 
-Job Mail Collector separates personal career information from operational tracking data.
+Job Search Collector separates personal career information from operational tracking data.
 
 ## Why a separate Markdown profile
 
@@ -23,12 +23,12 @@ Version 2 intentionally removes resume-version tracking. The core profile keeps 
 
 Preferred:
 
-1. Create a private file named `Job_Mail_Collector_Profile.md` in the user's connected Google Drive when the environment supports creating and reading Markdown files directly.
+1. Create a private file named `Job_Search_Collector_Profile.md` in the user's connected Google Drive when the environment supports creating and reading Markdown files directly.
 2. Record its exact Drive reference in `Config.profile_reference`.
 
 Compatibility fallback:
 
-If direct Markdown-file creation or reading is unavailable, create a private Google Doc named `Job_Mail_Collector_Profile`, paste the exact Markdown content into the document without changing the structure, and set:
+If direct Markdown-file creation or reading is unavailable, create a private Google Doc named `Job_Search_Collector_Profile`, paste the exact Markdown content into the document without changing the structure, and set:
 
 - `Config.profile_storage_format = google_doc_markdown`
 - `Config.profile_reference = <exact Google Doc reference>`
