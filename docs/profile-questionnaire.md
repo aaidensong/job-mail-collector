@@ -208,13 +208,13 @@ Do not ask about resume versions.
 
 ## Fresh Tracker policy
 
-Bootstrap always creates a new Job Mail Collector Tracker using the workflow's own schema.
+Bootstrap always creates a new Job Search Collector Tracker using the workflow's own schema.
 
 Do not ask whether the user already has a spreadsheet or tracker. Do not search Drive for one. Do not import, adapt, map, merge, or reuse an existing tracker during bootstrap.
 
 If the user mentions prior application history, explain briefly that setup intentionally starts with a fresh compatible Tracker. Historical migration can be handled separately in another ChatGPT conversation after setup.
 
-If a file named `Job_Mail_Collector` already exists, create a uniquely named new Sheet automatically rather than asking to reuse the old one.
+If a file named `Job_Search_Collector` already exists, create a uniquely named new Sheet automatically rather than asking to reuse the old one.
 
 ## Automation, sources, and schedule
 
@@ -226,11 +226,11 @@ For Gmail sources, ask whether ChatGPT should find likely job-alert senders auto
 
 Ask exactly one additional plain-language operational question about Web Discovery:
 
-> **Would you like Job Mail Collector to also search the public web for additional jobs that may not appear in your email alerts?**
+> **Would you like Job Search Collector to also search the public web for additional jobs that may not appear in your email alerts?**
 
 Korean:
 
-> **메일 알림에 없는 공고도 Job Mail Collector가 웹에서 추가로 찾아보게 할까요?**
+> **메일 알림에 없는 공고도 Job Search Collector가 웹에서 추가로 찾아보게 할까요?**
 
 Recommended default: enabled.
 
@@ -258,11 +258,11 @@ Examples of profile-worthy changes:
 
 Use a short confirmation question such as:
 
-> Would you like me to update your Job Mail Collector profile with this?
+> Would you like me to update your Job Search Collector profile with this?
 
 In Korean:
 
-> 이 내용을 Job Mail Collector 프로필에 업데이트할까요?
+> 이 내용을 Job Search Collector 프로필에 업데이트할까요?
 
 Do not write the profile until the user confirms. If the user explicitly asks for a profile change, that explicit request already counts as confirmation.
 
