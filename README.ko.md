@@ -150,6 +150,7 @@ Bootstrap은 Job Mail Collector 전용 구조를 사용하는 새 Tracker를 만
 - 예약 실행이 빠졌을 경우 `Control.last_successful_scan_date`를 기준으로 누락 기간 복구
 - 발신자 주소만으로 메일 유형을 단정하지 않음
 - Tracker 일부만 읽은 상태에서 `없다`고 판단하지 않음
+- 대시 문자, 공백, 대소문자, 지원하는 법인 표기처럼 의미 없는 Company/Title 표기 차이는 중복 비교 전에 정규화
 - 없는 지원 링크를 만들어내지 않음
 - 불확실한 회사 관계를 추정하지 않음
 - 애매한 리크루터 제출이나 회신 근거는 Human review로 보냄
@@ -172,7 +173,7 @@ README는 일반 사용자 중심으로 단순하게 유지합니다. 구현 세
 ## 저장소 구조
 
 ```text
-job-mail-collector/
+job-search-collector/
 ├── README.md
 ├── README.ko.md
 ├── LICENSE
