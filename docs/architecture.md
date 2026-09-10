@@ -193,7 +193,7 @@ ATS and rejection-stage inference are intentionally excluded from the Tracker sc
 
 Ambiguous evidence is not written automatically.
 
-If a scheduled external write cannot proceed because approval is required or a write action is unavailable, the workflow returns exact 13-column TSV as a fallback.
+If a scheduled external write cannot proceed because approval is required or a write action is unavailable, the workflow returns exact 14-column TSV as a fallback.
 
 ## 9. User application layer
 
